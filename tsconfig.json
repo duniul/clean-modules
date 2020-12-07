@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "es2018",
+    "module": "commonjs",
+    "lib": ["es2018"],
+    "rootDir": "src",
+    "outDir": "lib",
+    "tsBuildInfoFile": "lib/.tsbuildinfo",
+    "esModuleInterop": true,
+    "strict": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "incremental": true,
+    "skipLibCheck": true,
+    "types": ["node", "jest"],
+    "composite": true,
+    "declaration": true,
+    "removeComments": true
+  },
+  "include": ["src"],
+  "exclude": [
+    "../**/lib/**",
+    "../**/node_modules/**",
+    "../**/__snapshots__/**",
+    "../**/__fixtures__/**",
+    "../**/__tests__/**",
+    "../**/*.test.*"
+  ]
+}

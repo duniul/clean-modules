@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/duniul/clean-modules/compare/v1.0.0...v1.0.1) (2020-12-07)
+
+
+### Bug Fixes
+
+* set engines to node >=10 ([75de40e](https://github.com/duniul/clean-modules/commit/75de40eca44847cefb269b2b36ce2f36b27a93ca))
+
 # 1.0.0 (2020-12-07)
 
 

@@ -26,7 +26,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "prepare": "yarn build",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "release": "semantic-release"
   },
   "dependencies": {
     "arg": "^5.0.0",
@@ -36,6 +37,8 @@
     "supports-color": "^8.0.0"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "5.0.1",
+    "@semantic-release/git": "9.0.0",
     "@types/jest": "26.0.16",
     "@types/mock-fs": "4.13.0",
     "@types/node": "14.14.10",
@@ -47,6 +50,7 @@
     "mock-fs": "4.13.0",
     "prettier": "2.2.1",
     "rimraf": "3.0.2",
+    "semantic-release": "17.3.0",
     "ts-jest": "26.4.4",
     "typescript": "4.1.2"
   }

@@ -21,6 +21,9 @@
     "ci"
   ],
   "license": "ISC",
+  "engines": {
+    "node": ">=10"
+  },
   "files": [
     "lib",
     "!.tsbuildinfo"

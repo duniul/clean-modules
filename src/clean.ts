@@ -9,7 +9,7 @@ export async function findFilesToRemove(
   nodeModulesDir: string,
   includedGlobs?: string[],
   excludedGlobs?: string[]
-) {
+): Promise<CleanResult> {
   const { customInclude, customExclude } = getCustomGlobbers(includedGlobs, excludedGlobs);
   const result: CleanResult = { allFiles: [], includedFiles: [], excludedFiles: [] };
   let checkDir = isDefaultDir;
@@ -38,7 +38,7 @@ export async function findFilesToRemove(
   return result;
 }
 
-export async function removeFiles(filePaths: string[], dryRun: boolean = false) {
+export async function removeFiles(filePaths: string[], dryRun = false): Promise<number> {
   let reducedSize = 0;
 
   await Promise.all(
@@ -55,7 +55,7 @@ export async function removeFiles(filePaths: string[], dryRun: boolean = false) 
   return reducedSize;
 }
 
-export async function removeEmptyDirs(filePaths: string[]) {
+export async function removeEmptyDirs(filePaths: string[]): Promise<number> {
   let removedEmptyDirs = 0;
 
   await Promise.all(

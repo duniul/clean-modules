@@ -1,7 +1,9 @@
 import readline from 'readline';
 import supportsColor from 'supports-color';
 
-export function makeLogger(disabled: boolean = false) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function makeLogger(disabled = false): (message?: any, ...optionalParams: any[]) => void {
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   return disabled ? () => {} : console.log;
 }
 

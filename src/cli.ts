@@ -98,7 +98,8 @@ const argSpec = Object.values(options).reduce<arg.Spec>((spec, option) => {
 const args = arg(argSpec);
 
 if (args[options.help.flag]) {
-  const packageJson = require('./../package.json');
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const packageJson = require('../package.json');
   const optionsList = Object.values(options);
 
   console.log(`--- node-clean ---
@@ -130,11 +131,13 @@ ${optionsList
 
     return argString;
   })
-    .join('')}`);
+  .join('')}`);
 } else if (args[options.version.flag]) {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const { version } = require('../package.json');
   console.log(version);
 } else {
+  // eslint-disable-next-line no-inner-declarations
   async function run() {
     const includedGlobs = args[options.include.flag];
     const excludedGlobs = args[options.exclude.flag];
@@ -197,7 +200,7 @@ ${optionsList
     const { includedFiles, excludedFiles, reducedSize, removedEmptyDirs } = result;
 
     if (json) {
-      const output: Record<string, any> = {
+      const output: Record<string, unknown> = {
         removedFiles: includedFiles.length,
         excludedFiles: excludedFiles.length,
         reducedSize,

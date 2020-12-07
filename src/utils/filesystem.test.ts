@@ -131,7 +131,7 @@ describe('crawlDirFast', () => {
   });
 
   it('appends all nested file paths to the provided array', async () => {
-    let filePaths: string[] = [];
+    const filePaths: string[] = [];
     await crawlDirFast(filePaths, 'a0');
     expect(filePaths).toEqual(['a0/b0/c1', 'a0/b0/c2', 'a0/b0/c0/d2', 'a0/b0/c0/d1/e0/f0']);
   });
@@ -167,7 +167,7 @@ describe('crawlDirWithChecks', () => {
   });
 
   it('runs check functions on each nested item', async () => {
-    let filePaths: string[] = [];
+    const filePaths: string[] = [];
     const checkDir = jest.fn(() => false);
     const checkFile = jest.fn(() => true);
 
@@ -177,7 +177,7 @@ describe('crawlDirWithChecks', () => {
   });
 
   it('includes full dir without checking remaining items if checkDir returns true', async () => {
-    let filePaths: string[] = [];
+    const filePaths: string[] = [];
     const checkDir = jest.fn(() => true);
     const checkFile = jest.fn(() => true);
 
@@ -189,7 +189,7 @@ describe('crawlDirWithChecks', () => {
   });
 
   it('skips file if checkFile function returns false', async () => {
-    let filePaths: string[] = [];
+    const filePaths: string[] = [];
     const checkDir = jest.fn(() => false);
     const checkFile = jest.fn(() => false);
 

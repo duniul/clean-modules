@@ -1,4 +1,4 @@
-import { makeGlobber } from "./utils/glob";
+import { makeGlobber } from './utils/glob';
 
 export const DEFAULT_DIRS = [
   // test

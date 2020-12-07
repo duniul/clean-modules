@@ -9,7 +9,7 @@ export async function readDirentsAsync(dirPath: string, action: DirentAction): P
   await Promise.all(dirFiles.map(action));
 }
 
-export async function isEmptyDir(dirPath: string) {
+export async function isEmptyDir(dirPath: string): Promise<boolean> {
   const files = await fsPromise.readdir(dirPath);
   return files.length === 0;
 }
@@ -17,18 +17,20 @@ export async function isEmptyDir(dirPath: string) {
 export async function removeEmptyDirsUp(
   checkedDirs: Set<string>,
   dirPath: string,
-  count: number = 0
+  count = 0
 ): Promise<number> {
   if (!checkedDirs.has(dirPath)) {
     const files = await fsPromise.readdir(dirPath);
-    const isEmptyDir = files.length === 0;
+    const emptyDir = files.length === 0;
     checkedDirs.add(dirPath);
 
-    if (isEmptyDir) {
+    if (emptyDir) {
       try {
         await fsPromise.rmdir(dirPath);
         count++;
-      } catch (error) {}
+      } catch (error) {
+        // empty catch
+      }
 
       const parentDir = path.dirname(dirPath);
       count = await removeEmptyDirsUp(checkedDirs, parentDir, count);
@@ -50,7 +52,6 @@ export async function crawlDirFast(filePaths: string[], dirPath: string): Promis
     }
   });
 }
-
 
 // Crawl files and validate them against glob patterns.
 export async function crawlDirWithChecks(

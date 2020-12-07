@@ -1,4 +1,3 @@
-
 export interface CleanResult {
   allFiles: string[];
   includedFiles: string[];

@@ -12,7 +12,10 @@ export function makeGlobber(globs: string | string[], picoOptions: PicoOptions =
   return pm(globs, { dot: true, nocase: true, ...picoOptions });
 }
 
-export function getCustomGlobbers(includedGlobs?: string[], excludedGlobs?: string[]) {
+export function getCustomGlobbers(
+  includedGlobs?: string[],
+  excludedGlobs?: string[]
+): { customInclude?: GlobFunc; customExclude?: GlobFunc } {
   return {
     customInclude: includedGlobs && includedGlobs.length ? makeGlobber(includedGlobs) : undefined,
     customExclude: excludedGlobs && excludedGlobs.length ? makeGlobber(excludedGlobs) : undefined,

@@ -4,6 +4,15 @@
   "version": "1.0.0",
   "description": "Clean up/prune unnecessary files and reduce the size of your `node_modules` directory. Useful for CI caches or for reducing the size of your AWS Lambdas/Azure Functions.",
   "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/duniul/node-clean.git"
+  },
+  "homepage": "https://github.com/duniul/node-clean#readme",
+  "bugs": {
+    "url": "https://github.com/duniul/node-clean/issues"
+  },
+  "license": "ISC",
   "files": [
     "lib",
     "!.tsbuildinfo"
@@ -15,17 +24,9 @@
     "build": "rimraf lib && tsc",
     "dev": "tsc --watch",
     "test": "jest",
-    "modclean": "modclean"
+    "test:watch": "jest --watch",
+    "prepare": "yarn build"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/duniul/node-clean.git"
-  },
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/duniul/node-clean/issues"
-  },
-  "homepage": "https://github.com/duniul/node-clean#readme",
   "dependencies": {
     "arg": "^5.0.0",
     "picomatch": "^2.2.0",

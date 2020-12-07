@@ -12,6 +12,14 @@
   "bugs": {
     "url": "https://github.com/duniul/clean-modules/issues"
   },
+  "keywords": [
+    "node",
+    "node-modules",
+    "npm",
+    "yarn",
+    "cli-tool",
+    "ci"
+  ],
   "license": "ISC",
   "files": [
     "lib",

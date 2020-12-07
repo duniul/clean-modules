@@ -1,5 +1,10 @@
 # clean-modules 🧹
 
+<a href="https://www.npmjs.com/package/clean-modules"><img src="https://img.shields.io/npm/v/clean-modules" /></a>
+<a href="https://www.npmjs.com/package/clean-modules"><img src="https://img.shields.io/node/v-lts/clean-modules" /></a>
+<a href="https://www.npmjs.com/package/clean-modules"><img src="https://img.shields.io/bundlephobia/min/clean-modules?color=brightgreen" /></a>
+<a href="https://bundlephobia.com/result?p=clean-modules"><img src="https://img.shields.io/npm/dm/clean-modules?color=blue" /></a>
+
 > Clean up/prune unnecessary files and reduce the size of your `node_modules` directory. Useful for
 > CI caches or for reducing the size of your AWS Lambdas/Azure Functions.
 
@@ -152,8 +157,8 @@ Prints the help documentation.
 
 ## Globs
 
-`clean-modules` uses [`picomatch`](https://github.com/micromatch/picomatch) with the following options
-for all glob matching:
+`clean-modules` uses [`picomatch`](https://github.com/micromatch/picomatch) with the following
+options for all glob matching:
 
 ```js
 {

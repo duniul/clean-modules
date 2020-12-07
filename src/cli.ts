@@ -78,7 +78,7 @@ const options: CliOptions = {
     flag: '--version',
     alias: '-v',
     handler: Boolean,
-    description: 'Prints the installed version of node-clean.',
+    description: 'Prints the installed version of clean-modules.',
   },
   help: {
     flag: '--help',
@@ -102,13 +102,13 @@ if (args[options.help.flag]) {
   const packageJson = require('../package.json');
   const optionsList = Object.values(options);
 
-  console.log(`--- node-clean ---
+  console.log(`--- clean-modules ---
 
 Description
   ${packageJson.description}
   
 Usage
-  node-clean [<path/to/node_modules>] [options]
+  clean-modules [<path/to/node_modules>] [options]
 
 Options
 ${optionsList
@@ -151,7 +151,7 @@ ${optionsList
     const log = makeLogger(!!json);
 
     if (!json) {
-      log(bold('node-clean'), dryRun ? yellow('(dry run)') : '');
+      log(bold('clean-modules'), dryRun ? yellow('(dry run)') : '');
     }
 
     if (!yes) {

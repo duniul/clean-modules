@@ -1,4 +1,4 @@
-# node-clean 🧹
+# clean-modules 🧹
 
 > Clean up/prune unnecessary files and reduce the size of your `node_modules` directory. Useful for
 > CI caches or for reducing the size of your AWS Lambdas/Azure Functions.
@@ -48,14 +48,14 @@ This CLI tool combines combines all features that I could not find in other tool
 
 ## Installation
 
-`node-clean` can be installed globally if you only want to use it as a CLI tool:
+`clean-modules` can be installed globally if you only want to use it as a CLI tool:
 
 ```bash
 # npm
-npm install -g node-clean
+npm install -g clean-modules
 
 # yarn
-yarn global add node-clean
+yarn global add clean-modules
 ```
 
 ## Usage
@@ -63,13 +63,13 @@ yarn global add node-clean
 Simply run the command in the directory where your `node_modules` are:
 
 ```bash
-node-clean
+clean-modules
 ```
 
 You can also pass a path to where your `node_modules` are located as a positional argument:
 
 ```bash
-node-clean path/to/my/node_modules
+clean-modules path/to/my/node_modules
 ```
 
 If you want to include/exclude certain globs, skip the confirmation box or try running it without
@@ -91,7 +91,7 @@ default.
 
 ```bash
 # includes all TypeScript declaration files and @types folders
-node-clean --include "**/*.d.ts" --include "**/@types/**"
+clean-modules --include "**/*.d.ts" --include "**/@types/**"
 ```
 
 ### `--exclude | -e`
@@ -108,7 +108,7 @@ default.
 
 ```bash
 # excludes all sourcemap files and PNG files
-node-clean --exclude "**/*.map.js" --exclude "**/*.png"
+clean-modules --exclude "**/*.map.js" --exclude "**/*.png"
 ```
 
 ### `--analyze | -a`
@@ -144,7 +144,7 @@ Only logs a final JSON dump at the end of the script, useful for logs or service
 
 ### `--version | -v`
 
-Prints the installed version of `node-clean`.
+Prints the installed version of `clean-modules`.
 
 ### `--help | -h`
 
@@ -152,7 +152,7 @@ Prints the help documentation.
 
 ## Globs
 
-`node-clean` uses [`picomatch`](https://github.com/micromatch/picomatch) with the following options
+`clean-modules` uses [`picomatch`](https://github.com/micromatch/picomatch) with the following options
 for all glob matching:
 
 ```js
@@ -174,8 +174,8 @@ want to include a specific file make sure to prefix it with globstars (like `**/
 
 ### Recommended exclusions
 
-- `**/*.map.js`: **If you are running `node-clean` locally or need source files in production.**
-  `node-clean` removes sourcemap files by default since they take up a lot of space and does not
+- `**/*.map.js`: **If you are running `clean-modules` locally or need source files in production.**
+  `clean-modules` removes sourcemap files by default since they take up a lot of space and does not
   break builds when removed. They can be nice to have though, especially while developing.
 
 ## Alternatives
@@ -191,7 +191,7 @@ The most common issues I found with available tools are:
 
 ### Comparisons
 
-#### node-clean (this project)
+#### clean-modules (this project)
 
 - ✅ Inclusion/exclusion through file path globs
 - ✅ Fast

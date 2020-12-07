@@ -1,16 +1,16 @@
 {
-  "name": "node-clean",
+  "name": "clean-modules",
   "author": "Daniel Grefberg <hello@danielgrefberg.com>",
   "version": "1.0.0",
   "description": "Clean up/prune unnecessary files and reduce the size of your `node_modules` directory. Useful for CI caches or for reducing the size of your AWS Lambdas/Azure Functions.",
   "main": "lib/index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/duniul/node-clean.git"
+    "url": "git+https://github.com/duniul/clean-modules.git"
   },
-  "homepage": "https://github.com/duniul/node-clean#readme",
+  "homepage": "https://github.com/duniul/clean-modules#readme",
   "bugs": {
-    "url": "https://github.com/duniul/node-clean/issues"
+    "url": "https://github.com/duniul/clean-modules/issues"
   },
   "license": "ISC",
   "files": [
@@ -18,7 +18,7 @@
     "!.tsbuildinfo"
   ],
   "bin": {
-    "node-clean": "cli.js"
+    "clean-modules": "cli.js"
   },
   "scripts": {
     "build": "rimraf lib && tsc",

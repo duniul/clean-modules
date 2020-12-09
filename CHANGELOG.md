@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/duniul/clean-modules/compare/v1.0.2...v1.0.3) (2020-12-09)
+
+
+### Bug Fixes
+
+* restrict license glob ([17bc9c0](https://github.com/duniul/clean-modules/commit/17bc9c029f8197a7cb4514fd11eef32023855243))
+
 ## [1.0.2](https://github.com/duniul/clean-modules/compare/v1.0.1...v1.0.2) (2020-12-09)
 
 

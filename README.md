@@ -22,9 +22,9 @@ This CLI tool combines combines all features that I could not find in other tool
 ## Screenshots
 
 <p align="center">
-  <img alt="Small project" title="Small project" src="images/small-project.png" />
-  <img alt="Large project" title="Large project" src="images/large-project.png" />
-  <img alt="Dry run" title="Dry run" src="images/dry-run.png" />
+  <img alt="Small project" title="Small project" src="images/small-project.png" width="260" />
+  <img alt="Large project" title="Large project" src="images/large-project.png" width="260" />
+  <img alt="Dry run" title="Dry run" src="images/dry-run.png" width="260" />
 </p>
 
 ## Table of contents

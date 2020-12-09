@@ -140,8 +140,8 @@ export const DEFAULT_FILES = [
   'notice*',
 
   // licenses
-  'license*',
-  'licence*',
+  'license',
+  'licence',
 
   // typescript
   'tsconfig.json',

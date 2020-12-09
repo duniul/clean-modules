@@ -29,7 +29,7 @@
     "!.tsbuildinfo"
   ],
   "bin": {
-    "clean-modules": "cli.js"
+    "clean-modules": "bin/cli.js"
   },
   "scripts": {
     "build": "rimraf lib && tsc",

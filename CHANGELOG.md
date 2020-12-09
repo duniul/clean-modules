@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/duniul/clean-modules/compare/v1.0.1...v1.0.2) (2020-12-09)
+
+
+### Bug Fixes
+
+* add correct bin link ([75283b3](https://github.com/duniul/clean-modules/commit/75283b3b0e5a42597e90209f60f85e83fc7429d7))
+
 ## [1.0.1](https://github.com/duniul/clean-modules/compare/v1.0.0...v1.0.1) (2020-12-07)
 
 

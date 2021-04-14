@@ -75,4 +75,14 @@ describe('analyzeResults', () => {
     expect(info.files['a0/b0/c1.md'].excludedByArgs).toBe(false);
     expect(info.files['a0/b0/c0/d2.md'].excludedByArgs).toBe(true);
   });
+
+  it('does not throw if path is invalid', async () => {
+    const results = {
+      allFiles: ['invalid/path'],
+      includedFiles: ['invalid/path'],
+      excludedFiles: [],
+    };
+
+    expect(async () => await analyzeResults(results)).not.toThrow();
+  });
 });

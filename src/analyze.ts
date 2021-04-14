@@ -22,17 +22,21 @@ export async function analyzeResults(
 
   await Promise.all(
     result.allFiles.map(async filePath => {
-      const fileStats = await fsPromise.stat(filePath);
+      try {
+        const fileStats = await fsPromise.stat(filePath);
 
-      info.files[filePath] = {
-        includedBy: {
-          defaultDirs: isDefaultDir(filePath),
-          defaultFiles: isDefaultFile(filePath),
-          includeArgs: !!customInclude && customInclude(filePath),
-        },
-        excludedByArgs: !!customExclude && customExclude(filePath),
-        size: fileStats.size,
-      };
+        info.files[filePath] = {
+          includedBy: {
+            defaultDirs: isDefaultDir(filePath),
+            defaultFiles: isDefaultFile(filePath),
+            includeArgs: !!customInclude && customInclude(filePath),
+          },
+          excludedByArgs: !!customExclude && customExclude(filePath),
+          size: fileStats.size,
+        };
+      } catch (error) {
+        // do nothing
+      }
     })
   );
 

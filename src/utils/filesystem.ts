@@ -4,14 +4,25 @@ import path from 'path';
 export type DirentAction = (dirent: Dirent) => void;
 export type CheckFunc = (nextPath: string) => boolean;
 
-export async function readDirentsAsync(dirPath: string, action: DirentAction): Promise<void> {
-  const dirFiles = await fsPromise.readdir(dirPath, { withFileTypes: true });
+export async function forEachDirentAsync(dirPath: string, action: DirentAction): Promise<void> {
+  let dirFiles: Dirent[] = [];
+
+  try {
+    dirFiles = await fsPromise.readdir(dirPath, { withFileTypes: true });
+  } catch (error) {
+    // do nothing
+  }
+
   await Promise.all(dirFiles.map(action));
 }
 
-export async function isEmptyDir(dirPath: string): Promise<boolean> {
-  const files = await fsPromise.readdir(dirPath);
-  return files.length === 0;
+export async function readDirectory(dirPath: string): Promise<string[]> {
+  try {
+    const files = await fsPromise.readdir(dirPath);
+    return files;
+  } catch (error) {
+    return [];
+  }
 }
 
 export async function removeEmptyDirsUp(
@@ -20,7 +31,7 @@ export async function removeEmptyDirsUp(
   count = 0
 ): Promise<number> {
   if (!checkedDirs.has(dirPath)) {
-    const files = await fsPromise.readdir(dirPath);
+    const files = await readDirectory(dirPath);
     const emptyDir = files.length === 0;
     checkedDirs.add(dirPath);
 
@@ -29,7 +40,7 @@ export async function removeEmptyDirsUp(
         await fsPromise.rmdir(dirPath);
         count++;
       } catch (error) {
-        // empty catch
+        // do nothing
       }
 
       const parentDir = path.dirname(dirPath);
@@ -42,7 +53,7 @@ export async function removeEmptyDirsUp(
 
 // Find all files in a directory as fast as possible, without any extra checks or validations.
 export async function crawlDirFast(filePaths: string[], dirPath: string): Promise<void> {
-  await readDirentsAsync(dirPath, async dirent => {
+  await forEachDirentAsync(dirPath, async dirent => {
     const nextPath = `${dirPath}/${dirent.name}`;
 
     if (dirent.isDirectory()) {
@@ -60,7 +71,7 @@ export async function crawlDirWithChecks(
   checkDir: CheckFunc,
   checkFile: CheckFunc
 ): Promise<string[]> {
-  await readDirentsAsync(dirPath, async dirent => {
+  await forEachDirentAsync(dirPath, async dirent => {
     const nextPath = `${dirPath}/${dirent.name}`;
 
     if (dirent.isDirectory()) {

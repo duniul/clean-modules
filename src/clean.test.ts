@@ -1,5 +1,5 @@
-import mockFs from 'mock-fs';
 import fs from 'fs';
+import mockFs from 'mock-fs';
 import { findFilesToRemove, removeEmptyDirs, removeFiles } from './clean';
 
 const mockedFileStructure = {
@@ -50,6 +50,7 @@ describe('findFilesToRemove', () => {
       ])
     );
   });
+
   it('includes default files', async () => {
     const result = await findFilesToRemove('node_modules');
 
@@ -130,6 +131,11 @@ describe('removeFiles', () => {
     expect(fs.existsSync(filePaths[0])).toBe(true);
     expect(fs.existsSync(filePaths[1])).toBe(true);
   });
+
+  it('does not throw if path is invalid', async () => {
+    const filePaths = ['invalid/path/2', 'invalid/path/2'];
+    expect(async () => await removeFiles(filePaths)).not.toThrow();
+  });
 });
 
 describe('removeEmptyDirs', () => {
@@ -156,5 +162,10 @@ describe('removeEmptyDirs', () => {
     expect(fs.existsSync('node_modules/dep1/__tests__')).toBe(true); // not empty and not removed
     expect(fs.existsSync('node_modules/dep1/a-dir')).toBe(false); // empty and removed
     expect(fs.existsSync('node_modules/dep2')).toBe(false); // empty and removed
+  });
+
+  it('does not throw if path is invalid', async () => {
+    const filePaths = ['invalid/path/2', 'invalid/path/2'];
+    expect(async () => await removeEmptyDirs(filePaths)).not.toThrow();
   });
 });

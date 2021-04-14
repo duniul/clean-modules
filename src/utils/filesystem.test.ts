@@ -3,12 +3,12 @@ import mockFs from 'mock-fs';
 import {
   crawlDirFast,
   crawlDirWithChecks,
-  isEmptyDir,
-  readDirentsAsync,
+  forEachDirentAsync,
+  readDirectory,
   removeEmptyDirsUp,
 } from './filesystem';
 
-describe('readDirentsAsync', () => {
+describe('forEachDirentAsync', () => {
   beforeEach(() => {
     mockFs({
       testdir: {
@@ -25,7 +25,7 @@ describe('readDirentsAsync', () => {
 
   it('runs action with dirents for each item in a directory', async () => {
     const action = jest.fn();
-    await readDirentsAsync('testdir', action);
+    await forEachDirentAsync('testdir', action);
 
     expect(action).toHaveBeenCalledTimes(3);
     expect(action).toHaveBeenCalledWith(
@@ -48,21 +48,23 @@ describe('readDirentsAsync', () => {
   });
 });
 
-describe('isEmptyDir', () => {
+describe('readDirectory', () => {
   beforeEach(() => {
-    mockFs({ 'parent/empty': {} });
+    mockFs({ 'parent/empty': { 'foo.txt': '', 'bar.txt': '' } });
   });
 
   afterEach(() => {
     mockFs.restore();
   });
 
-  it('returns true if a directory is empty', async () => {
-    expect(await isEmptyDir('parent/empty')).toEqual(true);
+  it('returns list of files in directory', async () => {
+    expect(await readDirectory('parent/empty')).toEqual(
+      expect.arrayContaining(['foo.txt', 'bar.txt'])
+    );
   });
 
-  it('returns false if a directory is not empty', async () => {
-    expect(await isEmptyDir('parent')).toEqual(false);
+  it('returns empty array if directory does not exist', async () => {
+    expect(await readDirectory('parent/invalid')).toEqual([]);
   });
 });
 
@@ -99,6 +101,11 @@ describe('removeEmptyDirsUp', () => {
     expect(fs.existsSync('a0/b0')).toEqual(true);
     expect(fs.existsSync('a0')).toEqual(true);
   });
+
+  it('does not throw if path is invalid', async () => {
+    const checkedDirs = new Set<string>();
+    expect(async () => await removeEmptyDirsUp(checkedDirs, 'invalid/path')).not.toThrow();
+  });
 });
 
 describe('crawlDirFast', () => {
@@ -134,6 +141,11 @@ describe('crawlDirFast', () => {
     const filePaths: string[] = [];
     await crawlDirFast(filePaths, 'a0');
     expect(filePaths).toEqual(['a0/b0/c1', 'a0/b0/c2', 'a0/b0/c0/d2', 'a0/b0/c0/d1/e0/f0']);
+  });
+
+  it('does not throw if path is invalid', async () => {
+    const filePaths: string[] = [];
+    expect(async () => await crawlDirFast(filePaths, 'invalid/path')).not.toThrow();
   });
 });
 
@@ -197,5 +209,15 @@ describe('crawlDirWithChecks', () => {
 
     expect(filePaths).toEqual([]);
     expect(checkFile).toHaveBeenCalledTimes(4);
+  });
+
+  it('does not throw if path is invalid', async () => {
+    const filePaths: string[] = [];
+    const checkDir = jest.fn(() => false);
+    const checkFile = jest.fn(() => false);
+
+    expect(
+      async () => await crawlDirWithChecks(filePaths, 'invalid/path', checkDir, checkFile)
+    ).not.toThrow();
   });
 });

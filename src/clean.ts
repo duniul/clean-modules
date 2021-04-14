@@ -43,11 +43,16 @@ export async function removeFiles(filePaths: string[], dryRun = false): Promise<
 
   await Promise.all(
     filePaths.map(async filePath => {
-      const fileStats = await fsPromise.stat(filePath);
-      reducedSize += fileStats.size;
+      try {
+        const fileStats = await fsPromise.stat(filePath);
 
-      if (!dryRun) {
-        await fsPromise.unlink(filePath);
+        if (!dryRun) {
+          await fsPromise.unlink(filePath);
+        }
+
+        reducedSize += fileStats.size;
+      } catch (error) {
+        // do nothing
       }
     })
   );

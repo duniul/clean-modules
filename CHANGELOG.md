@@ -1,3 +1,11 @@
+## [1.0.4](https://github.com/duniul/clean-modules/compare/v1.0.3...v1.0.4) (2021-04-14)
+
+
+### Bug Fixes
+
+* **deps:** bump dependencies ([6aa9d55](https://github.com/duniul/clean-modules/commit/6aa9d556fe0fa42b70966c6e7788442dae7a3426))
+* don't fail on invalid file paths ([541ba1b](https://github.com/duniul/clean-modules/commit/541ba1b3ca033b90df414fdcf6cea5f655daf3ae))
+
 ## [1.0.3](https://github.com/duniul/clean-modules/compare/v1.0.2...v1.0.3) (2020-12-09)
 
 

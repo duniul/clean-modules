@@ -1,7 +1,7 @@
 {
   "name": "clean-modules",
   "author": "Daniel Grefberg <hello@danielgrefberg.com>",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Clean up/prune unnecessary files and reduce the size of your `node_modules` directory. Useful for CI caches or for reducing the size of your AWS Lambdas/Azure Functions.",
   "main": "lib/index.js",
   "repository": {
@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "arg": "^5.0.0",
-    "picomatch": "^2.2.3",
+    "picomatch": "^2.3.0",
     "pretty-bytes": "^5.6.0",
     "pretty-ms": "^7.0.1",
     "supports-color": "^8.1.1"
@@ -50,19 +50,20 @@
   "devDependencies": {
     "@semantic-release/changelog": "5.0.1",
     "@semantic-release/git": "9.0.0",
-    "@types/jest": "26.0.22",
+    "@types/jest": "26.0.23",
     "@types/mock-fs": "4.13.0",
-    "@types/node": "14.14.39",
-    "@types/picomatch": "2.2.2",
+    "@types/node": "15.6.1",
+    "@types/picomatch": "2.2.4",
     "@types/supports-color": "8.1.0",
-    "eslint": "7.24.0",
-    "eslint-config-acast": "5.0.1",
-    "jest": "26.6.3",
-    "mock-fs": "4.13.0",
-    "prettier": "2.2.1",
+    "eslint": "7.27.0",
+    "eslint-config-acast": "6.0.0",
+    "jest": "27.0.3",
+    "mock-fs": "5.0.0",
+    "prettier": "2.3.0",
+    "prettier-plugin-organize-imports": "2.1.0",
     "rimraf": "3.0.2",
-    "semantic-release": "17.4.2",
-    "ts-jest": "26.5.4",
-    "typescript": "4.2.4"
+    "semantic-release": "17.4.3",
+    "ts-jest": "27.0.2",
+    "typescript": "4.3.2"
   }
 }

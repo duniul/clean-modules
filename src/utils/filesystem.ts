@@ -1,14 +1,34 @@
-import { Dirent, promises as fsPromise } from 'fs';
+import { Dirent, promises as fsAsync } from 'fs';
 import path from 'path';
 
 export type DirentAction = (dirent: Dirent) => void;
-export type CheckFunc = (nextPath: string) => boolean;
+export type CheckPathFunc = (nextPath: string) => boolean;
 
+/**
+ * Check if a file exists without throwing.
+ */
+export async function fileExists(filePath: string): Promise<boolean> {
+  try {
+    await fsAsync.stat(filePath);
+
+    return true;
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      return false;
+    }
+
+    throw error;
+  }
+}
+
+/**
+ * Asynchronously loop through each file in a directory, passing the dirents for each file to the provided action.
+ */
 export async function forEachDirentAsync(dirPath: string, action: DirentAction): Promise<void> {
   let dirFiles: Dirent[] = [];
 
   try {
-    dirFiles = await fsPromise.readdir(dirPath, { withFileTypes: true });
+    dirFiles = await fsAsync.readdir(dirPath, { withFileTypes: true });
   } catch (error) {
     // do nothing
   }
@@ -16,15 +36,25 @@ export async function forEachDirentAsync(dirPath: string, action: DirentAction):
   await Promise.all(dirFiles.map(action));
 }
 
+/**
+ * Get the file paths inside a directory without throwing.
+ */
 export async function readDirectory(dirPath: string): Promise<string[]> {
   try {
-    const files = await fsPromise.readdir(dirPath);
+    const files = await fsAsync.readdir(dirPath);
     return files;
   } catch (error) {
-    return [];
+    if (error.code === 'ENOENT' || error.code === 'ENOTDIR') {
+      return [];
+    }
+
+    throw error;
   }
 }
 
+/**
+ * Remove empty directories, recursively travelling up in the file until the first non-empty directory is reached.
+ */
 export async function removeEmptyDirsUp(
   checkedDirs: Set<string>,
   dirPath: string,
@@ -37,7 +67,7 @@ export async function removeEmptyDirsUp(
 
     if (emptyDir) {
       try {
-        await fsPromise.rmdir(dirPath);
+        await fsAsync.rmdir(dirPath);
         count++;
       } catch (error) {
         // do nothing
@@ -51,7 +81,9 @@ export async function removeEmptyDirsUp(
   return count;
 }
 
-// Find all files in a directory as fast as possible, without any extra checks or validations.
+/**
+ * Find all files in a directory as fast as possible, without any extra checks or validations.
+ */
 export async function crawlDirFast(filePaths: string[], dirPath: string): Promise<void> {
   await forEachDirentAsync(dirPath, async dirent => {
     const nextPath = `${dirPath}/${dirent.name}`;
@@ -64,17 +96,19 @@ export async function crawlDirFast(filePaths: string[], dirPath: string): Promis
   });
 }
 
-// Crawl files and validate them against glob patterns.
+/**
+ * Crawl files and validate them against glob patterns.
+ */
 export async function crawlDirWithChecks(
   filePaths: string[], // Mutate array to avoid losing speed on spreading
   dirPath: string,
-  checkDir: CheckFunc,
-  checkFile: CheckFunc
+  checkDir: CheckPathFunc,
+  checkFile: CheckPathFunc
 ): Promise<string[]> {
-  await forEachDirentAsync(dirPath, async dirent => {
-    const nextPath = `${dirPath}/${dirent.name}`;
+  await forEachDirentAsync(dirPath, async nextPathDirent => {
+    const nextPath = `${dirPath}/${nextPathDirent.name}`;
 
-    if (dirent.isDirectory()) {
+    if (nextPathDirent.isDirectory()) {
       if (checkDir(nextPath)) {
         // If a full directory matches, include all of it.
         await crawlDirFast(filePaths, nextPath);

@@ -1,88 +1,79 @@
 import mockFs from 'mock-fs';
-import { analyzeResults } from './analyze';
+import { analyzeIncluded } from './analyze';
+import { EMPTY_GLOB_LISTS, getMockedFileStructure } from './__fixtures__/fixtures';
 
-describe('analyzeResults', () => {
+const mockCwd = '/';
+const mockNodeModulesPath = mockCwd + 'node_modules';
+const mockedFileStructure = getMockedFileStructure(mockNodeModulesPath);
+
+let cwdSpy: jest.SpyInstance<string, []>;
+
+beforeEach(() => {
+  cwdSpy = jest.spyOn(process, 'cwd').mockReturnValue(mockCwd);
+  mockFs(mockedFileStructure);
+});
+
+afterEach(() => {
+  cwdSpy.mockRestore();
+  mockFs.restore();
+});
+
+describe('analyzeIncluded', () => {
   beforeEach(() => {
-    mockFs({
-      a0: {
-        b0: {
-          c0: {
-            d0: {
-              e0: {},
-            },
-            d1: {
-              e0: {
-                'f0.md': 'f0',
-              },
-            },
-            'd2.md': 'd2d2',
-          },
-          'c1.md': 'c1',
-          'c2.js': 'c2',
-        },
-      },
+    mockFs(mockedFileStructure);
+  });
+
+  it('returns expected result', async () => {
+    const results = await analyzeIncluded(mockNodeModulesPath, {
+      ...EMPTY_GLOB_LISTS,
+      included: ['**/__tests__/**', '**/dep3/**'],
+      includedDirs: ['**/__tests__', '**/dep3'],
+      originalIncluded: ['__tests__', 'dep3'],
     });
-  });
 
-  afterEach(() => {
-    mockFs.restore();
-  });
-
-  it('lists individual file sizes', async () => {
-    const results = {
-      allFiles: ['a0/b0/c1.md', 'a0/b0/c0/d2.md'],
-      includedFiles: ['a0/b0/c1.md', 'a0/b0/c0/d2.md'],
-      excludedFiles: [],
-    };
-
-    const info = await analyzeResults(results);
-
-    expect(info.files['a0/b0/c1.md'].size).toBe(2);
-    expect(info.files['a0/b0/c0/d2.md'].size).toBe(4);
-  });
-
-  it('says which glob included the file', async () => {
-    const results = {
-      allFiles: ['a0/b0/c1.md', 'a0/b0/c2.js', 'a0/b0/c0/d2.md', 'a0/b0/c0/d1/e0/f0.md'],
-      includedFiles: ['a0/b0/c1.md', 'a0/b0/c2.js', 'a0/b0/c0/d2.md', 'a0/b0/c0/d1/e0/f0.md'],
-      excludedFiles: [],
-    };
-
-    const includedGlobs = ['**/c2.js'];
-
-    const info = await analyzeResults(results, includedGlobs);
-
-    expect(info.files['a0/b0/c1.md'].includedBy.defaultDirs).toBe(false);
-    expect(info.files['a0/b0/c1.md'].includedBy.defaultFiles).toBe(true);
-    expect(info.files['a0/b0/c1.md'].includedBy.defaultDirs).toBe(false);
-
-    expect(info.files['a0/b0/c2.js'].includedBy.defaultDirs).toBe(false);
-    expect(info.files['a0/b0/c2.js'].includedBy.defaultFiles).toBe(false);
-    expect(info.files['a0/b0/c2.js'].includedBy.includeArgs).toBe(true);
+    expect(results).toEqual([
+      {
+        filePath: '/node_modules/dep1/__tests__/test1.js',
+        includedByDefault: true,
+        includedByGlobs: [{ derived: '/node_modules/**/__tests__/**', original: '__tests__' }],
+      },
+      {
+        filePath: '/node_modules/dep1/__tests__/test2.js',
+        includedByDefault: true,
+        includedByGlobs: [{ derived: '/node_modules/**/__tests__/**', original: '__tests__' }],
+      },
+      {
+        filePath: '/node_modules/dep3/deeply/nested/file.ext',
+        includedByDefault: false,
+        includedByGlobs: [{ derived: '/node_modules/**/dep3/**', original: 'dep3' }],
+      },
+    ]);
   });
 
   it('says if a file was excluded or not', async () => {
-    const results = {
-      allFiles: ['a0/b0/c1.md', 'a0/b0/c0/d2.md', 'a0/b0/c0/d1/e0/f0.md'],
-      includedFiles: ['a0/b0/c1.md', 'a0/b0/c0/d1/e0/f0.md'],
-      excludedFiles: ['a0/b0/c0/d2.md'],
-    };
+    const results = await analyzeIncluded(mockNodeModulesPath, {
+      ...EMPTY_GLOB_LISTS,
+      included: ['**/tsconfig.json', '**/file.js'],
+      originalIncluded: ['tsconfig.json', 'file.js'],
+    });
 
-    const excludedGlobs = ['**/d2.md'];
-
-    const info = await analyzeResults(results, [], excludedGlobs);
-
-    expect(info.files['a0/b0/c1.md'].excludedByArgs).toBe(false);
-    expect(info.files['a0/b0/c0/d2.md'].excludedByArgs).toBe(true);
+    expect(results[0]).toHaveProperty('includedByDefault', false);
+    expect(results[1]).toHaveProperty('includedByDefault', true);
   });
 
-  it('does not throw if path is invalid', async () => {
-    const results = {
-      allFiles: ['invalid/path'],
-      includedFiles: ['invalid/path'],
-      excludedFiles: [],
-    };
+  it('lists what globs (original and derived version) included the file', async () => {
+    const results = await analyzeIncluded(mockNodeModulesPath, {
+      ...EMPTY_GLOB_LISTS,
+      included: ['**/*.json', '**/tsconfig.json', '**/file.js'],
+      originalIncluded: ['*.json', 'tsconfig.json', 'file.js'],
+    });
 
-    expect(async () => await analyzeResults(results)).not.toThrow();
+    expect(results[0]).toHaveProperty('includedByGlobs', [
+      { derived: '/node_modules/**/file.js', original: 'file.js' },
+    ]);
+    expect(results[1]).toHaveProperty('includedByGlobs', [
+      { derived: '/node_modules/**/*.json', original: '*.json' },
+      { derived: '/node_modules/**/tsconfig.json', original: 'tsconfig.json' },
+    ]);
   });
 });

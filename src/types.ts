@@ -1,7 +1,5 @@
 export interface CleanResult {
-  allFiles: string[];
   includedFiles: string[];
-  excludedFiles: string[];
   reducedSize?: number;
   removedEmptyDirs?: number;
   info?: CleanInfo;
@@ -25,4 +23,16 @@ export interface CleanInfo {
     excludeArgs?: string[] | string;
   };
   files: Record<string, FileInfo>;
+}
+
+export interface IncludedExcludedArgs {
+  included: string[];
+  excluded: string[];
+}
+
+export interface GlobLists {
+  excluded: string[];
+  included: string[];
+  includedDirs?: string[];
+  originalIncluded: string[];
 }

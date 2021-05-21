@@ -1,44 +1,56 @@
-import { promises as fsPromise } from 'fs';
-import { DEFAULT_DIRS_GLOB, DEFAULT_FILES_GLOB, isDefaultDir, isDefaultFile } from './defaultGlobs';
-import { CleanInfo, CleanResult } from './types';
-import { getCustomGlobbers } from './utils/glob';
+import path from 'path';
+import { findFilesToRemove } from './clean';
+import { GlobLists } from './types';
+import {
+  makeGlobMatcher,
+  optimizeGlobLists,
+  parseDefaultGlobsFile,
+  toAbsoluteGlobLists,
+} from './utils/glob';
 
-export async function analyzeResults(
-  result: CleanResult,
-  includedGlobs?: string[],
-  excludedGlobs?: string[]
-): Promise<CleanInfo> {
-  const { customInclude, customExclude } = getCustomGlobbers(includedGlobs, excludedGlobs);
+interface GlobVersions {
+  original: string;
+  derived: string;
+}
 
-  const info: CleanInfo = {
-    globs: {
-      defaultDirs: DEFAULT_DIRS_GLOB,
-      defaultFiles: DEFAULT_FILES_GLOB,
-      includeArgs: includedGlobs,
-      excludeArgs: excludedGlobs,
-    },
-    files: {},
-  };
+interface AnalyzeIncludedResult {
+  filePath: string;
+  includedByDefault: boolean;
+  includedByGlobs: GlobVersions[];
+}
 
-  await Promise.all(
-    result.allFiles.map(async filePath => {
-      try {
-        const fileStats = await fsPromise.stat(filePath);
-
-        info.files[filePath] = {
-          includedBy: {
-            defaultDirs: isDefaultDir(filePath),
-            defaultFiles: isDefaultFile(filePath),
-            includeArgs: !!customInclude && customInclude(filePath),
-          },
-          excludedByArgs: !!customExclude && customExclude(filePath),
-          size: fileStats.size,
-        };
-      } catch (error) {
-        // do nothing
-      }
-    })
+export async function analyzeIncluded(
+  nodeModulesPath: string,
+  globLists: GlobLists
+): Promise<AnalyzeIncludedResult[]> {
+  const includedFiles = await findFilesToRemove(nodeModulesPath, globLists);
+  const defaultGlobs = toAbsoluteGlobLists(
+    optimizeGlobLists(await parseDefaultGlobsFile()),
+    nodeModulesPath
   );
 
-  return info;
+  const includedByDefaultMatcher = makeGlobMatcher(defaultGlobs.included, {
+    ignore: defaultGlobs.excluded,
+  });
+
+  const globMatchers = globLists.included.map((glob, index) => {
+    const absoluteGlob = path.resolve(nodeModulesPath, glob);
+    const matcher = makeGlobMatcher(absoluteGlob);
+    return { original: globLists.originalIncluded[index], derived: absoluteGlob, matcher };
+  });
+
+  const analyzedResults = includedFiles.map(filePath => {
+    const includedByDefault = includedByDefaultMatcher(filePath);
+    const includedByGlobs: { original: string; derived: string }[] = [];
+
+    globMatchers.forEach(({ original, derived, matcher }) => {
+      if (matcher(filePath)) {
+        includedByGlobs.push({ original, derived });
+      }
+    });
+
+    return { filePath, includedByDefault, includedByGlobs };
+  });
+
+  return analyzedResults;
 }

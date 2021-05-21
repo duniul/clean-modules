@@ -1,12 +1,27 @@
 import readline from 'readline';
 import supportsColor from 'supports-color';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function makeLogger(disabled = false): (message?: any, ...optionalParams: any[]) => void {
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  return disabled ? () => {} : console.log;
+type DisabledConsole = Console;
+
+/**
+ * Creates a conditional console logger.
+ */
+export function makeLogger({ disabled }: { disabled: boolean }): Console | DisabledConsole {
+  if (disabled) {
+    const noop = () => undefined;
+    return Object.keys(console.log).reduce((disabledConsole, key) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      disabledConsole[key as keyof Console] = noop as any;
+      return disabledConsole;
+    }, {} as DisabledConsole);
+  }
+
+  return console;
 }
 
+/**
+ * Prompts the user with a yes/no question and waits for the answer.
+ */
 export async function yesOrNo(query: string): Promise<boolean> {
   const rl = readline.createInterface({
     input: process.stdin,
@@ -21,19 +36,17 @@ export async function yesOrNo(query: string): Promise<boolean> {
   );
 }
 
-function color(colorCode: string) {
-  return `\x1b[${colorCode}m`;
-}
-
-function colorFunc(colorCode: string) {
+/**
+ * Simple string colorizer factory.
+ */
+function colorizer(colorCode: string) {
   if (!supportsColor.stdout) {
-    return (text: string | number) => text;
+    return (text: string | number) => String(text);
   }
 
-  return (text: string | number) => `${color(colorCode)}${text}${color('0')}`;
+  return (text: string | number) => `\x1b[${colorCode}m${text}\x1b[0m`;
 }
 
-export const bold = colorFunc('1');
-export const dim = colorFunc('32');
-export const underline = colorFunc('4');
-export const yellow = colorFunc('33');
+export const bold = colorizer('1');
+export const green = colorizer('32');
+export const yellow = colorizer('33');

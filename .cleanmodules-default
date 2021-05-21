@@ -1,0 +1,201 @@
+#
+# DIRECTORIES
+# Directory globs must end with either / or /* or /**
+#
+
+# test
+__tests__/
+test/
+tests/
+powered-test/
+
+# docs
+docs/
+doc/
+
+# IDE
+.idea/
+.vscode/
+
+# examples
+example/
+examples/
+
+# code coverage
+coverage/
+.nyc_output/
+.nycrc/
+
+# CI/CD
+.circleci/
+.github/
+
+# git
+.git/
+
+# other
+website/
+
+#
+# FILE EXTENSIONS
+#
+
+# tests
+*.test.*
+
+# source maps
+*.map
+
+# docs/text
+*.@(md|mkd|markdown|mdown)
+*.todo
+*.mustache
+*.asciidoc
+*.DOCS
+
+# compiled
+# include .ts files but not .d.ts
+\!(*.d).ts
+*.coffee
+
+# compressed
+*.zip
+*.7z
+*.rar
+*.tar
+*.tgz
+
+# images
+*.@(jpg|jpeg)
+*.png
+*.gif
+
+# compiled
+*.h
+*.c
+*.hpp
+*.cpp
+*.o
+*.mk
+
+# other
+*.log
+*.tlog
+*.patch
+*.sln
+*.pdb
+*.jst
+*.swp
+*.lock
+*.vcxproj*
+*.orig
+*.rej
+
+#
+# FILES
+#
+
+# build scripts/files
+makefile*
+gemfile*
+gulpfile*
+gruntfile*
+rakefile*
+
+# CI/CD
+Jenkinsfile
+.travis.yml
+.gitlab-ci.yml
+.appveyor.yml
+circle.yml
+
+# Mac OS
+.DS_Store
+
+# linters
+.eslintrc*
+.stylelintrc*
+stylelint.config.js
+.htmllintrc*
+htmllint.js
+.jshintrc*
+.lint
+tslint.json
+.lintignore
+.jshintignore
+.eslintignore
+
+# prettier
+.prettierrc*
+prettier.config.js
+
+# testing
+test.js
+jest.config.js
+karma.conf.js
+wallaby.js
+wallaby.conf.js
+.coveralls.yml
+
+# docs
+readme*
+changelog*
+changes*
+authors*
+contributors*
+contributing*
+notice*
+
+# licenses
+licen@(s|c)e
+licen@(s|c)e-mit
+licen@(s|c)e.txt
+licen@(s|c)e-mit.txt
+
+# typescript
+tsconfig.json
+.tsbuildinfo
+
+# npm
+.npmrc
+
+# ignore files
+.*ignore
+
+# yarn
+yarn.lock
+.yarnclean
+.yarn-metadata.json
+
+# git
+.gitmodules
+.gitattributes
+
+# configs
+.npmrc
+.babelrc
+.editorconfig
+.tern-project
+.flowconfig
+.documentup.json
+.yo-rc.json
+_config.yml
+bower.json
+renovate.json
+.vimrc*
+.zuul.yml
+.istanbul.yml
+.nycrc
+.jscsrc
+
+# other
+.dir-locals.el
+binding.gyp
+cakefile
+component.json
+composer.json
+contributors
+.jamignore
+.codecov.yml
+pom.xml
+.iml

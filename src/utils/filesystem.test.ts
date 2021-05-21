@@ -3,10 +3,47 @@ import mockFs from 'mock-fs';
 import {
   crawlDirFast,
   crawlDirWithChecks,
+  fileExists,
   forEachDirentAsync,
   readDirectory,
   removeEmptyDirsUp,
 } from './filesystem';
+
+describe('file exists', () => {
+  beforeEach(() => {
+    mockFs({
+      testdir: {
+        foo: '.',
+        bar: '.',
+      },
+    });
+  });
+
+  afterEach(() => {
+    mockFs.restore();
+  });
+
+  it('returns true if the file exists', async () => {
+    const result = await fileExists('testdir/foo');
+    expect(result).toBe(true);
+  });
+
+  it('returns false if the file does not exists', async () => {
+    const result = await fileExists('testdir/foo');
+    expect(result).toBe(true);
+  });
+
+  it("throws any error that isn't ENOENT", async () => {
+    fs.promises.stat = jest.fn(() => {
+      throw new Error('not an ENOENT!');
+    });
+
+    await expect(fileExists('testdir/foo')).rejects.toThrow('not an ENOENT!');
+
+    const mockAsyncStat = fs.promises.stat as jest.MockedFunction<typeof fs.promises.stat>;
+    mockAsyncStat.mockRestore();
+  });
+});
 
 describe('forEachDirentAsync', () => {
   beforeEach(() => {

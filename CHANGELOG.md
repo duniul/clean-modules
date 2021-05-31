@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/duniul/clean-modules/compare/v2.0.0...v2.0.1) (2021-05-31)
+
+
+### Bug Fixes
+
+* include `.cleanmodules-default` file ([61decf7](https://github.com/duniul/clean-modules/commit/61decf7fd9b635f35daba10a58e7464c4db26b4a))
+
 # [2.0.0](https://github.com/duniul/clean-modules/compare/v1.0.3...v2.0.0) (2021-05-31)
 
 

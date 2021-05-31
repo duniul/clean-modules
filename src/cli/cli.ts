@@ -2,7 +2,7 @@ import path from 'path';
 import { terminalWidth } from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import yargs from 'yargs/yargs';
-import { DEFAULT_GLOBS_FILE_NAME } from '../constants';
+import { DEFAULT_GLOBS_FILE_NAME, DEFAULT_USER_GLOBS_FILE_NAME } from '../constants';
 import { analyzeCommand } from './commands/analyzeCommand';
 import { cleanCommand } from './commands/cleanCommand';
 
@@ -57,7 +57,7 @@ yargs(hideBin(process.argv))
     alias: 'f',
     description: 'Path to a custom globs file.',
     type: 'string',
-    default: DEFAULT_GLOBS_FILE_NAME,
+    default: DEFAULT_USER_GLOBS_FILE_NAME,
   })
   .option('no-defaults', {
     alias: 'n',

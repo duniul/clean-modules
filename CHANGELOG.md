@@ -1,3 +1,28 @@
+# [2.0.0](https://github.com/duniul/clean-modules/compare/v1.0.3...v2.0.0) (2021-05-31)
+
+
+### Bug Fixes
+
+* **deps:** bump dependencies ([6aa9d55](https://github.com/duniul/clean-modules/commit/6aa9d556fe0fa42b70966c6e7788442dae7a3426))
+* don't fail on invalid file paths ([541ba1b](https://github.com/duniul/clean-modules/commit/541ba1b3ca033b90df414fdcf6cea5f655daf3ae))
+
+
+### chore
+
+* **node:** bump minimum Node version to Node 12 ([d6c66f2](https://github.com/duniul/clean-modules/commit/d6c66f2ab75ec03a573b848c396d74316fc085d6))
+
+
+### Features
+
+* add glob file support, make `analyze` a separate command ([43832f0](https://github.com/duniul/clean-modules/commit/43832f08582ef55f33c7ee481c949a267a8f8a1d))
+
+
+### BREAKING CHANGES
+
+* **node:** Node versions lower than 12 are no longer supported
+* path to node_modules should now be supplied to the --directory option instead of a positional
+* the --analyze option has been replaced by a separate command
+
 ## [1.0.4](https://github.com/duniul/clean-modules/compare/v1.0.3...v1.0.4) (2021-04-14)
 
 

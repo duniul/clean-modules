@@ -20,7 +20,7 @@ This CLI tool combines the features that I could not find in other tools:
 - ⚡️ Super fast, but still written in Node
 - 🔍 Allows analyzing results, like which pattern excluded which file
 
-# Screenshots
+## Screenshots
 
 <p align="center">
   <img alt="Small project" title="Small project" src="images/small-project.png" width="240" />
@@ -28,7 +28,7 @@ This CLI tool combines the features that I could not find in other tools:
   <img alt="Dry run" title="Dry run" src="images/dry-run.png" width="240" />
 </p>
 
-# Table of contents
+## Table of contents
 
 <details><summary>Click to open</summary>
 

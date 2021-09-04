@@ -29,10 +29,10 @@
     ".cleanmodules-default",
     "!.tsbuildinfo"
   ],
-  "bin": {
-    "clean-modules": "bin/cli.js"
-  },
+  "packageManager": "yarn@3.0.2",
+  "bin": "bin/cli.js",
   "scripts": {
+    "cli": "node bin/cli.js",
     "build": "rimraf lib && tsc",
     "dev": "tsc --watch",
     "test": "jest",
@@ -50,6 +50,7 @@
     "yargs": "^17.1.1"
   },
   "devDependencies": {
+    "@babel/core": "7.15.5",
     "@semantic-release/changelog": "5.0.1",
     "@semantic-release/git": "9.0.0",
     "@types/jest": "27.0.1",

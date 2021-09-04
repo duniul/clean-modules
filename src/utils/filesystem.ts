@@ -4,6 +4,11 @@ import path from 'path';
 export type DirentAction = (dirent: Dirent) => void;
 export type CheckPathFunc = (nextPath: string) => boolean;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function hasErrorCode(error: any, code: string): boolean {
+  return error?.code === code;
+}
+
 /**
  * Check if a file exists without throwing.
  */
@@ -12,8 +17,8 @@ export async function fileExists(filePath: string): Promise<boolean> {
     await fsAsync.stat(filePath);
 
     return true;
-  } catch (error) {
-    if (error.code === 'ENOENT') {
+  } catch (error: unknown) {
+    if (hasErrorCode(error, 'ENOENT')) {
       return false;
     }
 
@@ -43,8 +48,8 @@ export async function readDirectory(dirPath: string): Promise<string[]> {
   try {
     const files = await fsAsync.readdir(dirPath);
     return files;
-  } catch (error) {
-    if (error.code === 'ENOENT' || error.code === 'ENOTDIR') {
+  } catch (error: unknown) {
+    if (hasErrorCode(error, 'ENOENT') || hasErrorCode(error, 'ENOTDIR')) {
       return [];
     }
 

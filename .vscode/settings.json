@@ -1,0 +1,51 @@
+{
+  // Make VSCode warn about same commit lengths for everyone
+  "git.inputValidation": "warn",
+  "git.inputValidationLength": 100,
+  "git.inputValidationSubjectLength": 72,
+
+  // Insert correct new lines and remove redundant whitespace to keep POSIX-compliant
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
+
+  // Exclude frequently updated/large files that we usually don't care about
+  "files.watcherExclude": {
+    // VSCode defaults
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/**": true,
+    "**/.hg/store/**": true,
+
+    // custom
+    "**/dist/**": true,
+    "**/lib/**": true,
+    "**/coverage/**": true
+  },
+
+  // Treat .cleanmodules files as ignore files
+  "files.associations": {
+    ".cleanmodules*": "ignore",
+  },
+
+  // Ensure we use the same formatter for files
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "files.trimTrailingWhitespace": false // Markdown uses trailing whitespace for line breaks
+  },
+
+  // Use same TypeScript version as repo rather than local user version
+  "typescript.tsdk": "node_modules/typescript/lib",
+}

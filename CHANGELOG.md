@@ -1,3 +1,14 @@
+## [2.0.3](https://github.com/duniul/clean-modules/compare/v2.0.2...v2.0.3) (2021-09-04)
+
+
+### Bug Fixes
+
+* wrap globs with parantheses to prevent issues with scoped packages ([31b35c4](https://github.com/duniul/clean-modules/commit/31b35c4e7aa2bc7ffc76300bb9177c43f794940a))
+* **defaults:** improve globs for files with optional file extensions ([a71a8e4](https://github.com/duniul/clean-modules/commit/a71a8e4ca29a35e74806267e379a85c2e5764721))
+* **deps:** bump dependencies ([735bf95](https://github.com/duniul/clean-modules/commit/735bf9586bac7fab59f01170bf192090de274903))
+* **exclude:** make files included by dir globs excludable ([6d4eceb](https://github.com/duniul/clean-modules/commit/6d4ecebe33034be2a2997ebb93d8c1cb012f363a))
+* change --directory to expect a string ([#7](https://github.com/duniul/clean-modules/issues/7)) ([8e77f83](https://github.com/duniul/clean-modules/commit/8e77f830c5b523d47906f87c8e68a988e55f5cdf))
+
 ## [2.0.2](https://github.com/duniul/clean-modules/compare/v2.0.1...v2.0.2) (2021-05-31)
 
 

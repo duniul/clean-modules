@@ -50,7 +50,7 @@ yargs(hideBin(process.argv))
   .option('directory', {
     alias: 'D',
     description: 'Path to node_modules.',
-    type: 'boolean',
+    type: 'string',
     default: 'node_modules',
   })
   .option('glob-file', {

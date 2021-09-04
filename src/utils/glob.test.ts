@@ -114,24 +114,24 @@ describe('toAbsoluteGlobLists', () => {
 describe('wrapGlobs', () => {
   it('wraps globs into a single glob', () => {
     const result = wrapGlobs(['**/foo', '**/bar', '*/baz']);
-    expect(result).toEqual('@(**/foo|**/bar|*/baz)');
+    expect(result).toEqual('@((**/foo)|(**/bar)|(*/baz))');
   });
 
   it('prepends an optional prefix to the result', () => {
     const result = wrapGlobs(['**/foo', '**/bar', '*/baz'], 'hello');
-    expect(result).toEqual('hello@(**/foo|**/bar|*/baz)');
+    expect(result).toEqual('hello@((**/foo)|(**/bar)|(*/baz))');
   });
 });
 
 describe('optimizeGlobs', () => {
   it('splits globs by leading characters and merges into two globs', () => {
     const result = optimizeGlobs(['**/some', '*/where', 'over', '**/the', '/rainbow']);
-    expect(result).toEqual(['**/@(some|the)', '@(*/where|over|/rainbow)']);
+    expect(result).toEqual(['**/@((some)|(the))', '@((*/where)|(over)|(/rainbow))']);
   });
 
   it('normalizes leading globstars', () => {
     const result = optimizeGlobs(['**/**/**/one', '**/**/two', '**/three', '/**/four']);
-    expect(result).toEqual(['**/@(one|two|three|four)']);
+    expect(result).toEqual(['**/@((one)|(two)|(three)|(four))']);
   });
 });
 
@@ -261,9 +261,9 @@ describe('parseGlobsFile', () => {
     # this is a comment
     __test__/
     !goodstuff/
-    
+
     */dep/Makefile
-    
+
     *.ts
     !*.d.ts
     *.ext

@@ -1,7 +1,7 @@
 {
   "name": "clean-modules",
   "author": "Daniel Grefberg <hello@danielgrefberg.com>",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Clean up/prune unnecessary files and reduce the size of your `node_modules` directory. Useful for CI caches or for reducing the size of your AWS Lambdas/Azure Functions.",
   "main": "lib/index.js",
   "repository": {

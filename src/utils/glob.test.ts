@@ -145,22 +145,22 @@ describe('optimizeGlobLists', () => {
     });
 
     expect(result).toMatchInlineSnapshot(`
-      Object {
-        "excluded": Array [
-          "**/@(wrapMe/**|andMe/**)",
-          "@(notMe/**)",
-        ],
-        "included": Array [
-          "**/@(wrapMe/**|andMe/**)",
-          "@(notMe/**|*/andNotMe.js|/andNotMeEither.ts)",
-        ],
-        "includedDirs": Array [
-          "**/@(wrapMe|andMe)",
-          "@(notMe)",
-        ],
-        "originalIncluded": Array [],
-      }
-    `);
+Object {
+  "excluded": Array [
+    "**/@((wrapMe/**)|(andMe/**))",
+    "@((notMe/**))",
+  ],
+  "included": Array [
+    "**/@((wrapMe/**)|(andMe/**))",
+    "@((notMe/**)|(*/andNotMe.js)|(/andNotMeEither.ts))",
+  ],
+  "includedDirs": Array [
+    "**/@((wrapMe)|(andMe))",
+    "@((notMe))",
+  ],
+  "originalIncluded": Array [],
+}
+`);
   });
 });
 

@@ -19,11 +19,11 @@
   },
   "include": ["src"],
   "exclude": [
-    "../**/lib/**",
-    "../**/node_modules/**",
-    "../**/__snapshots__/**",
-    "../**/__fixtures__/**",
-    "../**/__tests__/**",
-    "../**/*.test.*"
+    "**/lib/**",
+    "**/node_modules/**",
+    "**/__snapshots__/**",
+    "**/__fixtures__/**",
+    "**/__tests__/**",
+    "**/*.test.*"
   ]
 }

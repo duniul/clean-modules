@@ -17,7 +17,15 @@ export async function findFilesToRemove(
   const checkDir = includedDirs ? makeGlobMatcher(includedDirs, picoOptions) : () => false;
   const checkFile = makeGlobMatcher(included, picoOptions);
 
-  return crawlDirWithChecks([], nodeModulesPath, checkDir, checkFile);
+  let filesToRemove = await crawlDirWithChecks([], nodeModulesPath, checkDir, checkFile);
+
+  if (excluded.length) {
+    // make another pass to ensure that files included by dir globs are
+    // matched with excluded globs too
+    filesToRemove = filesToRemove.filter(file => checkFile(file));
+  }
+
+  return filesToRemove;
 }
 
 export async function removeFiles(

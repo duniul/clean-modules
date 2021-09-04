@@ -65,10 +65,10 @@ export function toAbsoluteGlobLists(
 }
 
 /**
- * Wraps globs into one conditional glob (like `@(this|that)`).
+ * Wraps globs into one conditional glob (like `@((one/glob/path)|(another/glob/path))`).
  */
 export function wrapGlobs(globs: string[], prefix?: string): string {
-  return `${prefix || ''}@(${globs.join('|')})`;
+  return `${prefix || ''}@(${globs.map(glob => '(' + glob + ')').join('|')})`;
 }
 
 const GLOBSTAR_START_REGEX = /^(\/?\*\*\/)+/;

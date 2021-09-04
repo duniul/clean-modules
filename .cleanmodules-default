@@ -87,7 +87,7 @@ website/
 *.jst
 *.swp
 *.lock
-*.vcxproj*
+*.vcxproj*(.*)
 *.orig
 *.rej
 
@@ -96,11 +96,11 @@ website/
 #
 
 # build scripts/files
-makefile*
-gemfile*
-gulpfile*
-gruntfile*
-rakefile*
+makefile*(.*)
+gemfile*(.*)
+gulpfile*(.*)
+gruntfile*(.*)
+rakefile*(.*)
 
 # CI/CD
 Jenkinsfile
@@ -113,12 +113,11 @@ circle.yml
 .DS_Store
 
 # linters
-.eslintrc*
-.stylelintrc*
+.eslintrc*(.*)
 stylelint.config.js
-.htmllintrc*
+.htmllintrc*(.*)
 htmllint.js
-.jshintrc*
+.jshintrc*(.*)
 .lint
 tslint.json
 .lintignore
@@ -126,7 +125,7 @@ tslint.json
 .eslintignore
 
 # prettier
-.prettierrc*
+.prettierrc*(.*)
 prettier.config.js
 
 # testing
@@ -138,13 +137,13 @@ wallaby.conf.js
 .coveralls.yml
 
 # docs
-readme*
-changelog*
-changes*
-authors*
-contributors*
-contributing*
-notice*
+readme*(.*)
+changelog*(.*)
+changes*(.*)
+authors*(.*)
+contributors*(.*)
+contributing*(.*)
+notice*(.*)
 
 # licenses
 licen@(s|c)e
@@ -182,7 +181,7 @@ yarn.lock
 _config.yml
 bower.json
 renovate.json
-.vimrc*
+.vimrc*(.*)
 .zuul.yml
 .istanbul.yml
 .nycrc

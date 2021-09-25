@@ -1,3 +1,10 @@
+## [2.0.4](https://github.com/duniul/clean-modules/compare/v2.0.3...v2.0.4) (2021-09-25)
+
+
+### Bug Fixes
+
+* remove custom help and version options in favor of yargs builtins ([0f5fa14](https://github.com/duniul/clean-modules/commit/0f5fa148b81a6bca1650430596ebc34779a4b126))
+
 ## [2.0.3](https://github.com/duniul/clean-modules/compare/v2.0.2...v2.0.3) (2021-09-04)
 
 

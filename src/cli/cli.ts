@@ -23,18 +23,8 @@ yargs(hideBin(process.argv))
   .scriptName(SCRIPT_NAME)
   .wrap(printWidth)
   .usage(`${SCRIPT_NAME} 🧹\n`)
-  .option('help', {
-    alias: 'h',
-    description: 'Show this help text',
-    type: 'boolean',
-    global: true,
-  })
-  .option('version', {
-    alias: 'v',
-    description: 'Show script version',
-    type: 'boolean',
-    global: true,
-  })
+  .alias('v', 'version')
+  .alias('h', 'help')
   .option('include', {
     alias: 'i',
     description: 'Custom glob patterns for files to include',

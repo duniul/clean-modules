@@ -1,3 +1,10 @@
+## [2.0.5](https://github.com/duniul/clean-modules/compare/v2.0.4...v2.0.5) (2022-07-01)
+
+
+### Bug Fixes
+
+* fix path issues on Windows ([6a7fb5c](https://github.com/duniul/clean-modules/commit/6a7fb5c015d9f1869fa8b016d63c8cd390a5e2a1))
+
 ## [2.0.4](https://github.com/duniul/clean-modules/compare/v2.0.3...v2.0.4) (2021-09-25)
 
 

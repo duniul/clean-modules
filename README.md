@@ -268,6 +268,8 @@ what is used to match file paths under the hood.
 The same type of patterns are accepted by both the `--include`/`--exclude` arguments and the glob
 configuration file.
 
+**Like with .gitignore, globs should use forward-slashes as separators on all operative systems (including Windows)!**
+
 ### Example configuration file
 
 ```ignore

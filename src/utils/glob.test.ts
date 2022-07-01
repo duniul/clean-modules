@@ -91,7 +91,7 @@ describe('mergeGlobLists', () => {
 });
 
 describe('toAbsoluteGlobLists', () => {
-  it('prepends absolute paths to globs lists', () => {
+  it('prepends globs with absolute paths on all platforms', () => {
     const result = toAbsoluteGlobLists(
       {
         ...EMPTY_GLOB_LISTS,

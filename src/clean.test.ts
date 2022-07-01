@@ -1,5 +1,6 @@
 import fs from 'fs';
 import mockFs from 'mock-fs';
+import path from 'path';
 import { findFilesToRemove, removeEmptyDirs, removeFiles } from './clean';
 import { EMPTY_GLOB_LISTS, getMockedFileStructure } from './__fixtures__/fixtures';
 
@@ -30,13 +31,11 @@ describe('findFilesToRemove', () => {
       includedDirs: ['**/__tests__', '**/dep3'],
     });
 
-    expect(result).toMatchInlineSnapshot(`
-      Array [
-        "/node_modules/dep1/__tests__/test1.js",
-        "/node_modules/dep1/__tests__/test2.js",
-        "/node_modules/dep3/deeply/nested/file.ext",
-      ]
-    `);
+    expect(result).toEqual([
+      mockCwd + path.join('node_modules', 'dep1', '__tests__', 'test1.js'),
+      mockCwd + path.join('node_modules', 'dep1', '__tests__', 'test2.js'),
+      mockCwd + path.join('node_modules', 'dep3', 'deeply', 'nested', 'file.ext'),
+    ]);
   });
 
   it('includes files', async () => {
@@ -45,12 +44,10 @@ describe('findFilesToRemove', () => {
       included: ['**/deeply/nested/file.ext', '**/dep4/**'],
     });
 
-    expect(result).toMatchInlineSnapshot(`
-      Array [
-        "/node_modules/dep4/nonDefaultFile.ext",
-        "/node_modules/dep3/deeply/nested/file.ext",
-      ]
-    `);
+    expect(result).toEqual([
+      mockCwd + path.join('node_modules', 'dep4', 'nonDefaultFile.ext'),
+      mockCwd + path.join('node_modules', 'dep3', 'deeply', 'nested', 'file.ext'),
+    ]);
   });
 
   it('can exclude files and dirs by glob patterns', async () => {
@@ -60,11 +57,7 @@ describe('findFilesToRemove', () => {
       excluded: ['**/test*.js'],
     });
 
-    expect(result).toMatchInlineSnapshot(`
-      Array [
-        "/node_modules/dep2/file.js",
-      ]
-    `);
+    expect(result).toEqual([mockCwd + path.join('node_modules', 'dep2', 'file.js')]);
   });
 });
 

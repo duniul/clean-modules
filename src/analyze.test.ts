@@ -1,4 +1,5 @@
 import mockFs from 'mock-fs';
+import path from 'path';
 import { analyzeIncluded } from './analyze';
 import { EMPTY_GLOB_LISTS, getMockedFileStructure } from './__fixtures__/fixtures';
 
@@ -33,19 +34,23 @@ describe('analyzeIncluded', () => {
 
     expect(results).toEqual([
       {
-        filePath: '/node_modules/dep1/__tests__/test1.js',
+        filePath: mockCwd + path.join('node_modules', 'dep1', '__tests__', 'test1.js'),
         includedByDefault: true,
-        includedByGlobs: [{ derived: '/node_modules/**/__tests__/**', original: '__tests__' }],
+        includedByGlobs: [
+          { derived: mockCwd + 'node_modules/**/__tests__/**', original: '__tests__' },
+        ],
       },
       {
-        filePath: '/node_modules/dep1/__tests__/test2.js',
+        filePath: mockCwd + path.join('node_modules', 'dep1', '__tests__', 'test2.js'),
         includedByDefault: true,
-        includedByGlobs: [{ derived: '/node_modules/**/__tests__/**', original: '__tests__' }],
+        includedByGlobs: [
+          { derived: mockCwd + 'node_modules/**/__tests__/**', original: '__tests__' },
+        ],
       },
       {
-        filePath: '/node_modules/dep3/deeply/nested/file.ext',
+        filePath: mockCwd + path.join('node_modules', 'dep3', 'deeply', 'nested', 'file.ext'),
         includedByDefault: false,
-        includedByGlobs: [{ derived: '/node_modules/**/dep3/**', original: 'dep3' }],
+        includedByGlobs: [{ derived: mockCwd + 'node_modules/**/dep3/**', original: 'dep3' }],
       },
     ]);
   });
@@ -69,11 +74,12 @@ describe('analyzeIncluded', () => {
     });
 
     expect(results[0]).toHaveProperty('includedByGlobs', [
-      { derived: '/node_modules/**/file.js', original: 'file.js' },
+      { derived: mockCwd + 'node_modules/**/file.js', original: 'file.js' },
     ]);
+
     expect(results[1]).toHaveProperty('includedByGlobs', [
-      { derived: '/node_modules/**/*.json', original: '*.json' },
-      { derived: '/node_modules/**/tsconfig.json', original: 'tsconfig.json' },
+      { derived: mockCwd + 'node_modules/**/*.json', original: '*.json' },
+      { derived: mockCwd + 'node_modules/**/tsconfig.json', original: 'tsconfig.json' },
     ]);
   });
 });

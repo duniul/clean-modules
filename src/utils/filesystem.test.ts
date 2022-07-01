@@ -1,5 +1,6 @@
 import fs from 'fs';
 import mockFs from 'mock-fs';
+import path from 'path';
 import {
   crawlDirFast,
   crawlDirWithChecks,
@@ -177,7 +178,12 @@ describe('crawlDirFast', () => {
   it('appends all nested file paths to the provided array', async () => {
     const filePaths: string[] = [];
     await crawlDirFast(filePaths, 'a0');
-    expect(filePaths).toEqual(['a0/b0/c1', 'a0/b0/c2', 'a0/b0/c0/d2', 'a0/b0/c0/d1/e0/f0']);
+    expect(filePaths).toEqual([
+      path.join('a0', 'b0', 'c1'),
+      path.join('a0', 'b0', 'c2'),
+      path.join('a0', 'b0', 'c0', 'd2'),
+      path.join('a0', 'b0', 'c0', 'd1', 'e0', 'f0'),
+    ]);
   });
 
   it('does not throw if path is invalid', async () => {
@@ -232,7 +238,12 @@ describe('crawlDirWithChecks', () => {
 
     await crawlDirWithChecks(filePaths, 'a0', checkDir, checkFile);
 
-    expect(filePaths).toEqual(['a0/b0/c1', 'a0/b0/c2', 'a0/b0/c0/d2', 'a0/b0/c0/d1/e0/f0']);
+    expect(filePaths).toEqual([
+      path.join('a0', 'b0', 'c1'),
+      path.join('a0', 'b0', 'c2'),
+      path.join('a0', 'b0', 'c0', 'd2'),
+      path.join('a0', 'b0', 'c0', 'd1', 'e0', 'f0'),
+    ]);
     expect(checkDir).toHaveBeenCalledTimes(1);
     expect(checkFile).toHaveBeenCalledTimes(0);
   });

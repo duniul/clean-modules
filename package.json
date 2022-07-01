@@ -33,7 +33,7 @@
   "bin": "bin/cli.js",
   "scripts": {
     "cli": "node bin/cli.js",
-    "build": "rimraf lib && tsc",
+    "build": "rimraf lib && tsc  -p tsconfig.build.json",
     "dev": "tsc --watch",
     "test": "jest",
     "test:watch": "jest --watch",

@@ -1,4 +1,3 @@
-import path from 'path';
 import { findFilesToRemove } from './clean';
 import { GlobLists } from './types';
 import {
@@ -6,6 +5,7 @@ import {
   optimizeGlobLists,
   parseDefaultGlobsFile,
   toAbsoluteGlobLists,
+  toPosixPath,
 } from './utils/glob';
 
 interface GlobVersions {
@@ -34,7 +34,7 @@ export async function analyzeIncluded(
   });
 
   const globMatchers = globLists.included.map((glob, index) => {
-    const absoluteGlob = path.resolve(nodeModulesPath, glob);
+    const absoluteGlob = toPosixPath(nodeModulesPath) + '/' + glob;
     const matcher = makeGlobMatcher(absoluteGlob);
     return { original: globLists.originalIncluded[index], derived: absoluteGlob, matcher };
   });

@@ -91,7 +91,7 @@ export async function removeEmptyDirsUp(
  */
 export async function crawlDirFast(filePaths: string[], dirPath: string): Promise<void> {
   await forEachDirentAsync(dirPath, async dirent => {
-    const nextPath = `${dirPath}/${dirent.name}`;
+    const nextPath = dirPath + path.sep + dirent.name;
 
     if (dirent.isDirectory()) {
       await crawlDirFast(filePaths, nextPath);
@@ -111,7 +111,7 @@ export async function crawlDirWithChecks(
   checkFile: CheckPathFunc
 ): Promise<string[]> {
   await forEachDirentAsync(dirPath, async nextPathDirent => {
-    const nextPath = `${dirPath}/${nextPathDirent.name}`;
+    const nextPath = dirPath + path.sep + nextPathDirent.name;
 
     if (nextPathDirent.isDirectory()) {
       if (checkDir(nextPath)) {

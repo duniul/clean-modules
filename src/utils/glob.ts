@@ -52,15 +52,22 @@ export function mergeGlobLists(globListsA: GlobLists, globListsB: GlobLists): Gl
   };
 }
 
+/** Replaces path with forward slashes as separators if necessary. Globs should always have POSIX separators, even on Windows. */
+export function toPosixPath(pathStr: string): string {
+  return path.sep === '/' ? pathStr : pathStr.replace(/\\/g, '/');
+}
+
 /**
- * Appends an absolute path to all editable lists in a GlobLists object.
+ * Prepends an absolute path to all editable lists in a GlobLists object.
  */
 export function toAbsoluteGlobLists(
   globLists: GlobLists,
   absoluteNodeModulesPath: string
 ): GlobLists {
+  const absolutePathWithPosixSeparator = toPosixPath(absoluteNodeModulesPath);
+
   return updateGlobLists(globLists, globs =>
-    globs.map(glob => path.resolve(absoluteNodeModulesPath, glob))
+    globs.map(glob => absolutePathWithPosixSeparator + '/' + glob)
   );
 }
 
@@ -178,6 +185,7 @@ export async function parseGlobsFile(filePath: string): Promise<GlobLists> {
 
   const fileGlobs =
     fileContents.split(/\r?\n/).filter(line => !line.match(COMMENT_OR_EMPTY_REGEX)) || [];
+
   return processGlobs(fileGlobs);
 }
 

@@ -1,5 +1,12 @@
 # clean-modules
 
+## 2.0.6
+
+### Patch Changes
+
+- [`c823749`](https://github.com/duniul/clean-modules/commit/c823749f6b6023538ed326d556c7c0f7f4cc8e0c)
+  Reduce `console` instead of `console.log` ([@duniul](https://github.com/duniul))
+
 ## 2.0.5
 
 ### Patch Changes

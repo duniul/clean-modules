@@ -253,7 +253,7 @@ way:
 
 ## Glob patterns and configuration file
 
-clean-modules accepts globs from either a configuration file (`.clean-modules` next to
+clean-modules accepts globs from either a configuration file (`.cleanmodules` next to
 `node_modules` by default) or CLI arguments. It uses
 [`.gitignore`-like](https://www.atlassian.com/git/tutorials/saving-changes/gitignore) glob patterns
 that are converted to valid [`picomatch`](https://github.com/micromatch/picomatch) globs, which is

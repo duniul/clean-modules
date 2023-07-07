@@ -4,7 +4,6 @@ import path from 'path';
 export type DirentAction = (dirent: Dirent) => void;
 export type CheckPathFunc = (nextPath: string) => boolean;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function hasErrorCode(error: any, code: string): boolean {
   return error?.code === code;
 }
@@ -73,12 +72,14 @@ export async function removeEmptyDirsUp(
     if (emptyDir) {
       try {
         await fsAsync.rmdir(dirPath);
+        // rome-ignore lint/style/noParameterAssign: recursive function
         count++;
       } catch (error) {
         // do nothing
       }
 
       const parentDir = path.dirname(dirPath);
+      // rome-ignore lint/style/noParameterAssign: recursive function
       count = await removeEmptyDirsUp(checkedDirs, parentDir, count);
     }
   }

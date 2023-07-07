@@ -1,3 +1,0 @@
-{
-  "extends": ["acast", "acast/typescript"]
-}

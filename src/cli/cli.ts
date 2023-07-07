@@ -2,7 +2,7 @@ import path from 'path';
 import { terminalWidth } from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import yargs from 'yargs/yargs';
-import { DEFAULT_GLOBS_FILE_NAME, DEFAULT_USER_GLOBS_FILE_NAME } from '../constants';
+import { DEFAULT_USER_GLOBS_FILE_NAME } from '../constants';
 import { analyzeCommand } from './commands/analyzeCommand';
 import { cleanCommand } from './commands/cleanCommand';
 

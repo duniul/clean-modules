@@ -9,7 +9,6 @@ export const EMPTY_GLOB_LISTS: GlobLists = {
   originalIncluded: [],
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getMockedFileStructure(nodeModulesPath: string): Record<string, any> {
   const stringifiedDefaultGlobs = fs.readFileSync(DEFAULT_GLOBS_FILE_PATH).toString();
 

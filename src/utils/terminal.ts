@@ -10,7 +10,6 @@ export function makeLogger({ disabled }: { disabled: boolean }): Console | Disab
   if (disabled) {
     const noop = () => undefined;
     return Object.keys(console).reduce((disabledConsole, key) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       disabledConsole[key as keyof Console] = noop as any;
       return disabledConsole;
     }, {} as DisabledConsole);

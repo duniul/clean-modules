@@ -1,5 +1,6 @@
 import mockFs from 'mock-fs';
 import path from 'path';
+import { afterEach, beforeEach, describe, expect, it, SpyInstance, vi } from 'vitest';
 import { analyzeIncluded } from './analyze';
 import { EMPTY_GLOB_LISTS, getMockedFileStructure } from './__fixtures__/fixtures';
 
@@ -7,10 +8,10 @@ const mockCwd = '/';
 const mockNodeModulesPath = mockCwd + 'node_modules';
 const mockedFileStructure = getMockedFileStructure(mockNodeModulesPath);
 
-let cwdSpy: jest.SpyInstance<string, []>;
+let cwdSpy: SpyInstance<[], string>;
 
 beforeEach(() => {
-  cwdSpy = jest.spyOn(process, 'cwd').mockReturnValue(mockCwd);
+  cwdSpy = vi.spyOn(process, 'cwd').mockReturnValue(mockCwd);
   mockFs(mockedFileStructure);
 });
 

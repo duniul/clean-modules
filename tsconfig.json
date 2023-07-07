@@ -12,7 +12,7 @@
     "emitDecoratorMetadata": true,
     "incremental": true,
     "skipLibCheck": true,
-    "types": ["node", "jest", "jest-os-detection"],
+    "types": ["node"],
     "composite": true,
     "declaration": true,
     "removeComments": true

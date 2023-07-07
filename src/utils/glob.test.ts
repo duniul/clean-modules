@@ -1,5 +1,6 @@
 import mockFs from 'mock-fs';
 import pm from 'picomatch';
+import { afterEach, describe, expect, it, Mock, vi } from 'vitest';
 import { DEFAULT_PICO_OPTIONS } from '../constants';
 import { GlobLists } from '../types';
 import { EMPTY_GLOB_LISTS } from '../__fixtures__/fixtures';
@@ -16,9 +17,9 @@ import {
   wrapGlobs,
 } from './glob';
 
-jest.mock('picomatch');
+vi.mock('picomatch');
 
-const mockedPm = pm as unknown as jest.Mock<typeof pm>;
+const mockedPm = pm as unknown as Mock<[], typeof pm>;
 
 describe('makeGlobMatcher', () => {
   it('creates a picomatch globber with default options', () => {
@@ -42,7 +43,7 @@ describe('updateGlobLists', () => {
   };
 
   it('runs passed function for correct files', () => {
-    const mockFn = jest.fn();
+    const mockFn = vi.fn();
 
     updateGlobLists(mockGlobLists, mockFn);
 
@@ -145,22 +146,22 @@ describe('optimizeGlobLists', () => {
     });
 
     expect(result).toMatchInlineSnapshot(`
-Object {
-  "excluded": Array [
-    "**/@((wrapMe/**)|(andMe/**))",
-    "@((notMe/**))",
-  ],
-  "included": Array [
-    "**/@((wrapMe/**)|(andMe/**))",
-    "@((notMe/**)|(*/andNotMe.js)|(/andNotMeEither.ts))",
-  ],
-  "includedDirs": Array [
-    "**/@((wrapMe)|(andMe))",
-    "@((notMe))",
-  ],
-  "originalIncluded": Array [],
-}
-`);
+      {
+        "excluded": [
+          "**/@((wrapMe/**)|(andMe/**))",
+          "@((notMe/**))",
+        ],
+        "included": [
+          "**/@((wrapMe/**)|(andMe/**))",
+          "@((notMe/**)|(*/andNotMe.js)|(/andNotMeEither.ts))",
+        ],
+        "includedDirs": [
+          "**/@((wrapMe)|(andMe))",
+          "@((notMe))",
+        ],
+        "originalIncluded": [],
+      }
+    `);
   });
 });
 
@@ -195,19 +196,19 @@ describe('processGlobs', () => {
   it('formats globs and splits them into include/exclude glob lists', () => {
     const result = processGlobs(['**/test', '!test.js', '**/path/to/directory/', '*.ext']);
     expect(result).toMatchInlineSnapshot(`
-      Object {
-        "excluded": Array [
+      {
+        "excluded": [
           "**/test.js",
         ],
-        "included": Array [
+        "included": [
           "**/**/test",
           "**/**/path/to/directory/**",
           "**/*.ext",
         ],
-        "includedDirs": Array [
+        "includedDirs": [
           "**/**/path/to/directory",
         ],
-        "originalIncluded": Array [
+        "originalIncluded": [
           "**/test",
           "**/path/to/directory/",
           "*.ext",
@@ -223,7 +224,7 @@ describe('processGlobs', () => {
     );
 
     expect(result.excluded).toMatchInlineSnapshot(`
-      Array [
+      [
         "**/**/notThis",
         "**/orThat.js",
         "**/**/not/this/either/**",
@@ -273,21 +274,21 @@ describe('parseGlobsFile', () => {
     const result = await parseGlobsFile(globFilePath);
 
     expect(result).toMatchInlineSnapshot(`
-      Object {
-        "excluded": Array [
+      {
+        "excluded": [
           "**/goodstuff/**",
           "**/*.d.ts",
         ],
-        "included": Array [
+        "included": [
           "**/__test__/**",
           "**/*/dep/Makefile",
           "**/*.ts",
           "**/*.ext",
         ],
-        "includedDirs": Array [
+        "includedDirs": [
           "**/__test__",
         ],
-        "originalIncluded": Array [
+        "originalIncluded": [
           "__test__/",
           "*/dep/Makefile",
           "*.ts",

@@ -1,6 +1,7 @@
 import fs from 'fs';
 import mockFs from 'mock-fs';
 import path from 'path';
+import { afterEach, beforeEach, describe, expect, it, MockedFunction, vi } from 'vitest';
 import {
   crawlDirFast,
   crawlDirWithChecks,
@@ -35,13 +36,13 @@ describe('file exists', () => {
   });
 
   it("throws any error that isn't ENOENT", async () => {
-    fs.promises.stat = jest.fn(() => {
+    fs.promises.stat = vi.fn(() => {
       throw new Error('not an ENOENT!');
     });
 
     await expect(fileExists('testdir/foo')).rejects.toThrow('not an ENOENT!');
 
-    const mockAsyncStat = fs.promises.stat as jest.MockedFunction<typeof fs.promises.stat>;
+    const mockAsyncStat = fs.promises.stat as MockedFunction<typeof fs.promises.stat>;
     mockAsyncStat.mockRestore();
   });
 });
@@ -62,7 +63,7 @@ describe('forEachDirentAsync', () => {
   });
 
   it('runs action with dirents for each item in a directory', async () => {
-    const action = jest.fn();
+    const action = vi.fn();
     await forEachDirentAsync('testdir', action);
 
     expect(action).toHaveBeenCalledTimes(3);
@@ -223,8 +224,8 @@ describe('crawlDirWithChecks', () => {
 
   it('runs check functions on each nested item', async () => {
     const filePaths: string[] = [];
-    const checkDir = jest.fn(() => false);
-    const checkFile = jest.fn(() => true);
+    const checkDir = vi.fn(() => false);
+    const checkFile = vi.fn(() => true);
 
     await crawlDirWithChecks(filePaths, 'a0', checkDir, checkFile);
     expect(checkDir).toHaveBeenCalledTimes(6);
@@ -233,8 +234,8 @@ describe('crawlDirWithChecks', () => {
 
   it('includes full dir without checking remaining items if checkDir returns true', async () => {
     const filePaths: string[] = [];
-    const checkDir = jest.fn(() => true);
-    const checkFile = jest.fn(() => true);
+    const checkDir = vi.fn(() => true);
+    const checkFile = vi.fn(() => true);
 
     await crawlDirWithChecks(filePaths, 'a0', checkDir, checkFile);
 
@@ -250,8 +251,8 @@ describe('crawlDirWithChecks', () => {
 
   it('skips file if checkFile function returns false', async () => {
     const filePaths: string[] = [];
-    const checkDir = jest.fn(() => false);
-    const checkFile = jest.fn(() => false);
+    const checkDir = vi.fn(() => false);
+    const checkFile = vi.fn(() => false);
 
     await crawlDirWithChecks(filePaths, 'a0', checkDir, checkFile);
 
@@ -261,8 +262,8 @@ describe('crawlDirWithChecks', () => {
 
   it('does not throw if path is invalid', async () => {
     const filePaths: string[] = [];
-    const checkDir = jest.fn(() => false);
-    const checkFile = jest.fn(() => false);
+    const checkDir = vi.fn(() => false);
+    const checkFile = vi.fn(() => false);
 
     expect(
       async () => await crawlDirWithChecks(filePaths, 'invalid/path', checkDir, checkFile)

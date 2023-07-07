@@ -35,8 +35,7 @@
     "cli": "node bin/cli.js",
     "build": "rimraf lib && tsc  -p tsconfig.build.json",
     "dev": "tsc --watch",
-    "test": "jest",
-    "test:watch": "jest --watch",
+    "test": "vitest",
     "prepare": "yarn build",
     "lint": "eslint src"
   },
@@ -52,7 +51,6 @@
     "@babel/core": "7.15.5",
     "@changesets/cli": "^2.24.2",
     "@changesets/get-github-info": "^0.5.1",
-    "@types/jest": "27.0.2",
     "@types/mock-fs": "4.13.1",
     "@types/node": "16",
     "@types/picomatch": "2.2.6",
@@ -60,12 +58,11 @@
     "@types/yargs": "17.0.3",
     "eslint": "7.32.0",
     "eslint-config-acast": "6.0.3",
-    "jest": "27.2.1",
-    "mock-fs": "5.1.1",
+    "mock-fs": "5.2.0",
     "prettier": "2.4.1",
     "prettier-plugin-organize-imports": "2.3.4",
     "rimraf": "3.0.2",
-    "ts-jest": "27.0.5",
-    "typescript": "4.4.3"
+    "typescript": "4.4.3",
+    "vitest": "^0.33.0"
   }
 }

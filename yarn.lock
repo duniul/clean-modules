@@ -1123,8 +1123,8 @@ __metadata:
     arg: ^5.0.1
     mock-fs: 5.2.0
     picomatch: ^2.3.0
-    prettier: 2.4.1
-    prettier-plugin-organize-imports: 2.3.4
+    prettier: 3.0.0
+    prettier-plugin-organize-imports: 3.2.2
     pretty-bytes: ^5.6.0
     pretty-ms: ^7.0.1
     rimraf: 3.0.2
@@ -3075,22 +3075,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier-plugin-organize-imports@npm:2.3.4":
-  version: 2.3.4
-  resolution: "prettier-plugin-organize-imports@npm:2.3.4"
+"prettier-plugin-organize-imports@npm:3.2.2":
+  version: 3.2.2
+  resolution: "prettier-plugin-organize-imports@npm:3.2.2"
   peerDependencies:
+    "@volar/vue-language-plugin-pug": ^1.0.4
+    "@volar/vue-typescript": ^1.0.4
     prettier: ">=2.0"
     typescript: ">=2.9"
-  checksum: 2298fcae0f16fd1a095cc3a33ba5d51b679b291518d404ad5eaca56fdcfbd55d35e26c5adffcb8664bfb45c2339b551b385cf03f48888c46d0348843d96024e1
+  peerDependenciesMeta:
+    "@volar/vue-language-plugin-pug":
+      optional: true
+    "@volar/vue-typescript":
+      optional: true
+  checksum: 28620ea73a0a518c93200c7ea17d38a26132db3f55a75954983dff3422d4dd2155515518422b7a68935736aa333b0406a51778053bd30133a57718090272bb5d
   languageName: node
   linkType: hard
 
-"prettier@npm:2.4.1":
-  version: 2.4.1
-  resolution: "prettier@npm:2.4.1"
+"prettier@npm:3.0.0":
+  version: 3.0.0
+  resolution: "prettier@npm:3.0.0"
   bin:
-    prettier: bin-prettier.js
-  checksum: cc6830588b401b0d742862fe9c46bc9118204fb307c3abe0e49e95b35ed23629573807ffdf9cdd65289c252a0bb51fc0171437f6626ee36378dea80f0ee80b91
+    prettier: bin/prettier.cjs
+  checksum: 6a832876a1552dc58330d2467874e5a0b46b9ccbfc5d3531eb69d15684743e7f83dc9fbd202db6270446deba9c82b79d24383d09924c462b457136a759425e33
   languageName: node
   linkType: hard
 

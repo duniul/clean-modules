@@ -1,6 +1,9 @@
-import mockFs from 'mock-fs';
-import { afterEach } from 'vitest';
+import { vol } from 'memfs';
+import { afterEach, vi } from 'vitest';
+
+vi.mock('fs');
+vi.mock('fs/promises');
 
 afterEach(() => {
-  mockFs.restore();
+  vol.reset();
 });

@@ -1,9 +1,9 @@
-import mockFs from 'mock-fs';
+import { vol } from 'memfs';
 import pm from 'picomatch';
-import { afterEach, describe, expect, it, Mock, vi } from 'vitest';
+import { describe, expect, it, Mock, vi } from 'vitest';
+import { EMPTY_GLOB_LISTS } from '../__test__/fixtures';
 import { DEFAULT_PICO_OPTIONS } from '../constants';
 import { GlobLists } from '../types';
-import { EMPTY_GLOB_LISTS } from '../__fixtures__/fixtures';
 import {
   formatGlob,
   makeGlobMatcher,
@@ -253,10 +253,6 @@ describe('processGlobs', () => {
 describe('parseGlobsFile', () => {
   const globFilePath = process.cwd() + '/.cleanmodules';
 
-  afterEach(() => {
-    mockFs.restore();
-  });
-
   it('loads globs from a glob file', async () => {
     const globFile = `
     # this is a comment
@@ -270,7 +266,7 @@ describe('parseGlobsFile', () => {
     *.ext
     `;
 
-    mockFs({ [globFilePath]: globFile });
+    vol.fromNestedJSON({ [globFilePath]: globFile });
     const result = await parseGlobsFile(globFilePath);
 
     expect(result).toMatchInlineSnapshot(`
@@ -306,7 +302,7 @@ describe('parseGlobsFile', () => {
     path/to/something
     `;
 
-    mockFs({ [globFilePath]: globFile });
+    vol.fromNestedJSON({ [globFilePath]: globFile });
     const result = await parseGlobsFile(globFilePath);
     expect(result.included).toEqual(['**/path/to/something']);
     expect(result.excluded).toEqual([]);
@@ -319,7 +315,7 @@ describe('parseGlobsFile', () => {
 
     `;
 
-    mockFs({ [globFilePath]: globFile });
+    vol.fromNestedJSON({ [globFilePath]: globFile });
     const result = await parseGlobsFile(globFilePath);
     expect(result.included).toEqual(['**/path/to/something']);
     expect(result.excluded).toEqual([]);
@@ -330,7 +326,7 @@ describe('parseGlobsFile', () => {
     !excludeMe
     `;
 
-    mockFs({ [globFilePath]: globFile });
+    vol.fromNestedJSON({ [globFilePath]: globFile });
     const result = await parseGlobsFile(globFilePath);
     expect(result.included).toEqual([]);
     expect(result.excluded).toEqual(['**/excludeMe']);

@@ -17,7 +17,7 @@
     "declaration": true,
     "removeComments": true
   },
-  "include": ["src"],
+  "include": ["src", "__mocks__", "src/__test__"],
   "exclude": [
     "**/lib/**",
     "**/node_modules/**"

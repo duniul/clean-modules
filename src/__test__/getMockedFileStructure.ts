@@ -1,20 +1,14 @@
 import fs from 'fs';
+import { vi } from 'vitest';
 import { DEFAULT_GLOBS_FILE_PATH } from '../constants';
-import { GlobLists } from '../types';
 
-export const EMPTY_GLOB_LISTS: GlobLists = {
-  included: [],
-  includedDirs: [],
-  excluded: [],
-  originalIncluded: [],
-};
-
-export function getMockedFileStructure(nodeModulesPath: string): Record<string, any> {
-  const stringifiedDefaultGlobs = fs.readFileSync(DEFAULT_GLOBS_FILE_PATH).toString();
+export async function getMockedFileStructure(): Promise<Record<string, any>> {
+  const actualFs = await vi.importActual<typeof fs.promises>('fs/promises');
+  const defaultGlobs = (await actualFs.readFile(DEFAULT_GLOBS_FILE_PATH)).toString();
 
   return {
-    [DEFAULT_GLOBS_FILE_PATH]: stringifiedDefaultGlobs,
-    [nodeModulesPath]: {
+    [DEFAULT_GLOBS_FILE_PATH]: defaultGlobs,
+    node_modules: {
       dep1: {
         __tests__: {
           'test1.js': '.',

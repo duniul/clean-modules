@@ -1,74 +1,62 @@
 import fs from 'fs';
-import mockFs from 'mock-fs';
+import { vol } from 'memfs';
 import path from 'path';
-import { afterEach, beforeEach, describe, expect, it, SpyInstance, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { EMPTY_GLOB_LISTS } from './__test__/fixtures';
+import { getMockedFileStructure } from './__test__/getMockedFileStructure';
 import { findFilesToRemove, removeEmptyDirs, removeFiles } from './clean';
-import { EMPTY_GLOB_LISTS, getMockedFileStructure } from './__fixtures__/fixtures';
 
-const mockCwd = '/';
-const mockNodeModulesPath = mockCwd + 'node_modules';
-const mockedFileStructure = getMockedFileStructure(mockNodeModulesPath);
+const nodeModulesPath = 'node_modules';
 
-let cwdSpy: SpyInstance<[], string>;
-
-beforeEach(() => {
-  cwdSpy = vi.spyOn(process, 'cwd').mockReturnValue(mockCwd);
-  mockFs(mockedFileStructure);
+beforeEach(async () => {
+  const fileStructure = await getMockedFileStructure();
+  vol.fromNestedJSON(fileStructure);
 });
 
 afterEach(() => {
-  cwdSpy.mockRestore();
-  mockFs.restore();
+  vol.reset();
 });
 
 describe('findFilesToRemove', () => {
-  beforeEach(() => {
-    mockFs(mockedFileStructure);
-  });
-
   it('includes dirs', async () => {
-    const result = await findFilesToRemove(mockNodeModulesPath, {
+    const result = await findFilesToRemove(nodeModulesPath, {
       ...EMPTY_GLOB_LISTS,
       includedDirs: ['**/__tests__', '**/dep3'],
     });
 
     expect(result).toEqual([
-      mockCwd + path.join('node_modules', 'dep1', '__tests__', 'test1.js'),
-      mockCwd + path.join('node_modules', 'dep1', '__tests__', 'test2.js'),
-      mockCwd + path.join('node_modules', 'dep3', 'deeply', 'nested', 'file.ext'),
+      path.join('node_modules', 'dep1', '__tests__', 'test1.js'),
+      path.join('node_modules', 'dep1', '__tests__', 'test2.js'),
+      path.join('node_modules', 'dep3', 'deeply', 'nested', 'file.ext'),
     ]);
   });
 
   it('includes files', async () => {
-    const result = await findFilesToRemove(mockNodeModulesPath, {
+    const result = await findFilesToRemove(nodeModulesPath, {
       ...EMPTY_GLOB_LISTS,
       included: ['**/deeply/nested/file.ext', '**/dep4/**'],
     });
 
     expect(result).toEqual([
-      mockCwd + path.join('node_modules', 'dep4', 'nonDefaultFile.ext'),
-      mockCwd + path.join('node_modules', 'dep3', 'deeply', 'nested', 'file.ext'),
+      path.join('node_modules', 'dep4', 'nonDefaultFile.ext'),
+      path.join('node_modules', 'dep3', 'deeply', 'nested', 'file.ext'),
     ]);
   });
 
   it('can exclude files and dirs by glob patterns', async () => {
-    const result = await findFilesToRemove(mockNodeModulesPath, {
+    const result = await findFilesToRemove(nodeModulesPath, {
       ...EMPTY_GLOB_LISTS,
       included: ['**/*.js'],
       excluded: ['**/test*.js'],
     });
 
-    expect(result).toEqual([mockCwd + path.join('node_modules', 'dep2', 'file.js')]);
+    expect(result).toEqual([path.join('node_modules', 'dep2', 'file.js')]);
   });
 });
 
 describe('removeFiles', () => {
-  beforeEach(() => {
-    mockFs(mockedFileStructure);
-  });
-
   it('removes files at provided file paths', async () => {
-    const filePaths = ['/node_modules/dep1/__tests__/test1.js', '/node_modules/dep1/a-dir/doc.md'];
+    const filePaths = ['node_modules/dep1/__tests__/test1.js', 'node_modules/dep1/a-dir/doc.md'];
 
     // files are initially there
     expect(fs.existsSync(filePaths[0])).toBe(true);
@@ -82,7 +70,7 @@ describe('removeFiles', () => {
   });
 
   it('does not remove files during dry runs', async () => {
-    const filePaths = ['/node_modules/dep1/__tests__/test1.js', '/node_modules/dep1/a-dir/doc.md'];
+    const filePaths = ['node_modules/dep1/__tests__/test1.js', 'node_modules/dep1/a-dir/doc.md'];
 
     await removeFiles(filePaths, { dryRun: true });
 
@@ -97,16 +85,12 @@ describe('removeFiles', () => {
 });
 
 describe('removeEmptyDirs', () => {
-  beforeEach(() => {
-    mockFs(mockedFileStructure);
-  });
-
   it('cleans up empty parent dirs for provided files', async () => {
     const filePaths = [
-      '/node_modules/dep1/__tests__/test1.js',
-      '/node_modules/dep1/a-dir/doc.md',
-      '/node_modules/dep2/tsconfig.json',
-      '/node_modules/dep2/file.js',
+      'node_modules/dep1/__tests__/test1.js',
+      'node_modules/dep1/a-dir/doc.md',
+      'node_modules/dep2/tsconfig.json',
+      'node_modules/dep2/file.js',
     ];
 
     // remove files before testing
@@ -114,9 +98,9 @@ describe('removeEmptyDirs', () => {
 
     await removeEmptyDirs(filePaths);
 
-    expect(fs.existsSync('/node_modules/dep1/__tests__')).toBe(true); // not empty and not removed
-    expect(fs.existsSync('/node_modules/dep1/a-dir')).toBe(false); // empty and removed
-    expect(fs.existsSync('/node_modules/dep2')).toBe(false); // empty and removed
+    expect(fs.existsSync('node_modules/dep1/__tests__')).toBe(true); // not empty and not removed
+    expect(fs.existsSync('node_modules/dep1/a-dir')).toBe(false); // empty and removed
+    expect(fs.existsSync('node_modules/dep2')).toBe(false); // empty and removed
   });
 
   it('does not throw if path is invalid', async () => {

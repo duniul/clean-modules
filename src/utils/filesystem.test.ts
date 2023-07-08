@@ -1,7 +1,7 @@
 import fs from 'fs';
-import mockFs from 'mock-fs';
+import { vol } from 'memfs';
 import path from 'path';
-import { afterEach, beforeEach, describe, expect, it, MockedFunction, vi } from 'vitest';
+import { beforeEach, describe, expect, it, MockedFunction, vi } from 'vitest';
 import {
   crawlDirFast,
   crawlDirWithChecks,
@@ -13,16 +13,12 @@ import {
 
 describe('file exists', () => {
   beforeEach(() => {
-    mockFs({
+    vol.fromNestedJSON({
       testdir: {
         foo: '.',
         bar: '.',
       },
     });
-  });
-
-  afterEach(() => {
-    mockFs.restore();
   });
 
   it('returns true if the file exists', async () => {
@@ -49,17 +45,13 @@ describe('file exists', () => {
 
 describe('forEachDirentAsync', () => {
   beforeEach(() => {
-    mockFs({
+    vol.fromNestedJSON({
       testdir: {
         foo: { 'foo-bar': '' },
         bar: '',
         baz: '',
       },
     });
-  });
-
-  afterEach(() => {
-    mockFs.restore();
   });
 
   it('runs action with dirents for each item in a directory', async () => {
@@ -89,11 +81,7 @@ describe('forEachDirentAsync', () => {
 
 describe('readDirectory', () => {
   beforeEach(() => {
-    mockFs({ 'parent/empty': { 'foo.txt': '', 'bar.txt': '' } });
-  });
-
-  afterEach(() => {
-    mockFs.restore();
+    vol.fromNestedJSON({ 'parent/empty': { 'foo.txt': '', 'bar.txt': '' } });
   });
 
   it('returns list of files in directory', async () => {
@@ -109,7 +97,7 @@ describe('readDirectory', () => {
 
 describe('removeEmptyDirsUp', () => {
   beforeEach(() => {
-    mockFs({
+    vol.fromNestedJSON({
       a0: {
         b0: {
           c0: {
@@ -121,10 +109,6 @@ describe('removeEmptyDirsUp', () => {
         },
       },
     });
-  });
-
-  afterEach(() => {
-    mockFs.restore();
   });
 
   it('recursively removes empty directories up in the file tree', async () => {
@@ -149,7 +133,7 @@ describe('removeEmptyDirsUp', () => {
 
 describe('crawlDirFast', () => {
   beforeEach(() => {
-    mockFs({
+    vol.fromNestedJSON({
       a0: {
         b0: {
           c0: {
@@ -170,10 +154,6 @@ describe('crawlDirFast', () => {
       a1: 'a1',
       a2: 'a2',
     });
-  });
-
-  afterEach(() => {
-    mockFs.restore();
   });
 
   it('appends all nested file paths to the provided array', async () => {
@@ -195,7 +175,7 @@ describe('crawlDirFast', () => {
 
 describe('crawlDirWithChecks', () => {
   beforeEach(() => {
-    mockFs({
+    vol.fromNestedJSON({
       a0: {
         b0: {
           c0: {
@@ -216,10 +196,6 @@ describe('crawlDirWithChecks', () => {
       a1: 'a1',
       a2: 'a2',
     });
-  });
-
-  afterEach(() => {
-    mockFs.restore();
   });
 
   it('runs check functions on each nested item', async () => {

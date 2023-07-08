@@ -1,32 +1,24 @@
-import mockFs from 'mock-fs';
+import { fs, vol } from 'memfs';
 import path from 'path';
-import { afterEach, beforeEach, describe, expect, it, SpyInstance, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { getMockedFileStructure } from './__test__/getMockedFileStructure';
 import { analyzeIncluded } from './analyze';
-import { EMPTY_GLOB_LISTS, getMockedFileStructure } from './__fixtures__/fixtures';
+import { EMPTY_GLOB_LISTS } from './__test__/fixtures';
 
-const mockCwd = '/';
-const mockNodeModulesPath = mockCwd + 'node_modules';
-const mockedFileStructure = getMockedFileStructure(mockNodeModulesPath);
+const nodeModulesPath = 'node_modules';
 
-let cwdSpy: SpyInstance<[], string>;
-
-beforeEach(() => {
-  cwdSpy = vi.spyOn(process, 'cwd').mockReturnValue(mockCwd);
-  mockFs(mockedFileStructure);
+beforeEach(async () => {
+  const fileStructure = await getMockedFileStructure();
+  vol.fromNestedJSON(fileStructure);
 });
 
 afterEach(() => {
-  cwdSpy.mockRestore();
-  mockFs.restore();
+  vol.reset();
 });
 
 describe('analyzeIncluded', () => {
-  beforeEach(() => {
-    mockFs(mockedFileStructure);
-  });
-
   it('returns expected result', async () => {
-    const results = await analyzeIncluded(mockNodeModulesPath, {
+    const results = await analyzeIncluded(nodeModulesPath, {
       ...EMPTY_GLOB_LISTS,
       included: ['**/__tests__/**', '**/dep3/**'],
       includedDirs: ['**/__tests__', '**/dep3'],
@@ -35,29 +27,25 @@ describe('analyzeIncluded', () => {
 
     expect(results).toEqual([
       {
-        filePath: mockCwd + path.join('node_modules', 'dep1', '__tests__', 'test1.js'),
+        filePath: path.join('node_modules', 'dep1', '__tests__', 'test1.js'),
         includedByDefault: true,
-        includedByGlobs: [
-          { derived: mockCwd + 'node_modules/**/__tests__/**', original: '__tests__' },
-        ],
+        includedByGlobs: [{ derived: 'node_modules/**/__tests__/**', original: '__tests__' }],
       },
       {
-        filePath: mockCwd + path.join('node_modules', 'dep1', '__tests__', 'test2.js'),
+        filePath: path.join('node_modules', 'dep1', '__tests__', 'test2.js'),
         includedByDefault: true,
-        includedByGlobs: [
-          { derived: mockCwd + 'node_modules/**/__tests__/**', original: '__tests__' },
-        ],
+        includedByGlobs: [{ derived: 'node_modules/**/__tests__/**', original: '__tests__' }],
       },
       {
-        filePath: mockCwd + path.join('node_modules', 'dep3', 'deeply', 'nested', 'file.ext'),
+        filePath: path.join('node_modules', 'dep3', 'deeply', 'nested', 'file.ext'),
         includedByDefault: false,
-        includedByGlobs: [{ derived: mockCwd + 'node_modules/**/dep3/**', original: 'dep3' }],
+        includedByGlobs: [{ derived: 'node_modules/**/dep3/**', original: 'dep3' }],
       },
     ]);
   });
 
   it('says if a file was excluded or not', async () => {
-    const results = await analyzeIncluded(mockNodeModulesPath, {
+    const results = await analyzeIncluded(nodeModulesPath, {
       ...EMPTY_GLOB_LISTS,
       included: ['**/tsconfig.json', '**/file.js'],
       originalIncluded: ['tsconfig.json', 'file.js'],
@@ -68,19 +56,19 @@ describe('analyzeIncluded', () => {
   });
 
   it('lists what globs (original and derived version) included the file', async () => {
-    const results = await analyzeIncluded(mockNodeModulesPath, {
+    const results = await analyzeIncluded(nodeModulesPath, {
       ...EMPTY_GLOB_LISTS,
       included: ['**/*.json', '**/tsconfig.json', '**/file.js'],
       originalIncluded: ['*.json', 'tsconfig.json', 'file.js'],
     });
 
     expect(results[0]).toHaveProperty('includedByGlobs', [
-      { derived: mockCwd + 'node_modules/**/file.js', original: 'file.js' },
+      { derived: 'node_modules/**/file.js', original: 'file.js' },
     ]);
 
     expect(results[1]).toHaveProperty('includedByGlobs', [
-      { derived: mockCwd + 'node_modules/**/*.json', original: '*.json' },
-      { derived: mockCwd + 'node_modules/**/tsconfig.json', original: 'tsconfig.json' },
+      { derived: 'node_modules/**/*.json', original: '*.json' },
+      { derived: 'node_modules/**/tsconfig.json', original: 'tsconfig.json' },
     ]);
   });
 });

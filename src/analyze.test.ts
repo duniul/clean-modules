@@ -47,34 +47,34 @@ describe('analyzeIncluded', () => {
   it('says if a file was excluded or not', async () => {
     const results = await analyzeIncluded(nodeModulesPath, {
       ...EMPTY_GLOB_LISTS,
-      included: ['**/tsconfig.json', '**/file.js'],
-      originalIncluded: ['tsconfig.json', 'file.js'],
+      included: ['**/CHANGELOG.md', '**/file.js'],
+      originalIncluded: ['CHANGELOG.md', 'file.js'],
     });
 
     const fileResult = results.find((r) => r.filePath.endsWith('file.js'));
-    const tsconfigResult = results.find((r) => r.filePath.endsWith('tsconfig.json'));
+    const changelogResult = results.find((r) => r.filePath.endsWith('CHANGELOG.md'));
 
     expect(fileResult).toHaveProperty('includedByDefault', false);
-    expect(tsconfigResult).toHaveProperty('includedByDefault', true);
+    expect(changelogResult).toHaveProperty('includedByDefault', true);
   });
 
   it('lists what globs (original and derived version) included the file', async () => {
     const results = await analyzeIncluded(nodeModulesPath, {
       ...EMPTY_GLOB_LISTS,
-      included: ['**/*.json', '**/tsconfig.json', '**/file.js'],
-      originalIncluded: ['*.json', 'tsconfig.json', 'file.js'],
+      included: ['**/*.md', '**/CHANGELOG.md', '**/file.js'],
+      originalIncluded: ['*.md', 'CHANGELOG.md', 'file.js'],
     });
 
     const fileResult = results.find((r) => r.filePath.endsWith('file.js'));
-    const tsconfigResult = results.find((r) => r.filePath.endsWith('tsconfig.json'));
+    const changelogResult = results.find((r) => r.filePath.endsWith('CHANGELOG.md'));
 
     expect(fileResult).toHaveProperty('includedByGlobs', [
       { derived: 'node_modules/**/file.js', original: 'file.js' },
     ]);
 
-    expect(tsconfigResult).toHaveProperty('includedByGlobs', [
-      { derived: 'node_modules/**/*.json', original: '*.json' },
-      { derived: 'node_modules/**/tsconfig.json', original: 'tsconfig.json' },
+    expect(changelogResult).toHaveProperty('includedByGlobs', [
+      { derived: 'node_modules/**/*.md', original: '*.md' },
+      { derived: 'node_modules/**/CHANGELOG.md', original: 'CHANGELOG.md' },
     ]);
   });
 });

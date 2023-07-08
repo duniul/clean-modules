@@ -20,7 +20,7 @@ export async function getMockedFileStructure(): Promise<Record<string, any>> {
         '.npmrc': '.',
       },
       dep2: {
-        'tsconfig.json': '.',
+        'CHANGELOG.md': '.',
         'file.js': '.',
       },
       dep3: {

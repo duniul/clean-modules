@@ -152,7 +152,6 @@ licen@(s|c)e.txt
 licen@(s|c)e-mit.txt
 
 # typescript
-tsconfig.json
 .tsbuildinfo
 
 # npm

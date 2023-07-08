@@ -89,7 +89,7 @@ describe('removeEmptyDirs', () => {
     const filePaths = [
       'node_modules/dep1/__tests__/test1.js',
       'node_modules/dep1/a-dir/doc.md',
-      'node_modules/dep2/tsconfig.json',
+      'node_modules/dep2/CHANGELOG.md',
       'node_modules/dep2/file.js',
     ];
 

@@ -1088,13 +1088,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"changesets-changelog-clean@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "changesets-changelog-clean@npm:1.0.0"
+"changesets-changelog-clean@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "changesets-changelog-clean@npm:1.1.0"
   dependencies:
     "@changesets/get-github-info": ^0.5.2
     "@changesets/types": ^5.2.1
-  checksum: 560d0f50335395c3a51fd3e6166d790d7c5a98858c225095fca7b59edb82bd4452f14429267cff67b4493b03aa1071c0ad618237527886b62114ce903f9778c4
+  checksum: f8252bc4aeba8b4332bae9e96eadc2229911605426334f72d03488f0161b81a9ca3d2d75bc3cb72b1564a29ccf809864863e3b6c0d0740a0773014d516e14c91
   languageName: node
   linkType: hard
 
@@ -1137,7 +1137,7 @@ __metadata:
     "@types/supports-color": 8.1.1
     "@types/yargs": 17.0.3
     arg: ^5.0.1
-    changesets-changelog-clean: ^1.0.0
+    changesets-changelog-clean: ^1.1.0
     mock-fs: 5.2.0
     picomatch: ^2.3.0
     prettier: 3.0.0

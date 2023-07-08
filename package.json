@@ -55,7 +55,7 @@
     "@types/picomatch": "2.2.6",
     "@types/supports-color": "8.1.1",
     "@types/yargs": "17.0.3",
-    "changesets-changelog-clean": "^1.0.0",
+    "changesets-changelog-clean": "^1.1.0",
     "mock-fs": "5.2.0",
     "prettier": "3.0.0",
     "prettier-plugin-organize-imports": "3.2.2",

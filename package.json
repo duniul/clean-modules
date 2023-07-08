@@ -38,7 +38,9 @@
     "test": "vitest",
     "prepare": "yarn build",
     "lint": "rome check src && prettier --check src",
-    "lint:fix": "rome check --apply src && prettier --write src"
+    "lint:fix": "rome check --apply src && prettier --write src",
+    "version": "changeset version",
+    "release": "changeset publish"
   },
   "dependencies": {
     "arg": "^5.0.1",

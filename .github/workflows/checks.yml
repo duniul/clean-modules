@@ -1,0 +1,65 @@
+name: 🕵️ Checks
+
+on:
+  workflow_dispatch:
+  push:
+    paths-ignore:
+      - '.vscode/**'
+      - 'images/**'
+      - '*.md'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: 🧱 Build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: 🏗 Setup repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: 🏗 Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18.x
+          cache: yarn
+
+      - name: 📦 Install dependencies
+        run: yarn install
+
+      - name: 🧱 Build project
+        run: yarn build
+
+  test:
+    name: 🧪 Test
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node-version: [14.x, 18.x]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: 🏗 Setup repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: 🏗 Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: yarn
+
+      - name: 📦 Install dependencies
+        run: yarn install
+
+      - name: 🧪 Run tests
+        run: yarn test

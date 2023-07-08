@@ -1,12 +1,12 @@
-import { findFilesToRemove } from './clean';
-import { GlobLists } from './types';
+import { findFilesToRemove } from './clean.js';
+import { GlobLists } from './types.js';
 import {
   makeGlobMatcher,
   optimizeGlobLists,
   parseDefaultGlobsFile,
   toAbsoluteGlobLists,
   toPosixPath,
-} from './utils/glob';
+} from './utils/glob.js';
 
 interface GlobVersions {
   original: string;

@@ -2,9 +2,9 @@ import fs from 'fs';
 import { vol } from 'memfs';
 import path from 'path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { EMPTY_GLOB_LISTS } from './__test__/fixtures';
-import { getMockedFileStructure } from './__test__/getMockedFileStructure';
-import { findFilesToRemove, removeEmptyDirs, removeFiles } from './clean';
+import { EMPTY_GLOB_LISTS } from './__test__/fixtures.js';
+import { getMockedFileStructure } from './__test__/getMockedFileStructure.js';
+import { findFilesToRemove, removeEmptyDirs, removeFiles } from './clean.js';
 
 const nodeModulesPath = 'node_modules';
 

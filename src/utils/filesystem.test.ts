@@ -9,7 +9,7 @@ import {
   forEachDirentAsync,
   readDirectory,
   removeEmptyDirsUp,
-} from './filesystem';
+} from './filesystem.js';
 
 describe('file exists', () => {
   beforeEach(() => {

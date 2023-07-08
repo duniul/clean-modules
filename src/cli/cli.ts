@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 
 import path from 'path';
-import { terminalWidth } from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import yargs from 'yargs/yargs';
-import { DEFAULT_USER_GLOBS_FILE_NAME } from '../constants';
-import { analyzeCommand } from './commands/analyzeCommand';
-import { cleanCommand } from './commands/cleanCommand';
+import { DEFAULT_USER_GLOBS_FILE_NAME } from '../constants.js';
+import { analyzeCommand } from './commands/analyzeCommand.js';
+import { cleanCommand } from './commands/cleanCommand.js';
 
 const SCRIPT_NAME = 'clean-modules';
 const CLEAN_DESCRIPTION =
@@ -19,11 +18,8 @@ function handleError(error: Error) {
   process.exit(1);
 }
 
-const printWidth = Math.min(Math.max(terminalWidth(), 50), 150);
-
 yargs(hideBin(process.argv))
   .scriptName(SCRIPT_NAME)
-  .wrap(printWidth)
   .usage(`${SCRIPT_NAME} 🧹\n`)
   .alias('v', 'version')
   .alias('h', 'help')

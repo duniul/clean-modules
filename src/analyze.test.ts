@@ -1,9 +1,9 @@
 import { fs, vol } from 'memfs';
 import path from 'path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { getMockedFileStructure } from './__test__/getMockedFileStructure';
-import { analyzeIncluded } from './analyze';
-import { EMPTY_GLOB_LISTS } from './__test__/fixtures';
+import { getMockedFileStructure } from './__test__/getMockedFileStructure.js';
+import { analyzeIncluded } from './analyze.js';
+import { EMPTY_GLOB_LISTS } from './__test__/fixtures.js';
 
 const nodeModulesPath = 'node_modules';
 

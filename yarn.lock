@@ -742,12 +742,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/yargs@npm:17.0.3":
-  version: 17.0.3
-  resolution: "@types/yargs@npm:17.0.3"
+"@types/yargs@npm:17.0.24":
+  version: 17.0.24
+  resolution: "@types/yargs@npm:17.0.24"
   dependencies:
     "@types/yargs-parser": "*"
-  checksum: 8c4e01f893f0b372a37efb2da2191b63793a25126e0b468c7eb8886176fec2a10f063d9718fa75f1fa00e82fbed4a614bb06661d968e4233be8a00468b94ac60
+  checksum: 5f3ac4dc4f6e211c1627340160fbe2fd247ceba002190da6cf9155af1798450501d628c9165a183f30a224fc68fa5e700490d740ff4c73e2cdef95bc4e8ba7bf
   languageName: node
   linkType: hard
 
@@ -1239,7 +1239,7 @@ __metadata:
     "@types/node": 16
     "@types/picomatch": 2.2.6
     "@types/supports-color": 8.1.1
-    "@types/yargs": 17.0.3
+    "@types/yargs": 17.0.24
     arg: ^5.0.1
     changesets-changelog-clean: ^1.1.0
     memfs: ^4.2.0
@@ -1253,7 +1253,7 @@ __metadata:
     tsup: ^7.1.0
     typescript: 5.1.6
     vitest: ^0.33.0
-    yargs: ^17.1.1
+    yargs: ^17.7.2
   bin:
     clean-modules: bin/cli.js
   languageName: unknown
@@ -4876,7 +4876,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yargs@npm:^17.1.1, yargs@npm:^17.7.1":
+"yargs@npm:^17.7.1, yargs@npm:^17.7.2":
   version: 17.7.2
   resolution: "yargs@npm:17.7.2"
   dependencies:

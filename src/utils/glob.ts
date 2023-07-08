@@ -1,9 +1,9 @@
 import { promises as fsAsync } from 'fs';
 import path from 'path';
 import pm from 'picomatch';
-import { DEFAULT_GLOBS_FILE_PATH, DEFAULT_PICO_OPTIONS } from '../constants';
-import { GlobLists, IncludedExcludedArgs } from '../types';
-import { fileExists } from './filesystem';
+import { DEFAULT_GLOBS_FILE_PATH, DEFAULT_PICO_OPTIONS } from '../constants.js';
+import { GlobLists, IncludedExcludedArgs } from '../types.js';
+import { fileExists } from './filesystem.js';
 
 export interface GlobberPicoOptions {
   dot?: boolean;

@@ -1,9 +1,9 @@
 import { vol } from 'memfs';
 import pm from 'picomatch';
 import { describe, expect, it, Mock, vi } from 'vitest';
-import { EMPTY_GLOB_LISTS } from '../__test__/fixtures';
-import { DEFAULT_PICO_OPTIONS } from '../constants';
-import { GlobLists } from '../types';
+import { EMPTY_GLOB_LISTS } from '../__test__/fixtures.js';
+import { DEFAULT_PICO_OPTIONS } from '../constants.js';
+import { GlobLists } from '../types.js';
 import {
   formatGlob,
   makeGlobMatcher,
@@ -15,7 +15,7 @@ import {
   toAbsoluteGlobLists,
   updateGlobLists,
   wrapGlobs,
-} from './glob';
+} from './glob.js';
 
 vi.mock('picomatch');
 

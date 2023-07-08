@@ -1,9 +1,9 @@
 import prettyBytes from 'pretty-bytes';
 import prettyMs from 'pretty-ms';
-import { findFilesToRemove, removeEmptyDirs, removeFiles } from '../..';
-import { IncludedExcludedArgs } from '../../types';
-import { getGlobLists } from '../../utils/glob';
-import { bold, green, makeLogger, yellow, yesOrNo } from '../../utils/terminal';
+import { findFilesToRemove, removeEmptyDirs, removeFiles } from '../../index.js';
+import { IncludedExcludedArgs } from '../../types.js';
+import { getGlobLists } from '../../utils/glob.js';
+import { bold, green, makeLogger, yellow, yesOrNo } from '../../utils/terminal.js';
 
 export interface CleanCommandProps {
   argGlobs: IncludedExcludedArgs;

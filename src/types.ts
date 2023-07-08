@@ -33,6 +33,6 @@ export interface IncludedExcludedArgs {
 export interface GlobLists {
   excluded: string[];
   included: string[];
-  includedDirs?: string[];
+  includedDirs?: string[] | undefined;
   originalIncluded: string[];
 }

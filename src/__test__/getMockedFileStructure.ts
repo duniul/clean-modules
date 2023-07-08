@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { vi } from 'vitest';
-import { DEFAULT_GLOBS_FILE_PATH } from '../constants';
+import { DEFAULT_GLOBS_FILE_PATH } from '../constants.js';
 
 export async function getMockedFileStructure(): Promise<Record<string, any>> {
   const actualFs = await vi.importActual<typeof fs.promises>('fs/promises');

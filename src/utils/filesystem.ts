@@ -1,5 +1,6 @@
 import { Dirent, promises as fsAsync } from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 export type DirentAction = (dirent: Dirent) => void;
 export type CheckPathFunc = (nextPath: string) => boolean;
@@ -128,4 +129,12 @@ export async function crawlDirWithChecks(
   });
 
   return filePaths;
+}
+
+/**
+ * Get directory of the file directory, like CommonJS `__dirname`.
+ * @example const thisFilesDir = fileDir(import.meta);
+ */
+export function fileDir(importMeta: ImportMeta) {
+  return path.dirname(fileURLToPath(importMeta.url));
 }

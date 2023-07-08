@@ -1,6 +1,6 @@
-import { analyzeIncluded } from '../../analyze';
-import { IncludedExcludedArgs } from '../../types';
-import { getGlobLists } from '../../utils/glob';
+import { analyzeIncluded } from '../../analyze.js';
+import { IncludedExcludedArgs } from '../../types.js';
+import { getGlobLists } from '../../utils/glob.js';
 
 export interface AnalyzeCommandProps {
   argGlobs: IncludedExcludedArgs;

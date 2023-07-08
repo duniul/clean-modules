@@ -1,3 +1,3 @@
-export { analyzeIncluded } from './analyze';
-export { findFilesToRemove, removeEmptyDirs, removeFiles } from './clean';
-export * from './types';
+export { analyzeIncluded } from './analyze.js';
+export { findFilesToRemove, removeEmptyDirs, removeFiles } from './clean.js';
+export * from './types.js';

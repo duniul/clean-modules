@@ -1,8 +1,8 @@
 import { promises as fsAsync } from 'fs';
 import path from 'path';
-import { GlobLists } from './types';
-import { crawlDirWithChecks, removeEmptyDirsUp } from './utils/filesystem';
-import { makeGlobMatcher, optimizeGlobLists, toAbsoluteGlobLists } from './utils/glob';
+import { GlobLists } from './types.js';
+import { crawlDirWithChecks, removeEmptyDirsUp } from './utils/filesystem.js';
+import { makeGlobMatcher, optimizeGlobLists, toAbsoluteGlobLists } from './utils/glob.js';
 
 export async function findFilesToRemove(
   nodeModulesPath: string,

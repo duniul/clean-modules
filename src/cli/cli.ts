@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import path from 'path';
 import { terminalWidth } from 'yargs';
 import { hideBin } from 'yargs/helpers';

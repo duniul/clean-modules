@@ -1,21 +1,14 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": ["@tsconfig/node14/tsconfig.json"],
   "compilerOptions": {
-    "target": "es2018",
-    "module": "commonjs",
-    "lib": ["es2018"],
-    "outDir": "lib",
-    "tsBuildInfoFile": "lib/.tsbuildinfo",
-    "esModuleInterop": true,
+    "outDir": "dist",
     "strict": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "incremental": true,
-    "skipLibCheck": true,
-    "types": ["node"],
-    "composite": true,
-    "declaration": true,
-    "removeComments": true
-  },
-  "include": ["src", "__mocks__", "src/__test__"],
-  "exclude": ["**/lib/**", "**/node_modules/**"]
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "exactOptionalPropertyTypes": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noImplicitOverride": true
+  }
 }

@@ -1,7 +1,8 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "types": ["node"]
+    "types": ["node"],
+    "rootDir": "src"
   },
   "exclude": [
     "**/lib/**",
@@ -9,6 +10,8 @@
     "**/__snapshots__/**",
     "**/__fixtures__/**",
     "**/__tests__/**",
-    "**/*.test.*"
+    "**/__test__/**",
+    "**/__mocks__/**",
+    "**/*.test.*",
   ]
 }

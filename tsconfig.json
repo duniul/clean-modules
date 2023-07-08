@@ -3,7 +3,6 @@
     "target": "es2018",
     "module": "commonjs",
     "lib": ["es2018"],
-    "rootDir": "src",
     "outDir": "lib",
     "tsBuildInfoFile": "lib/.tsbuildinfo",
     "esModuleInterop": true,
@@ -18,8 +17,5 @@
     "removeComments": true
   },
   "include": ["src", "__mocks__", "src/__test__"],
-  "exclude": [
-    "**/lib/**",
-    "**/node_modules/**"
-  ]
+  "exclude": ["**/lib/**", "**/node_modules/**"]
 }

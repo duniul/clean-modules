@@ -51,8 +51,11 @@ describe('analyzeIncluded', () => {
       originalIncluded: ['tsconfig.json', 'file.js'],
     });
 
-    expect(results[0]).toHaveProperty('includedByDefault', false);
-    expect(results[1]).toHaveProperty('includedByDefault', true);
+    const fileResult = results.find((r) => r.filePath.endsWith('file.js'));
+    const tsconfigResult = results.find((r) => r.filePath.endsWith('tsconfig.json'));
+
+    expect(fileResult).toHaveProperty('includedByDefault', false);
+    expect(tsconfigResult).toHaveProperty('includedByDefault', true);
   });
 
   it('lists what globs (original and derived version) included the file', async () => {
@@ -62,11 +65,14 @@ describe('analyzeIncluded', () => {
       originalIncluded: ['*.json', 'tsconfig.json', 'file.js'],
     });
 
-    expect(results[0]).toHaveProperty('includedByGlobs', [
+    const fileResult = results.find((r) => r.filePath.endsWith('file.js'));
+    const tsconfigResult = results.find((r) => r.filePath.endsWith('tsconfig.json'));
+
+    expect(fileResult).toHaveProperty('includedByGlobs', [
       { derived: 'node_modules/**/file.js', original: 'file.js' },
     ]);
 
-    expect(results[1]).toHaveProperty('includedByGlobs', [
+    expect(tsconfigResult).toHaveProperty('includedByGlobs', [
       { derived: 'node_modules/**/*.json', original: '*.json' },
       { derived: 'node_modules/**/tsconfig.json', original: 'tsconfig.json' },
     ]);

@@ -1,116 +1,24 @@
-#!/usr/bin/env node
+import { Builtins, Cli } from 'clipanion';
+import { createRequire } from 'node:module';
+import path from 'node:path';
+import { fileDir } from '../utils/filesystem.js';
+import { AnalyzeCommand } from './commands/analyze.command.js';
+import { CleanCommand } from './commands/clean.command.js';
 
-import path from 'path';
-import { hideBin } from 'yargs/helpers';
-import yargs from 'yargs/yargs';
-import { DEFAULT_USER_GLOBS_FILE_NAME } from '../constants.js';
-import { analyzeCommand } from './commands/analyzeCommand.js';
-import { cleanCommand } from './commands/cleanCommand.js';
+const [_node, _app, ...args] = process.argv;
+const esmRequire = createRequire(import.meta.url);
+const cliDir = fileDir(import.meta);
+const { name, version } = esmRequire(path.resolve(cliDir, '..', '..', 'package.json'));
 
-const SCRIPT_NAME = 'clean-modules';
-const CLEAN_DESCRIPTION =
-  'Removes unnecessary files to reduce the size of your node_modules directory.';
-const ANALYZE_DESCRIPTION =
-  'Helps determining why a file is included by the clean command without removing any files.';
+const cli = new Cli({
+  binaryLabel: name,
+  binaryVersion: version,
+  binaryName: name,
+});
 
-function handleError(error: Error) {
-  console.error(error);
-  process.exit(1);
-}
+cli.register(Builtins.HelpCommand);
+cli.register(Builtins.VersionCommand);
+cli.register(CleanCommand);
+cli.register(AnalyzeCommand);
 
-yargs(hideBin(process.argv))
-  .scriptName(SCRIPT_NAME)
-  .usage(`${SCRIPT_NAME} 🧹\n`)
-  .alias('v', 'version')
-  .alias('h', 'help')
-  .option('include', {
-    alias: 'i',
-    description: 'Custom glob patterns for files to include',
-    type: 'string',
-    array: true,
-  })
-  .option('exclude', {
-    alias: 'e',
-    description: 'Custom glob patterns for files to exclude',
-    type: 'string',
-    array: true,
-  })
-  .option('directory', {
-    alias: 'D',
-    description: 'Path to node_modules.',
-    type: 'string',
-    default: 'node_modules',
-  })
-  .option('glob-file', {
-    alias: 'f',
-    description: 'Path to a custom globs file.',
-    type: 'string',
-    default: DEFAULT_USER_GLOBS_FILE_NAME,
-  })
-  .option('no-defaults', {
-    alias: 'n',
-    description: 'Only includes/excludes globs specified by a custom glob file or CLI arguments.',
-    type: 'boolean',
-  })
-  .option('json', {
-    alias: 'j',
-    description: 'Only logs a final JSON dump at the end of the script.',
-    type: 'boolean',
-  })
-  .command(
-    '*',
-    CLEAN_DESCRIPTION,
-    yargsArgv => {
-      return yargsArgv
-        .usage('Usage:\n $ $0 [command] [options]')
-        .option('keep-empty', {
-          alias: 'k',
-          description: 'Skips removing empty folders after removing contents.',
-          type: 'boolean',
-          default: false,
-        })
-        .option('dry-run', {
-          alias: 'd',
-          description: 'Runs the script and prints results without removing any files.',
-          type: 'boolean',
-        })
-        .option('silent', {
-          alias: 's',
-          description: 'Does not log anything to console (unless --json is enabled).',
-          type: 'boolean',
-        })
-        .option('yes', {
-          alias: 'y',
-          description: 'Skips the confirmation prompt at the start of the script.',
-          type: 'boolean',
-        });
-    },
-    async args => {
-      await cleanCommand({
-        argGlobs: { included: args.include || [], excluded: args.exclude || [] },
-        nodeModulesPath: path.resolve(process.cwd(), args.directory),
-        useDefaultGlobs: args['defaults'] !== false,
-        userGlobsFilePath: args['glob-file'],
-        keepEmpty: args['keep-empty'],
-        dryRun: !!args['dry-run'],
-        json: !!args.json,
-        silent: !!args.silent,
-        yes: !!args.yes,
-      }).catch(handleError);
-    }
-  )
-  .command(
-    'analyze',
-    ANALYZE_DESCRIPTION,
-    yargsArgv => {
-      return yargsArgv.usage(`${ANALYZE_DESCRIPTION}\n\nUsage:\n $ $0 [options]`);
-    },
-    async args => {
-      await analyzeCommand({
-        argGlobs: { included: args.include || [], excluded: args.exclude || [] },
-        nodeModulesPath: path.resolve(process.cwd(), args.directory),
-        useDefaultGlobs: args['defaults'] !== false,
-        userGlobsFilePath: args['glob-file'],
-      }).catch(handleError);
-    }
-  ).argv;
+cli.runExit(args);

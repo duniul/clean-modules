@@ -735,22 +735,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/yargs-parser@npm:*":
-  version: 21.0.0
-  resolution: "@types/yargs-parser@npm:21.0.0"
-  checksum: b2f4c8d12ac18a567440379909127cf2cec393daffb73f246d0a25df36ea983b93b7e9e824251f959e9f928cbc7c1aab6728d0a0ff15d6145f66cec2be67d9a2
-  languageName: node
-  linkType: hard
-
-"@types/yargs@npm:17.0.24":
-  version: 17.0.24
-  resolution: "@types/yargs@npm:17.0.24"
-  dependencies:
-    "@types/yargs-parser": "*"
-  checksum: 5f3ac4dc4f6e211c1627340160fbe2fd247ceba002190da6cf9155af1798450501d628c9165a183f30a224fc68fa5e700490d740ff4c73e2cdef95bc4e8ba7bf
-  languageName: node
-  linkType: hard
-
 "@vitest/expect@npm:0.33.0":
   version: 0.33.0
   resolution: "@vitest/expect@npm:0.33.0"
@@ -1239,8 +1223,8 @@ __metadata:
     "@types/node": 16
     "@types/picomatch": 2.3.0
     "@types/supports-color": 8.1.1
-    "@types/yargs": 17.0.24
     changesets-changelog-clean: ^1.1.0
+    clipanion: ^3.2.1
     memfs: ^4.2.0
     picomatch: ^2.3.0
     prettier: 3.0.0
@@ -1252,7 +1236,6 @@ __metadata:
     tsup: ^7.1.0
     typescript: 5.1.6
     vitest: ^0.33.0
-    yargs: ^17.7.2
   bin:
     clean-modules: bin/cli.js
   languageName: unknown
@@ -1262,6 +1245,17 @@ __metadata:
   version: 2.2.0
   resolution: "clean-stack@npm:2.2.0"
   checksum: 2ac8cd2b2f5ec986a3c743935ec85b07bc174d5421a5efc8017e1f146a1cf5f781ae962618f416352103b32c9cd7e203276e8c28241bbe946160cab16149fb68
+  languageName: node
+  linkType: hard
+
+"clipanion@npm:^3.2.1":
+  version: 3.2.1
+  resolution: "clipanion@npm:3.2.1"
+  dependencies:
+    typanion: ^3.8.0
+  peerDependencies:
+    typanion: "*"
+  checksum: 448efd122ead3c802e61ba7a2002e2080c8cce01ce8a0a789d9b9e4f8fe70fd887dcf163ef8c778f5364a9e6f4b498b9f1853f709d7ed4291713e78bcfb88ee8
   languageName: node
   linkType: hard
 
@@ -4395,6 +4389,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"typanion@npm:^3.8.0":
+  version: 3.13.0
+  resolution: "typanion@npm:3.13.0"
+  checksum: 7d1506ab3a635ca5aaf84696829092f4cf6949c7995e950e0a744f55b4d4a824e2cf22278d37c323396188240d0003bd10de14a64da8e1ded3ddd71dcec2d146
+  languageName: node
+  linkType: hard
+
 "type-detect@npm:^4.0.0, type-detect@npm:^4.0.5":
   version: 4.0.8
   resolution: "type-detect@npm:4.0.8"
@@ -4873,7 +4874,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yargs@npm:^17.7.1, yargs@npm:^17.7.2":
+"yargs@npm:^17.7.1":
   version: 17.7.2
   resolution: "yargs@npm:17.7.2"
   dependencies:

@@ -14,6 +14,7 @@
 - 📁 Cleans up empty directories after removing files
 - ⚡️ Super fast, but still written in Node
 - 🔍 Allows analyzing results, like which pattern excluded which file
+- 🧑‍💻 Supports both CLI and programmatic usage
 
 <p align="center">
   <img alt="Small project" title="Small project" src="images/small-project.png" width="240" />
@@ -25,8 +26,8 @@
 
 <details><summary>Click to open</summary>
 
-- [Installation](#installation)
 - [Quick start](#quick-start)
+- [Installation](#installation)
 - [Commands](#commands)
   - [`clean-modules clean` (default command) 🧹](#clean-modules-clean-default-command-)
     - [Usage](#usage)
@@ -49,6 +50,7 @@
   - [Default globs](#default-globs)
     - [Common extra inclusions](#common-extra-inclusions)
     - [Common extra exclusions](#common-extra-exclusions)
+- [Programmatic usage](#programmatic-usage)
 - [Alternatives](#alternatives)
   - [Comparisons](#comparisons)
     - [clean-modules (this project)](#clean-modules-this-project)
@@ -56,7 +58,6 @@
     - [modclean](#modclean)
     - [node-prune](#node-prune)
     - [nm-prune](#nm-prune)
-
 
 </details>
 
@@ -295,6 +296,34 @@ custom exclusions depending on what packages you use.
 - `!**/*.map.js`: **If you are running `clean-modules` locally or need source files in production.**
   `clean-modules` removes sourcemap files by default since they take up a lot of space and does not
   break builds when removed. They can be nice to have though, especially while developing.
+
+## Programmatic usage
+
+Clean modules can be used programmatically too!
+
+Simply import the corresponding function from the package:
+
+````ts
+import { clean, analyze } from 'clean-modules';
+
+// analyze, all options are optional
+const analyzeResult = await analyze({
+  directory: '/path/to/node_modules',
+  globFile: '/path/to/.cleanmodules',
+  globs: ['**/*.js'],
+  noDefaults: false,
+});
+
+// clean, all options are optional
+const cleanResult = await clean({
+  directory: '/path/to/node_modules',
+  globFile: '/path/to/.cleanmodules',
+  globs: ['**/*.js'],
+  noDefaults: false,
+  keepEmpty: false,
+  dryRun: false,
+});
+````
 
 ## Alternatives
 

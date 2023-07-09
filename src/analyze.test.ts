@@ -1,80 +1,214 @@
-import { fs, vol } from 'memfs';
-import path from 'path';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { vol } from 'memfs';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { getMockedFileStructure } from './__test__/getMockedFileStructure.js';
-import { analyzeIncluded } from './analyze.js';
-import { EMPTY_GLOB_LISTS } from './__test__/fixtures.js';
+import { analyze } from './analyze.js';
 
-const nodeModulesPath = 'node_modules';
+const fileStructure = await getMockedFileStructure();
 
 beforeEach(async () => {
-  const fileStructure = await getMockedFileStructure();
   vol.fromNestedJSON(fileStructure);
 });
 
-afterEach(() => {
-  vol.reset();
-});
+describe(analyze.name, () => {
+  it('returns information about the files that would be removed', async () => {
+    const result = await analyze();
+    expect(result).toMatchInlineSnapshot(`
+      [
+        {
+          "filePath": "<CWD>/node_modules/dep1/.npmrc",
+          "includedByDefault": true,
+          "includedByGlobs": [
+            {
+              "derived": "<CWD>/node_modules/**/.npmrc",
+              "original": ".npmrc",
+            },
+            {
+              "derived": "<CWD>/node_modules/**/.npmrc",
+              "original": ".npmrc",
+            },
+          ],
+        },
+        {
+          "filePath": "<CWD>/node_modules/dep2/CHANGELOG.md",
+          "includedByDefault": true,
+          "includedByGlobs": [
+            {
+              "derived": "<CWD>/node_modules/**/*.@(md|mkd|markdown|mdown)",
+              "original": "*.@(md|mkd|markdown|mdown)",
+            },
+            {
+              "derived": "<CWD>/node_modules/**/changelog*(.*)",
+              "original": "changelog*(.*)",
+            },
+          ],
+        },
+        {
+          "filePath": "<CWD>/node_modules/dep1/__tests__/test1.js",
+          "includedByDefault": true,
+          "includedByGlobs": [
+            {
+              "derived": "<CWD>/node_modules/**/__tests__/**",
+              "original": "__tests__/",
+            },
+          ],
+        },
+        {
+          "filePath": "<CWD>/node_modules/dep1/__tests__/test2.js",
+          "includedByDefault": true,
+          "includedByGlobs": [
+            {
+              "derived": "<CWD>/node_modules/**/__tests__/**",
+              "original": "__tests__/",
+            },
+          ],
+        },
+        {
+          "filePath": "<CWD>/node_modules/dep1/a-dir/doc.md",
+          "includedByDefault": true,
+          "includedByGlobs": [
+            {
+              "derived": "<CWD>/node_modules/**/*.@(md|mkd|markdown|mdown)",
+              "original": "*.@(md|mkd|markdown|mdown)",
+            },
+          ],
+        },
+      ]
+    `);
+  })
 
-describe('analyzeIncluded', () => {
-  it('returns expected result', async () => {
-    const results = await analyzeIncluded(nodeModulesPath, {
-      ...EMPTY_GLOB_LISTS,
-      included: ['**/__tests__/**', '**/dep3/**'],
-      includedDirs: ['**/__tests__', '**/dep3'],
-      originalIncluded: ['__tests__', 'dep3'],
-    });
 
-    expect(results).toEqual([
-      {
-        filePath: path.join('node_modules', 'dep1', '__tests__', 'test1.js'),
-        includedByDefault: true,
-        includedByGlobs: [{ derived: 'node_modules/**/__tests__/**', original: '__tests__' }],
-      },
-      {
-        filePath: path.join('node_modules', 'dep1', '__tests__', 'test2.js'),
-        includedByDefault: true,
-        includedByGlobs: [{ derived: 'node_modules/**/__tests__/**', original: '__tests__' }],
-      },
-      {
-        filePath: path.join('node_modules', 'dep3', 'deeply', 'nested', 'file.ext'),
-        includedByDefault: false,
-        includedByGlobs: [{ derived: 'node_modules/**/dep3/**', original: 'dep3' }],
-      },
-    ]);
+  it('accepts custom globs', async () => {
+    const result = await analyze({ globs: ['**/nonDefaultFile.ext'] });
+    expect(result).toMatchInlineSnapshot(`
+      [
+        {
+          "filePath": "<CWD>/node_modules/dep1/.npmrc",
+          "includedByDefault": true,
+          "includedByGlobs": [
+            {
+              "derived": "<CWD>/node_modules/**/.npmrc",
+              "original": ".npmrc",
+            },
+            {
+              "derived": "<CWD>/node_modules/**/.npmrc",
+              "original": ".npmrc",
+            },
+          ],
+        },
+        {
+          "filePath": "<CWD>/node_modules/dep2/CHANGELOG.md",
+          "includedByDefault": true,
+          "includedByGlobs": [
+            {
+              "derived": "<CWD>/node_modules/**/*.@(md|mkd|markdown|mdown)",
+              "original": "*.@(md|mkd|markdown|mdown)",
+            },
+            {
+              "derived": "<CWD>/node_modules/**/changelog*(.*)",
+              "original": "changelog*(.*)",
+            },
+          ],
+        },
+        {
+          "filePath": "<CWD>/node_modules/dep4/nonDefaultFile.ext",
+          "includedByDefault": false,
+          "includedByGlobs": [
+            {
+              "derived": "<CWD>/node_modules/**/**/nonDefaultFile.ext",
+              "original": "**/nonDefaultFile.ext",
+            },
+          ],
+        },
+        {
+          "filePath": "<CWD>/node_modules/dep1/__tests__/test1.js",
+          "includedByDefault": true,
+          "includedByGlobs": [
+            {
+              "derived": "<CWD>/node_modules/**/__tests__/**",
+              "original": "__tests__/",
+            },
+          ],
+        },
+        {
+          "filePath": "<CWD>/node_modules/dep1/__tests__/test2.js",
+          "includedByDefault": true,
+          "includedByGlobs": [
+            {
+              "derived": "<CWD>/node_modules/**/__tests__/**",
+              "original": "__tests__/",
+            },
+          ],
+        },
+        {
+          "filePath": "<CWD>/node_modules/dep1/a-dir/doc.md",
+          "includedByDefault": true,
+          "includedByGlobs": [
+            {
+              "derived": "<CWD>/node_modules/**/*.@(md|mkd|markdown|mdown)",
+              "original": "*.@(md|mkd|markdown|mdown)",
+            },
+          ],
+        },
+      ]
+    `);
   });
 
-  it('says if a file was excluded or not', async () => {
-    const results = await analyzeIncluded(nodeModulesPath, {
-      ...EMPTY_GLOB_LISTS,
-      included: ['**/CHANGELOG.md', '**/file.js'],
-      originalIncluded: ['CHANGELOG.md', 'file.js'],
-    });
-
-    const fileResult = results.find((r) => r.filePath.endsWith('file.js'));
-    const changelogResult = results.find((r) => r.filePath.endsWith('CHANGELOG.md'));
-
-    expect(fileResult).toHaveProperty('includedByDefault', false);
-    expect(changelogResult).toHaveProperty('includedByDefault', true);
+  it('allows skipping default globs', async () => {
+    const result = await analyze({ noDefaults: true, globs: ['**/nonDefaultFile.ext'] });
+    expect(result).toMatchInlineSnapshot(`
+      [
+        {
+          "filePath": "<CWD>/node_modules/dep4/nonDefaultFile.ext",
+          "includedByDefault": false,
+          "includedByGlobs": [
+            {
+              "derived": "<CWD>/node_modules/**/**/nonDefaultFile.ext",
+              "original": "**/nonDefaultFile.ext",
+            },
+          ],
+        },
+      ]
+    `);
   });
 
-  it('lists what globs (original and derived version) included the file', async () => {
-    const results = await analyzeIncluded(nodeModulesPath, {
-      ...EMPTY_GLOB_LISTS,
-      included: ['**/*.md', '**/CHANGELOG.md', '**/file.js'],
-      originalIncluded: ['*.md', 'CHANGELOG.md', 'file.js'],
-    });
+  it('uses custom glob file if provided', async () => {
+    const customGlobFile = '.custom-glob-file';
+    vol.fromNestedJSON({ ...fileStructure, [customGlobFile]: '**.md\n**/nonDefaultFile.ext' });
 
-    const fileResult = results.find((r) => r.filePath.endsWith('file.js'));
-    const changelogResult = results.find((r) => r.filePath.endsWith('CHANGELOG.md'));
-
-    expect(fileResult).toHaveProperty('includedByGlobs', [
-      { derived: 'node_modules/**/file.js', original: 'file.js' },
-    ]);
-
-    expect(changelogResult).toHaveProperty('includedByGlobs', [
-      { derived: 'node_modules/**/*.md', original: '*.md' },
-      { derived: 'node_modules/**/CHANGELOG.md', original: 'CHANGELOG.md' },
-    ]);
+    const result = await analyze({ noDefaults: true, globFile: customGlobFile });
+    expect(result).toMatchInlineSnapshot(`
+      [
+        {
+          "filePath": "<CWD>/node_modules/dep2/CHANGELOG.md",
+          "includedByDefault": true,
+          "includedByGlobs": [
+            {
+              "derived": "<CWD>/node_modules/**/**.md",
+              "original": "**.md",
+            },
+          ],
+        },
+        {
+          "filePath": "<CWD>/node_modules/dep4/nonDefaultFile.ext",
+          "includedByDefault": false,
+          "includedByGlobs": [
+            {
+              "derived": "<CWD>/node_modules/**/**/nonDefaultFile.ext",
+              "original": "**/nonDefaultFile.ext",
+            },
+          ],
+        },
+        {
+          "filePath": "<CWD>/node_modules/dep1/a-dir/doc.md",
+          "includedByDefault": true,
+          "includedByGlobs": [
+            {
+              "derived": "<CWD>/node_modules/**/**.md",
+              "original": "**.md",
+            },
+          ],
+        },
+      ]
+    `);
   });
 });

@@ -1,6 +1,7 @@
-import { findFilesToRemove } from './clean.js';
-import { GlobLists } from './types.js';
+import { SharedOptions, sharedDefaultOptions } from './shared.js';
 import {
+  findFilesByGlobLists,
+  getGlobLists,
   makeGlobMatcher,
   optimizeGlobLists,
   parseDefaultGlobsFile,
@@ -8,22 +9,37 @@ import {
   toPosixPath,
 } from './utils/glob.js';
 
-interface GlobVersions {
+export interface GlobVersions {
+  /** The original glob, as provided by the glob file or user. */
   original: string;
+  /** The glob as it was derived by clean-modules and passed to picomatch. */
   derived: string;
 }
 
-interface AnalyzeIncludedResult {
+export interface AnalyzeResult {
+  /** The absolute path to the file. */
   filePath: string;
+  /** Whether the file was included by clean-modules' default globs. */
   includedByDefault: boolean;
+  /** List of globs that included the file. */
   includedByGlobs: GlobVersions[];
 }
 
-export async function analyzeIncluded(
-  nodeModulesPath: string,
-  globLists: GlobLists
-): Promise<AnalyzeIncludedResult[]> {
-  const includedFiles = await findFilesToRemove(nodeModulesPath, globLists);
+export type AnalyzeOptions = SharedOptions;
+
+/**
+ * Helps determining why a file is included by the `clean` operation without removing any files. Extra globs can be passed as positional args.
+ * @param options analyze options
+ * @returns list of files that were included by the clean operation and what globs they were included by
+ */
+export async function analyze(options: AnalyzeOptions = {}): Promise<AnalyzeResult[]> {
+  const mergedOptions = { ...sharedDefaultOptions, ...options };
+  const { globs, noDefaults, globFile, directory } = mergedOptions;
+  const nodeModulesPath = directory || sharedDefaultOptions.directory;
+
+  const globLists = await getGlobLists({ globs, noDefaults, globFile });
+  const includedFiles = await findFilesByGlobLists(nodeModulesPath, globLists);
+
   const defaultGlobs = toAbsoluteGlobLists(
     optimizeGlobLists(await parseDefaultGlobsFile()),
     nodeModulesPath

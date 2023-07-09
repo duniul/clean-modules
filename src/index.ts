@@ -1,3 +1,3 @@
-export { analyzeIncluded } from './analyze.js';
-export { findFilesToRemove, removeEmptyDirs, removeFiles } from './clean.js';
-export * from './types.js';
+export * from './analyze.js';
+export * from './clean.js';
+export { type SharedOptions } from './shared.js';

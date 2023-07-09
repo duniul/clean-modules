@@ -1,13 +1,18 @@
 import { promises as fsAsync } from 'fs';
 import path from 'path';
-import pm from 'picomatch';
-import { DEFAULT_GLOBS_FILE_PATH, DEFAULT_PICO_OPTIONS } from '../constants.js';
-import { GlobLists } from '../types.js';
-import { fileExists } from './filesystem.js';
+import pm, { PicomatchOptions } from 'picomatch';
+import { DEFAULT_GLOBS_FILE_PATH } from '../shared.js';
+import { crawlDirWithChecks, fileExists } from './filesystem.js';
 
-function initGlobLists(): GlobLists {
+export function initGlobLists(): GlobLists {
   return { excluded: [], included: [], includedDirs: [], originalIncluded: [] };
 }
+
+export const DEFAULT_PICO_OPTIONS: Partial<PicomatchOptions> = {
+  dot: true,
+  nocase: true,
+  strictSlashes: true,
+};
 
 export interface GlobberPicoOptions {
   dot?: boolean;
@@ -27,6 +32,13 @@ export function makeGlobMatcher(
   picoOptions?: GlobberPicoOptions
 ): GlobFunc {
   return pm(globs, { ...DEFAULT_PICO_OPTIONS, ...picoOptions });
+}
+
+export interface GlobLists {
+  excluded: string[];
+  included: string[];
+  includedDirs: string[];
+  originalIncluded: string[];
 }
 
 /**
@@ -196,33 +208,33 @@ export async function parseDefaultGlobsFile(): Promise<GlobLists> {
 }
 
 export interface GetGlobListsOptions {
-  argGlobs: string[];
-  useDefaultGlobs: boolean;
-  userGlobsFilePath: string;
+  noDefaults?: boolean | undefined;
+  globFile?: string | undefined;
+  globs?: string[] | undefined;
 }
 
 /**
  * Parses and combines globs from all possible sources.
  */
 export async function getGlobLists({
-  argGlobs,
-  useDefaultGlobs,
-  userGlobsFilePath,
+  noDefaults,
+  globFile,
+  globs,
 }: GetGlobListsOptions): Promise<GlobLists> {
   const globListsToMerge: GlobLists[] = [];
 
-  if (useDefaultGlobs) {
+  if (!noDefaults) {
     const defaultGlobLists = await parseDefaultGlobsFile();
     globListsToMerge.push(defaultGlobLists);
   }
 
-  if (userGlobsFilePath && (await fileExists(userGlobsFilePath))) {
-    const userFileGlobLists = await parseGlobsFile(userGlobsFilePath);
+  if (globFile && (await fileExists(globFile))) {
+    const userFileGlobLists = await parseGlobsFile(globFile);
     globListsToMerge.push(userFileGlobLists);
   }
 
-  if (argGlobs?.length) {
-    const argGlobsLists = processGlobs(argGlobs);
+  if (globs?.length) {
+    const argGlobsLists = processGlobs(globs);
     globListsToMerge.push(argGlobsLists);
   }
 
@@ -230,4 +242,34 @@ export async function getGlobLists({
     (mergedGlobLists, globLists) => mergeGlobLists(mergedGlobLists, globLists),
     initGlobLists()
   );
+}
+
+/**
+ * Finds all files matching the given glob lists in the given directory.
+ * @param directory the directory to search in
+ * @param globLists the glob lists to match against
+ * @returns a promise that resolves to an array of matching file paths
+ */
+export async function findFilesByGlobLists(
+  directory: string,
+  globLists: GlobLists
+): Promise<string[]> {
+  const { included, includedDirs, excluded } = toAbsoluteGlobLists(
+    optimizeGlobLists(globLists),
+    directory
+  );
+
+  const picoOptions = { ignore: excluded };
+  const checkDir = includedDirs?.length ? makeGlobMatcher(includedDirs, picoOptions) : () => false;
+  const checkFile = makeGlobMatcher(included, picoOptions);
+
+  let filesToRemove = await crawlDirWithChecks([], directory, checkDir, checkFile);
+
+  if (excluded.length) {
+    // make another pass to ensure that files included by dir globs are
+    // matched with excluded globs too
+    filesToRemove = filesToRemove.filter(file => checkFile(file));
+  }
+
+  return filesToRemove;
 }

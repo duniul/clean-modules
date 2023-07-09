@@ -1,67 +1,42 @@
-import { promises as fsAsync } from 'fs';
-import path from 'path';
-import { GlobLists } from './types.js';
-import { crawlDirWithChecks, removeEmptyDirsUp } from './utils/filesystem.js';
-import { makeGlobMatcher, optimizeGlobLists, toAbsoluteGlobLists } from './utils/glob.js';
+import { SharedOptions, sharedDefaultOptions } from './shared.js';
+import { removeEmptyDirs, removeFiles } from './utils/filesystem.js';
+import { findFilesByGlobLists, getGlobLists } from './utils/glob.js';
 
-export async function findFilesToRemove(
-  nodeModulesPath: string,
-  globLists: GlobLists
-): Promise<string[]> {
-  const { included, includedDirs, excluded } = toAbsoluteGlobLists(
-    optimizeGlobLists(globLists),
-    nodeModulesPath
-  );
+export const defaultCleanOptions: Required<CleanOptions> = {
+  ...sharedDefaultOptions,
+  dryRun: false,
+  keepEmpty: false,
+};
 
-  const picoOptions = { ignore: excluded };
-  const checkDir = includedDirs ? makeGlobMatcher(includedDirs, picoOptions) : () => false;
-  const checkFile = makeGlobMatcher(included, picoOptions);
-
-  let filesToRemove = await crawlDirWithChecks([], nodeModulesPath, checkDir, checkFile);
-
-  if (excluded.length) {
-    // make another pass to ensure that files included by dir globs are
-    // matched with excluded globs too
-    filesToRemove = filesToRemove.filter(file => checkFile(file));
-  }
-
-  return filesToRemove;
+export interface CleanResult {
+  /** List of all files that were cleaned up. */
+  files: string[];
+  /** How many bytes of data that was removed when cleaning. */
+  reducedSize: number;
+  /** The number of empty directories that were cleaned up after the operation. */
+  removedEmptyDirs: number;
 }
 
-export async function removeFiles(
-  filePaths: string[],
-  { dryRun = false }: { dryRun?: boolean } = {}
-): Promise<number> {
-  let reducedSize = 0;
-
-  await Promise.all(
-    filePaths.map(async filePath => {
-      try {
-        const fileStats = await fsAsync.stat(filePath);
-
-        if (!dryRun) {
-          await fsAsync.unlink(filePath);
-        }
-
-        reducedSize += fileStats.size;
-      } catch (error) {
-        // do nothing
-      }
-    })
-  );
-
-  return reducedSize;
+export interface CleanOptions extends SharedOptions {
+  /** Whether to skip actually deleting any files and just perform a dry run of the cleaning operation. */
+  dryRun?: boolean;
+  /** Whether to keep empty directories around after cleaning. */
+  keepEmpty?: boolean;
 }
 
-export async function removeEmptyDirs(filePaths: string[]): Promise<number> {
-  let removedEmptyDirs = 0;
+/**
+ * Removes unnecessary files to reduce the size of a node_modules directory.
+ * @param options clean options
+ * @returns summary of the clean operation
+ */
+export async function clean(options: CleanOptions = {}): Promise<CleanResult> {
+  const mergedOptions = { ...defaultCleanOptions, ...options };
+  const { globs, noDefaults, globFile, directory, dryRun, keepEmpty } = mergedOptions;
 
-  await Promise.all(
-    filePaths.map(async filePath => {
-      const removedParentDirs = await removeEmptyDirsUp(new Set<string>(), path.dirname(filePath));
-      removedEmptyDirs += removedParentDirs;
-    })
-  );
+  const globLists = await getGlobLists({ globs, noDefaults, globFile });
+  const files = await findFilesByGlobLists(directory, globLists);
+  const reducedSize = await removeFiles(files, { dryRun });
+  const removedEmptyDirs = (dryRun || keepEmpty) ? 0 : await removeEmptyDirs(files);
 
-  return removedEmptyDirs;
+  return { files, reducedSize, removedEmptyDirs };
 }

@@ -1,5 +1,4 @@
-import { analyzeIncluded } from '../../analyze.js';
-import { getGlobLists } from '../../utils/glob.js';
+import { analyze } from '../../analyze.js';
 import { BaseCommand } from '../helpers/base.command.js';
 
 export class AnalyzeCommand extends BaseCommand {
@@ -10,13 +9,11 @@ export class AnalyzeCommand extends BaseCommand {
   };
 
   async execute(): Promise<void> {
-    const globLists = await getGlobLists({
-      argGlobs: this.globs,
-      useDefaultGlobs: !this.noDefaults,
-      userGlobsFilePath: this.globFile,
+    const analyzeResults = await analyze({
+      globs: this.globs,
+      noDefaults: this.noDefaults,
+      globFile: this.globFile,
     });
-
-    const analyzeResults = await analyzeIncluded(this.directory, globLists);
 
     console.log(JSON.stringify(analyzeResults, null, 2));
   }

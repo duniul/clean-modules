@@ -1,14 +1,17 @@
 import fs from 'fs';
 import { vol } from 'memfs';
 import path from 'path';
-import { beforeEach, describe, expect, it, MockedFunction, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, MockedFunction, vi } from 'vitest';
+import { getMockedFileStructure } from '../__test__/getMockedFileStructure.js';
 import {
   crawlDirFast,
   crawlDirWithChecks,
   fileExists,
   forEachDirentAsync,
   readDirectory,
+  removeEmptyDirs,
   removeEmptyDirsUp,
+  removeFiles,
 } from './filesystem.js';
 
 describe('file exists', () => {
@@ -32,14 +35,13 @@ describe('file exists', () => {
   });
 
   it("throws any error that isn't ENOENT", async () => {
-    fs.promises.stat = vi.fn(() => {
+    const statSpy = vi.spyOn(fs.promises, 'stat').mockImplementation(() => {
       throw new Error('not an ENOENT!');
     });
 
     await expect(fileExists('testdir/foo')).rejects.toThrow('not an ENOENT!');
 
-    const mockAsyncStat = fs.promises.stat as MockedFunction<typeof fs.promises.stat>;
-    mockAsyncStat.mockRestore();
+    statSpy.mockRestore();
   });
 });
 
@@ -128,6 +130,36 @@ describe('removeEmptyDirsUp', () => {
   it('does not throw if path is invalid', async () => {
     const checkedDirs = new Set<string>();
     expect(async () => await removeEmptyDirsUp(checkedDirs, 'invalid/path')).not.toThrow();
+  });
+});
+
+describe('removeEmptyDirs', () => {
+  beforeEach(async () => {
+    const fileStructure = await getMockedFileStructure();
+    vol.fromNestedJSON(fileStructure);
+  });
+
+  it('cleans up empty parent dirs for provided files', async () => {
+    const filePaths = [
+      'node_modules/dep1/__tests__/test1.js',
+      'node_modules/dep1/a-dir/doc.md',
+      'node_modules/dep2/CHANGELOG.md',
+      'node_modules/dep2/file.js',
+    ];
+
+    // remove files before testing
+    filePaths.forEach(filePath => fs.unlinkSync(filePath));
+
+    await removeEmptyDirs(filePaths);
+
+    expect(fs.existsSync('node_modules/dep1/__tests__')).toBe(true); // not empty and not removed
+    expect(fs.existsSync('node_modules/dep1/a-dir')).toBe(false); // empty and removed
+    expect(fs.existsSync('node_modules/dep2')).toBe(false); // empty and removed
+  });
+
+  it('does not throw if path is invalid', async () => {
+    const filePaths = ['invalid/path/2', 'invalid/path/2'];
+    expect(async () => await removeEmptyDirs(filePaths)).not.toThrow();
   });
 });
 
@@ -244,5 +276,40 @@ describe('crawlDirWithChecks', () => {
     expect(
       async () => await crawlDirWithChecks(filePaths, 'invalid/path', checkDir, checkFile)
     ).not.toThrow();
+  });
+});
+
+describe('removeFiles', () => {
+  beforeEach(async () => {
+    const fileStructure = await getMockedFileStructure();
+    vol.fromNestedJSON(fileStructure);
+  });
+
+  it('removes files at provided file paths', async () => {
+    const filePaths = ['node_modules/dep1/__tests__/test1.js', 'node_modules/dep1/a-dir/doc.md'];
+
+    // files are initially there
+    expect(fs.existsSync(filePaths[0])).toBe(true);
+    expect(fs.existsSync(filePaths[1])).toBe(true);
+
+    await removeFiles(filePaths);
+
+    // then they are not
+    expect(fs.existsSync(filePaths[0])).toBe(false);
+    expect(fs.existsSync(filePaths[1])).toBe(false);
+  });
+
+  it('does not remove files during dry runs', async () => {
+    const filePaths = ['node_modules/dep1/__tests__/test1.js', 'node_modules/dep1/a-dir/doc.md'];
+
+    await removeFiles(filePaths, { dryRun: true });
+
+    expect(fs.existsSync(filePaths[0])).toBe(true);
+    expect(fs.existsSync(filePaths[1])).toBe(true);
+  });
+
+  it('does not throw if path is invalid', async () => {
+    const filePaths = ['/invalid/path/2', '/invalid/path/2'];
+    expect(async () => await removeFiles(filePaths)).not.toThrow();
   });
 });

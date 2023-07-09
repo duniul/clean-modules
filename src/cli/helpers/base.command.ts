@@ -1,20 +1,19 @@
 import { Command, Option } from 'clipanion';
-import path from 'path';
-import { DEFAULT_USER_GLOBS_FILE_NAME } from '../../constants.js';
+import { sharedDefaultOptions } from '../../shared.js';
 
 /**
  * Shared options for all commands.
  */
 export abstract class BaseCommand extends Command {
-  directory = Option.String('-D,--directory', path.resolve(process.cwd(), 'node_modules'), {
+  directory = Option.String('-D,--directory', sharedDefaultOptions.directory, {
     description: 'Path to node_modules',
   });
 
-  globFile = Option.String('-f,--glob-file', DEFAULT_USER_GLOBS_FILE_NAME, {
-    description: 'Path to a custom globs file',
+  globFile = Option.String('-f,--glob-file', sharedDefaultOptions.globFile, {
+    description: 'Path to a custom glob file',
   });
 
-  noDefaults = Option.Boolean('-n,--no-defaults', false, {
+  noDefaults = Option.Boolean('-n,--no-defaults', sharedDefaultOptions.noDefaults, {
     description: 'Only includes/excludes globs specified by a custom glob file or CLI arguments',
   });
 

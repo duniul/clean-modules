@@ -1,4 +1,4 @@
-import { Dirent, promises as fsAsync } from 'fs';
+import fs, { Dirent } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -14,7 +14,7 @@ function hasErrorCode(error: any, code: string): boolean {
  */
 export async function fileExists(filePath: string): Promise<boolean> {
   try {
-    await fsAsync.stat(filePath);
+    await fs.promises.stat(filePath);
 
     return true;
   } catch (error: unknown) {
@@ -33,7 +33,7 @@ export async function forEachDirentAsync(dirPath: string, action: DirentAction):
   let dirFiles: Dirent[] = [];
 
   try {
-    dirFiles = await fsAsync.readdir(dirPath, { withFileTypes: true });
+    dirFiles = await fs.promises.readdir(dirPath, { withFileTypes: true });
   } catch (error) {
     // do nothing
   }
@@ -46,7 +46,7 @@ export async function forEachDirentAsync(dirPath: string, action: DirentAction):
  */
 export async function readDirectory(dirPath: string): Promise<string[]> {
   try {
-    const files = await fsAsync.readdir(dirPath);
+    const files = await fs.promises.readdir(dirPath);
     return files;
   } catch (error: unknown) {
     if (hasErrorCode(error, 'ENOENT') || hasErrorCode(error, 'ENOTDIR')) {
@@ -72,7 +72,7 @@ export async function removeEmptyDirsUp(
 
     if (emptyDir) {
       try {
-        await fsAsync.rmdir(dirPath);
+        await fs.promises.rmdir(dirPath);
         // rome-ignore lint/style/noParameterAssign: recursive function
         count++;
       } catch (error) {
@@ -87,6 +87,25 @@ export async function removeEmptyDirsUp(
 
   return count;
 }
+
+/**
+ * Deeply removes empty directories for each file path.
+ * @param filePaths the file paths to remove empty directories for
+ * @returns the number of empty directories removed
+ */
+export async function removeEmptyDirs(filePaths: string[]): Promise<number> {
+  let removedEmptyDirs = 0;
+
+  await Promise.all(
+    filePaths.map(async filePath => {
+      const removedParentDirs = await removeEmptyDirsUp(new Set<string>(), path.dirname(filePath));
+      removedEmptyDirs += removedParentDirs;
+    })
+  );
+
+  return removedEmptyDirs;
+}
+
 
 /**
  * Find all files in a directory as fast as possible, without any extra checks or validations.
@@ -129,6 +148,41 @@ export async function crawlDirWithChecks(
   });
 
   return filePaths;
+}
+
+export type RemoveFilesOptions = {
+  dryRun?: boolean;
+}
+
+/**
+ * Removes files and returns the total size of the removed files.
+ * @param filePaths the file paths to remove
+ * @param options dryRun: if true, don't actually remove the files
+ * @returns the total size of the removed files
+ */
+export async function removeFiles(
+  filePaths: string[],
+  options: RemoveFilesOptions = {}
+): Promise<number> {
+  let reducedSize = 0;
+
+  await Promise.all(
+    filePaths.map(async filePath => {
+      try {
+        const fileStats = await fs.promises.stat(filePath);
+
+        if (!options.dryRun) {
+          await fs.promises.unlink(filePath);
+        }
+
+        reducedSize += fileStats.size;
+      } catch (error) {
+        // do nothing
+      }
+    })
+  );
+
+  return reducedSize;
 }
 
 /**

@@ -1,11 +1,13 @@
 import { vol } from 'memfs';
+import path from 'path';
 import pm from 'picomatch';
-import { describe, expect, it, Mock, vi } from 'vitest';
-import { EMPTY_GLOB_LISTS } from '../__test__/fixtures.js';
-import { DEFAULT_PICO_OPTIONS } from '../constants.js';
-import { GlobLists } from '../types.js';
+import { beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 import {
+  DEFAULT_PICO_OPTIONS,
+  findFilesByGlobLists,
   formatGlob,
+  GlobLists,
+  initGlobLists,
   makeGlobMatcher,
   mergeGlobLists,
   optimizeGlobLists,
@@ -16,27 +18,22 @@ import {
   updateGlobLists,
   wrapGlobs,
 } from './glob.js';
-
-vi.mock('picomatch');
-
-const mockedPm = pm as unknown as Mock<[], typeof pm>;
+import { getMockedFileStructure } from '../__test__/getMockedFileStructure.js';
 
 describe('makeGlobMatcher', () => {
   it('creates a picomatch globber with default options', () => {
-    const globMock = 'globber';
-    mockedPm.mockReturnValueOnce(globMock as unknown as typeof pm);
     const pattern = '**/**';
 
     const globber = makeGlobMatcher(pattern);
 
-    expect(pm).toHaveBeenCalledWith(pattern, DEFAULT_PICO_OPTIONS);
-    expect(globber).toBe(globMock);
+    expect(globber).toBeInstanceOf(Function);
+    expect(globber).toHaveProperty('name', 'matcher');
   });
 });
 
 describe('updateGlobLists', () => {
   const mockGlobLists: GlobLists = {
-    ...EMPTY_GLOB_LISTS,
+    ...initGlobLists(),
     included: ['foo'],
     includedDirs: ['bar'],
     excluded: ['baz'],
@@ -69,13 +66,13 @@ describe('mergeGlobLists', () => {
   it('merges glob lists', () => {
     const result = mergeGlobLists(
       {
-        ...EMPTY_GLOB_LISTS,
+        ...initGlobLists(),
         included: ['foo'],
         includedDirs: ['foo'],
         excluded: ['foo'],
       },
       {
-        ...EMPTY_GLOB_LISTS,
+        ...initGlobLists(),
         included: ['bar'],
         includedDirs: ['bar'],
         excluded: ['bar'],
@@ -83,7 +80,7 @@ describe('mergeGlobLists', () => {
     );
 
     expect(result).toEqual({
-      ...EMPTY_GLOB_LISTS,
+      ...initGlobLists(),
       included: ['foo', 'bar'],
       includedDirs: ['foo', 'bar'],
       excluded: ['foo', 'bar'],
@@ -95,7 +92,7 @@ describe('toAbsoluteGlobLists', () => {
   it('prepends globs with absolute paths on all platforms', () => {
     const result = toAbsoluteGlobLists(
       {
-        ...EMPTY_GLOB_LISTS,
+        ...initGlobLists(),
         included: ['bar'],
         includedDirs: ['bar'],
         excluded: ['bar'],
@@ -104,7 +101,7 @@ describe('toAbsoluteGlobLists', () => {
     );
 
     expect(result).toEqual({
-      ...EMPTY_GLOB_LISTS,
+      ...initGlobLists(),
       included: ['/foo/bar'],
       includedDirs: ['/foo/bar'],
       excluded: ['/foo/bar'],
@@ -139,7 +136,7 @@ describe('optimizeGlobs', () => {
 describe('optimizeGlobLists', () => {
   it('splits globs by leading characters and merges into two globs', () => {
     const result = optimizeGlobLists({
-      ...EMPTY_GLOB_LISTS,
+      ...initGlobLists(),
       included: ['**/wrapMe/**', '**/andMe/**', 'notMe/**', '*/andNotMe.js', '/andNotMeEither.ts'],
       includedDirs: ['**/wrapMe', '**/andMe', 'notMe'],
       excluded: ['**/wrapMe/**', '**/andMe/**', 'notMe/**'],
@@ -314,5 +311,49 @@ describe('parseGlobsFile', () => {
     const result = await parseGlobsFile(globFilePath);
     expect(result.included).toEqual([]);
     expect(result.excluded).toEqual(['**/excludeMe']);
+  });
+});
+
+describe('findFilesByGlobLists', async () => {
+  const fileStructure = await getMockedFileStructure();
+  const nodeModulesPath = 'node_modules';
+
+  beforeEach(async () => {
+    vol.fromNestedJSON(fileStructure);
+  });
+
+  it('includes dirs', async () => {
+    const result = await findFilesByGlobLists(nodeModulesPath, {
+      ...initGlobLists(),
+      includedDirs: ['**/__tests__', '**/dep3'],
+    });
+
+    expect(result).toEqual([
+      path.join('node_modules', 'dep1', '__tests__', 'test1.js'),
+      path.join('node_modules', 'dep1', '__tests__', 'test2.js'),
+      path.join('node_modules', 'dep3', 'deeply', 'nested', 'file.ext'),
+    ]);
+  });
+
+  it('includes files', async () => {
+    const result = await findFilesByGlobLists(nodeModulesPath, {
+      ...initGlobLists(),
+      included: ['**/deeply/nested/file.ext', '**/dep4/**'],
+    });
+
+    expect(result).toEqual([
+      path.join('node_modules', 'dep4', 'nonDefaultFile.ext'),
+      path.join('node_modules', 'dep3', 'deeply', 'nested', 'file.ext'),
+    ]);
+  });
+
+  it('can exclude files and dirs by glob patterns', async () => {
+    const result = await findFilesByGlobLists(nodeModulesPath, {
+      ...initGlobLists(),
+      included: ['**/*.js'],
+      excluded: ['**/test*.js'],
+    });
+
+    expect(result).toEqual([path.join('node_modules', 'dep2', 'file.js')]);
   });
 });

@@ -68,7 +68,7 @@
     "@types/node": "16",
     "@types/picomatch": "2.3.0",
     "@types/supports-color": "8.1.1",
-    "changesets-changelog-clean": "^1.2.0",
+    "changesets-changelog-clean": "^1.2.1",
     "memfs": "^4.2.0",
     "prettier": "3.0.0",
     "prettier-plugin-organize-imports": "3.2.2",

@@ -1347,13 +1347,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"changesets-changelog-clean@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "changesets-changelog-clean@npm:1.2.0"
+"changesets-changelog-clean@npm:^1.2.1":
+  version: 1.2.1
+  resolution: "changesets-changelog-clean@npm:1.2.1"
   dependencies:
     "@changesets/get-github-info": ^0.5.2
     "@changesets/types": ^5.2.1
-  checksum: fb8f664dfb0a0c53824f0771f4b2ff76a762e11e0152eca38e9a967455a80e8a64c42b51be06a2db79482286896d0bbed9deefdc8ea831bdf7dcb8b7a9b6513e
+  checksum: a533954f0166ed6c636d6152b1dded571cdfc5637fd69e913ecef8955d8e633b8d7fc646dc46427e421a56699905c55c5f2ad90db4c362f7379394c59e162f15
   languageName: node
   linkType: hard
 
@@ -1414,7 +1414,7 @@ __metadata:
     "@types/node": 16
     "@types/picomatch": 2.3.0
     "@types/supports-color": 8.1.1
-    changesets-changelog-clean: ^1.2.0
+    changesets-changelog-clean: ^1.2.1
     clipanion: ^3.2.1
     memfs: ^4.2.0
     picomatch: ^2.3.0

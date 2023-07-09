@@ -714,10 +714,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/picomatch@npm:2.2.6":
-  version: 2.2.6
-  resolution: "@types/picomatch@npm:2.2.6"
-  checksum: 63eb07c32e04dcf931f9d76c6ed902d03173fd6f7ded9ba69a9cf6c80abca582cf94664f588303c05c8ac1c786337c7f8f8692e4a97896e04365d266ba2fd952
+"@types/picomatch@npm:2.3.0":
+  version: 2.3.0
+  resolution: "@types/picomatch@npm:2.3.0"
+  checksum: dde9572b6ca775185bd27a04ab050961f3e59b51863b1883669dcbf010aab394037af201ad9aa89373d9141cf1f5ba1f81266d3af09dfca5879298c128af928d
   languageName: node
   linkType: hard
 
@@ -1237,7 +1237,7 @@ __metadata:
     "@tsconfig/node14": ^14.1.0
     "@types/mock-fs": 4.13.1
     "@types/node": 16
-    "@types/picomatch": 2.2.6
+    "@types/picomatch": 2.3.0
     "@types/supports-color": 8.1.1
     "@types/yargs": 17.0.24
     changesets-changelog-clean: ^1.1.0

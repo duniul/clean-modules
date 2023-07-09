@@ -129,7 +129,7 @@ tslint.json
 prettier.config.js
 
 # testing
-test.js
+\!(utils)/test.js
 jest.config.js
 karma.conf.js
 wallaby.js

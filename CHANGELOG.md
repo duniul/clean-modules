@@ -1,5 +1,11 @@
 # clean-modules
 
+## 3.0.1
+
+### Patch Changes
+
+- Include `dist` in package 🙈 _[`671086d`](https://github.com/duniul/clean-modules/commit/671086d3f1617128c2492a815310a19c95d5f79a) [@duniul](https://github.com/duniul)_
+
 ## 3.0.0
 
 ### Major Changes

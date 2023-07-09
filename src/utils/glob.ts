@@ -2,8 +2,12 @@ import { promises as fsAsync } from 'fs';
 import path from 'path';
 import pm from 'picomatch';
 import { DEFAULT_GLOBS_FILE_PATH, DEFAULT_PICO_OPTIONS } from '../constants.js';
-import { GlobLists, IncludedExcludedArgs } from '../types.js';
+import { GlobLists } from '../types.js';
 import { fileExists } from './filesystem.js';
+
+function initGlobLists(): GlobLists {
+  return { excluded: [], included: [], includedDirs: [], originalIncluded: [] };
+}
 
 export interface GlobberPicoOptions {
   dot?: boolean;
@@ -139,13 +143,8 @@ export function formatGlob(glob: string): string {
 /**
  * Parses clean-modules/gitignore-like globs and converts them into picomatch compatible globs.
  */
-export function processGlobs(globs: string[], excludedOnlyGlobs: string[] = []): GlobLists {
-  const globLists: GlobLists & { includedDirs: string[] } = {
-    excluded: excludedOnlyGlobs.map(formatGlob),
-    included: [],
-    includedDirs: [],
-    originalIncluded: [],
-  };
+export function processGlobs(globs: string[]): GlobLists {
+  const globLists = initGlobLists();
 
   globs.forEach(glob => {
     const isExcluded = !!glob.match(EXCLAMATION_START);
@@ -196,8 +195,8 @@ export async function parseDefaultGlobsFile(): Promise<GlobLists> {
   return parseGlobsFile(DEFAULT_GLOBS_FILE_PATH);
 }
 
-export interface ParseGlobsOptions {
-  argGlobs: IncludedExcludedArgs;
+export interface GetGlobListsOptions {
+  argGlobs: string[];
   useDefaultGlobs: boolean;
   userGlobsFilePath: string;
 }
@@ -209,18 +208,26 @@ export async function getGlobLists({
   argGlobs,
   useDefaultGlobs,
   userGlobsFilePath,
-}: ParseGlobsOptions): Promise<GlobLists> {
-  let globLists = processGlobs(argGlobs.included, argGlobs.excluded);
+}: GetGlobListsOptions): Promise<GlobLists> {
+  const globListsToMerge: GlobLists[] = [];
 
   if (useDefaultGlobs) {
     const defaultGlobLists = await parseDefaultGlobsFile();
-    globLists = mergeGlobLists(globLists, defaultGlobLists);
+    globListsToMerge.push(defaultGlobLists);
   }
 
   if (userGlobsFilePath && (await fileExists(userGlobsFilePath))) {
     const userFileGlobLists = await parseGlobsFile(userGlobsFilePath);
-    globLists = mergeGlobLists(globLists, userFileGlobLists);
+    globListsToMerge.push(userFileGlobLists);
   }
 
-  return globLists;
+  if (argGlobs?.length) {
+    const argGlobsLists = processGlobs(argGlobs);
+    globListsToMerge.push(argGlobsLists);
+  }
+
+  return globListsToMerge.reduce(
+    (mergedGlobLists, globLists) => mergeGlobLists(mergedGlobLists, globLists),
+    initGlobLists()
+  );
 }

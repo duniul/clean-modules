@@ -2,4 +2,14 @@
 'clean-modules': major
 ---
 
-Require exactly _one_ argument per `-i,--include` and `-e,--exclude` argument instead of an arbitrary number. This helps to prevent mixing up those arguments with positionals.
+**BREAKING** Replace `-i,--include` and `-e,--exclude` with globs passed as positional arguments. This makes them consistent with the glob file patterns.
+
+To migrate, move included and excluded globs to the end of the command, and prefix any exclusion globs with `!`.
+
+```sh
+# before
+clean-modules --include "foo" "bar" --exclude "baz" "qux"
+
+# after
+clean-modules "foo" "bar" "!baz" "!qux"
+```

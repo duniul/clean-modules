@@ -25,14 +25,9 @@ export interface CleanInfo {
   files: Record<string, FileInfo>;
 }
 
-export interface IncludedExcludedArgs {
-  included: string[];
-  excluded: string[];
-}
-
 export interface GlobLists {
   excluded: string[];
   included: string[];
-  includedDirs?: string[] | undefined;
+  includedDirs: string[];
   originalIncluded: string[];
 }

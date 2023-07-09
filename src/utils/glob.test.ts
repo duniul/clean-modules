@@ -217,22 +217,6 @@ describe('processGlobs', () => {
     `);
   });
 
-  it('allows passing predefined excluded globs', () => {
-    const result = processGlobs(
-      ['!**/not/this/either/', '!and/definitely/not/this'],
-      ['**/notThis', 'orThat.js']
-    );
-
-    expect(result.excluded).toMatchInlineSnapshot(`
-      [
-        "**/**/notThis",
-        "**/orThat.js",
-        "**/**/not/this/either/**",
-        "**/and/definitely/not/this",
-      ]
-    `);
-  });
-
   it('removes trailing globstars from dir globs', () => {
     const result = processGlobs(['**/foo/**', '/bar/**']);
     expect(result.includedDirs).toEqual(['**/**/foo', 'bar']);

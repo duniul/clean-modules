@@ -10,7 +10,7 @@ export class CleanCommand extends BaseCommand {
   static override paths = [['clean'], Command.Default];
   static override usage = {
     description:
-      'Default command. Removes unnecessary files to reduce the size of your node_modules directory',
+      'Default command. Removes unnecessary files to reduce the size of your node_modules directory. Extra globs can be passed as positional args.',
   };
 
   keepEmpty = Option.Boolean('-k,--keep-empty', false, {
@@ -52,7 +52,7 @@ export class CleanCommand extends BaseCommand {
     const cleanupStart = new Date().getTime();
 
     const globLists = await getGlobLists({
-      argGlobs: { included: this.include, excluded: this.exclude },
+      argGlobs: this.globs,
       useDefaultGlobs: !this.noDefaults,
       userGlobsFilePath: this.globFile,
     });

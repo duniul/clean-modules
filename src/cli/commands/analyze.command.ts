@@ -6,12 +6,12 @@ export class AnalyzeCommand extends BaseCommand {
   static override paths = [['analyze']];
   static override usage = {
     description:
-      'Helps determining why a file is included by the clean command without removing any files.',
+      'Helps determining why a file is included by the clean command without removing any files. Extra globs can be passed as positional args.',
   };
 
   async execute(): Promise<void> {
     const globLists = await getGlobLists({
-      argGlobs: { included: this.include, excluded: this.exclude },
+      argGlobs: this.globs,
       useDefaultGlobs: !this.noDefaults,
       userGlobsFilePath: this.globFile,
     });

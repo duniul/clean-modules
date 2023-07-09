@@ -1,18 +1,7 @@
 # clean-modules
 
 ## 3.0.2
-
-### Patch Changes
-
-- Ensure `dist` is built properly... _[`6ca7cac`](https://github.com/duniul/clean-modules/commit/6ca7cac570d40e607760884488440f4c3d989c5c) [@duniul](https://github.com/duniul)_
-
-## 3.0.1
-
-### Patch Changes
-
-- Include `dist` in package 🙈 _[`671086d`](https://github.com/duniul/clean-modules/commit/671086d3f1617128c2492a815310a19c95d5f79a) [@duniul](https://github.com/duniul)_
-
-## 3.0.0
+<sup>(includes 3.0.0 and 3.0.1, which were unpublished)</sup>
 
 ### Major Changes
 
@@ -39,14 +28,6 @@
 - Remove `arg` as a runtime dependency. _[`95b0dcf`](https://github.com/duniul/clean-modules/commit/95b0dcf0693b6c14635497c866d717ae89820299) [@duniul](https://github.com/duniul)_
 - Try to avoid test util files when cleaning up test files. _[`cf7ede5`](https://github.com/duniul/clean-modules/commit/cf7ede5037e865851afff1e3b22502e5fb165fca) [@duniul](https://github.com/duniul)_
 - Fix issue where `--glob-file` could be passed as an array, causing a crash. _[`de47cf2`](https://github.com/duniul/clean-modules/commit/de47cf22adb5a44507a0dde1caa763fd98c16eba) [@duniul](https://github.com/duniul)_
-
-<details><summary>Updated 0 dependencies</summary>
-
-<small>
-
-</small>
-
-</details>
 
 ## 2.0.6
 

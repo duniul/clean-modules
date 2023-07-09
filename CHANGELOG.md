@@ -1,5 +1,41 @@
 # clean-modules
 
+## 3.0.0
+
+### Major Changes
+
+- **BREAKING** Replace `-i,--include` and `-e,--exclude` with globs passed as positional arguments. This makes them consistent with the glob file patterns. _[`de47cf2`](https://github.com/duniul/clean-modules/commit/de47cf22adb5a44507a0dde1caa763fd98c16eba) [@duniul](https://github.com/duniul)_
+
+  To migrate, move included and excluded globs to the end of the command, and prefix any exclusion globs with `!`.
+
+  ```sh
+  # before
+  clean-modules --include "foo" "bar" --exclude "baz" "qux"
+
+  # after
+  clean-modules "foo" "bar" "!baz" "!qux"
+  ```
+
+- **BREAKING** Replace old programmatic API with one that better correspond to the CLI commands. See the README for information on how to import them. _[`6c8dfff`](https://github.com/duniul/clean-modules/commit/6c8dfff6f151d56a661a7759d36e35162889afad) [@duniul](https://github.com/duniul)_
+- **BREAKING** Drop support for Node 12, require Node >= 14. _[`0ebf930`](https://github.com/duniul/clean-modules/commit/0ebf9307371cbd6d4a966139f020a8d1a9e0d0a1) [@duniul](https://github.com/duniul)_
+
+### Patch Changes
+
+- Replace `yargs` with `clipanion` for CLI parsing. _[`de47cf2`](https://github.com/duniul/clean-modules/commit/de47cf22adb5a44507a0dde1caa763fd98c16eba) [@duniul](https://github.com/duniul)_
+- Don't remove `tsconfig.json` files by default, as they can be shared. _[`17603eb`](https://github.com/duniul/clean-modules/commit/17603ebcdd9d27d46abdce4805e8dfbe0deae3ae) [@duniul](https://github.com/duniul)_
+- Update `pretty-bytes`, `pretty-ms` and `supports-color`. _[`e198b46`](https://github.com/duniul/clean-modules/commit/e198b468174afa9b72fe160a553a659bfe255bf0) [@duniul](https://github.com/duniul)_
+- Remove `arg` as a runtime dependency. _[`95b0dcf`](https://github.com/duniul/clean-modules/commit/95b0dcf0693b6c14635497c866d717ae89820299) [@duniul](https://github.com/duniul)_
+- Try to avoid test util files when cleaning up test files. _[`cf7ede5`](https://github.com/duniul/clean-modules/commit/cf7ede5037e865851afff1e3b22502e5fb165fca) [@duniul](https://github.com/duniul)_
+- Fix issue where `--glob-file` could be passed as an array, causing a crash. _[`de47cf2`](https://github.com/duniul/clean-modules/commit/de47cf22adb5a44507a0dde1caa763fd98c16eba) [@duniul](https://github.com/duniul)_
+
+<details><summary>Updated 0 dependencies</summary>
+
+<small>
+
+</small>
+
+</details>
+
 ## 2.0.6
 
 ### Patch Changes
@@ -23,7 +59,7 @@
 ### Patch Changes
 
 - Wrap globs with parantheses to prevent issues with scoped packages. _[`31b35c4`](https://github.com/duniul/clean-modules/commit/31b35c4e7aa2bc7ffc76300bb9177c43f794940a) [@duniul](https://github.com/duniul)_
-- Improve globs for files with optional file extensions.  _[`a71a8e4`](https://github.com/duniul/clean-modules/commit/a71a8e4ca29a35e74806267e379a85c2e5764721) [@duniul](https://github.com/duniul)_
+- Improve globs for files with optional file extensions. _[`a71a8e4`](https://github.com/duniul/clean-modules/commit/a71a8e4ca29a35e74806267e379a85c2e5764721) [@duniul](https://github.com/duniul)_
 - Bump dependencies _[`735bf95`](https://github.com/duniul/clean-modules/commit/735bf9586bac7fab59f01170bf192090de274903) [@duniul](https://github.com/duniul)_
 - Make files included by dir globs excludable. _[`6d4eceb`](https://github.com/duniul/clean-modules/commit/6d4ecebe33034be2a2997ebb93d8c1cb012f363a) [@duniul](https://github.com/duniul)_
 - Change `--directory` to expect a string. _[`#7`](https://github.com/duniul/clean-modules/pull/7) [`8e77f83`](https://github.com/duniul/clean-modules/commit/8e77f830c5b523d47906f87c8e68a988e55f5cdf) [@ImedAdel](https://github.com/ImedAdel)_

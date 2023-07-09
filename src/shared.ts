@@ -22,5 +22,5 @@ export const sharedDefaultOptions: Required<SharedOptions> = {
   directory: path.resolve(process.cwd(), 'node_modules'),
   globFile: '.cleanmodules',
   noDefaults: false,
-  globs: undefined,
+  globs: [],
 };

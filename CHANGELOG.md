@@ -1,5 +1,11 @@
 # clean-modules
 
+## 3.0.2
+
+### Patch Changes
+
+- Ensure `dist` is built properly... _[`6ca7cac`](https://github.com/duniul/clean-modules/commit/6ca7cac570d40e607760884488440f4c3d989c5c) [@duniul](https://github.com/duniul)_
+
 ## 3.0.1
 
 ### Patch Changes

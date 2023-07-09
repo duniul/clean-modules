@@ -48,7 +48,7 @@
     "build": "tsup",
     "dev": "tsc --watch",
     "test": "vitest",
-    "prepublish": "yarn build",
+    "prepublishOnly": "yarn build",
     "lint": "rome check src && prettier --check src",
     "lint:fix": "rome check --apply src && prettier --write src",
     "version": "changeset version",

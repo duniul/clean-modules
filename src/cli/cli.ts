@@ -7,7 +7,7 @@ import { CleanCommand } from './commands/clean.command.js';
 
 const [_node, _app, ...args] = process.argv;
 const esmRequire = createRequire(import.meta.url);
-const cliDir = fileDir(import.meta);
+const cliDir = fileDir(import.meta.url);
 const { name, version } = esmRequire(path.resolve(cliDir, '..', '..', 'package.json'));
 
 const cli = new Cli({

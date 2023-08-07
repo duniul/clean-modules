@@ -1,6 +1,13 @@
 # clean-modules
 
+## 3.0.3
+
+### Patch Changes
+
+- Fix `import.meta.url` not being transpiled to an equivalent value for CJS builds. _[`#22`](https://github.com/duniul/clean-modules/pull/22) [`efa65b5`](https://github.com/duniul/clean-modules/commit/efa65b5aa011053f57279eb9233c83331549e3f8) [@duniul](https://github.com/duniul)_
+
 ## 3.0.2
+
 <sup>(includes 3.0.0 and 3.0.1, which were unpublished)</sup>
 
 ### Major Changes

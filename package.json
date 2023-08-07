@@ -1,7 +1,7 @@
 {
   "name": "clean-modules",
   "author": "Daniel Grefberg <hello@danielgrefberg.com>",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "Clean up/prune unnecessary files and reduce the size of your `node_modules` directory. Useful for CI caches or for reducing the size of serverless functions.",
   "repository": "https://github.com/duniul/clean-modules.git",
   "homepage": "https://github.com/duniul/clean-modules#readme",

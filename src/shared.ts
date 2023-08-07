@@ -2,7 +2,7 @@ import path from 'path';
 import { fileDir } from './utils/filesystem.js';
 
 export const DEFAULT_GLOBS_FILE_PATH = path.resolve(
-  fileDir(import.meta),
+  fileDir(import.meta.url),
   '..',
   '.cleanmodules-default'
 );

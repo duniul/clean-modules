@@ -187,8 +187,8 @@ export async function removeFiles(
 
 /**
  * Get directory of the file directory, like CommonJS `__dirname`.
- * @example const thisFilesDir = fileDir(import.meta);
+ * @example const thisFilesDir = fileDir(import.meta.url);
  */
-export function fileDir(importMeta: ImportMeta) {
-  return path.dirname(fileURLToPath(importMeta.url));
+export function fileDir(importMetaUrl: string) {
+  return path.dirname(fileURLToPath(importMetaUrl));
 }

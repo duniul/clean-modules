@@ -1,5 +1,11 @@
 # clean-modules
 
+## 3.0.4
+
+### Patch Changes
+
+- Add `.stylelintrc*(.*)` to `.cleanmodules-default`. _[`#24`](https://github.com/duniul/clean-modules/pull/24) [`31fb7eb`](https://github.com/duniul/clean-modules/commit/31fb7eb5a2807a54888f60d1d704b1ef565d1d9d) [@SukkaW](https://github.com/SukkaW)_
+
 ## 3.0.3
 
 ### Patch Changes

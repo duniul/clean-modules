@@ -148,7 +148,9 @@ describe('removeEmptyDirs', () => {
     ];
 
     // remove files before testing
-    filePaths.forEach(filePath => fs.unlinkSync(filePath));
+    for (const filePath of filePaths) {
+      fs.unlinkSync(filePath);
+    }
 
     await removeEmptyDirs(filePaths);
 

@@ -103,13 +103,13 @@ export function optimizeGlobs(globs: string[]): string[] {
   const globstarStartGlobs: string[] = [];
   const fixedPathGlobs: string[] = [];
 
-  globs.forEach(glob => {
+  for (const glob of globs) {
     if (glob.match(GLOBSTAR_START_REGEX)) {
       globstarStartGlobs.push(glob);
     } else {
       fixedPathGlobs.push(glob);
     }
-  });
+  }
 
   const result: string[] = [];
 
@@ -158,13 +158,15 @@ export function formatGlob(glob: string): string {
 export function processGlobs(globs: string[]): GlobLists {
   const globLists = initGlobLists();
 
-  globs.forEach(glob => {
+  for (const glob of globs) {
     const isExcluded = !!glob.match(EXCLAMATION_START);
     const formattedGlob = formatGlob(glob);
 
     if (!formattedGlob) {
-      return;
-    } else if (isExcluded) {
+      continue;
+    }
+
+    if (isExcluded) {
       globLists.excluded.push(formattedGlob);
     } else {
       if (formattedGlob.endsWith('/**')) {
@@ -174,7 +176,7 @@ export function processGlobs(globs: string[]): GlobLists {
       globLists.included.push(formattedGlob);
       globLists.originalIncluded.push(glob.trim());
     }
-  });
+  }
 
   return globLists;
 }

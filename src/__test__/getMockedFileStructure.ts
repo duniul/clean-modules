@@ -8,7 +8,7 @@ export async function getMockedFileStructure(): Promise<Record<string, any>> {
 
   return {
     [DEFAULT_GLOBS_FILE_PATH]: defaultGlobs,
-    'node_modules': {
+    node_modules: {
       dep1: {
         __tests__: {
           'test1.js': '.',

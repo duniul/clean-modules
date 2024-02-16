@@ -106,7 +106,6 @@ export async function removeEmptyDirs(filePaths: string[]): Promise<number> {
   return removedEmptyDirs;
 }
 
-
 /**
  * Find all files in a directory as fast as possible, without any extra checks or validations.
  */
@@ -152,7 +151,7 @@ export async function crawlDirWithChecks(
 
 export type RemoveFilesOptions = {
   dryRun?: boolean;
-}
+};
 
 /**
  * Removes files and returns the total size of the removed files.

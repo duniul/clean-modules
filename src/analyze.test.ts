@@ -74,8 +74,7 @@ describe(analyze.name, () => {
         },
       ]
     `);
-  })
-
+  });
 
   it('accepts custom globs', async () => {
     const result = await analyze({ globs: ['**/nonDefaultFile.ext'] });

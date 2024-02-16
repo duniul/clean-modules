@@ -13,11 +13,6 @@ function normalizePath(str: string) {
 function shouldNormalizePath(val: any) {
   if (typeof val === 'string') {
     return normalizePath(val) !== val;
-  } else if (typeof val === 'object') {
-    Object.keys(val).forEach(key => {
-      const objectValue = val[key];
-      return shouldNormalizePath(objectValue);
-    });
   }
 
   return false;
@@ -30,7 +25,9 @@ export const pathSerializer: Serializer = {
     if (typeof val === 'string') {
       const normalizedVal = normalizePath(val);
       return printer(normalizedVal, config, indentation, depth, refs);
-    } else if (typeof val === 'object') {
+    }
+
+    if (typeof val === 'object') {
       const normalizedVal = Object.fromEntries(
         Object.entries(val).map(([key, value]) => [
           key,

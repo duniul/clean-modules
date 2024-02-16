@@ -36,7 +36,7 @@ export async function clean(options: CleanOptions = {}): Promise<CleanResult> {
   const globLists = await getGlobLists({ globs, noDefaults, globFile });
   const files = await findFilesByGlobLists(directory, globLists);
   const reducedSize = await removeFiles(files, { dryRun });
-  const removedEmptyDirs = (dryRun || keepEmpty) ? 0 : await removeEmptyDirs(files);
+  const removedEmptyDirs = dryRun || keepEmpty ? 0 : await removeEmptyDirs(files);
 
   return { files, reducedSize, removedEmptyDirs };
 }

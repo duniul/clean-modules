@@ -59,11 +59,11 @@ export async function analyze(options: AnalyzeOptions = {}): Promise<AnalyzeResu
     const includedByDefault = includedByDefaultMatcher(filePath);
     const includedByGlobs: { original: string; derived: string }[] = [];
 
-    globMatchers.forEach(({ original, derived, matcher }) => {
+    for (const { original, derived, matcher } of globMatchers) {
       if (matcher(filePath)) {
         includedByGlobs.push({ original, derived });
       }
-    });
+    }
 
     return { filePath, includedByDefault, includedByGlobs };
   });

@@ -50,8 +50,8 @@
     "dev": "tsc --watch",
     "test": "vitest",
     "prepublishOnly": "pnpm build",
-    "lint": "rome check src && prettier --check src",
-    "lint:fix": "rome check --apply src && prettier --write src",
+    "lint": "biome check src && prettier --check src",
+    "lint:fix": "biome check --apply src && prettier --write src",
     "version": "changeset version",
     "release": "changeset publish"
   },
@@ -63,6 +63,7 @@
     "supports-color": "^9.4.0"
   },
   "devDependencies": {
+    "@biomejs/biome": "^1.5.3",
     "@changesets/cli": "^2.27.1",
     "@tsconfig/node14": "^14.1.0",
     "@types/mock-fs": "4.13.4",
@@ -73,7 +74,6 @@
     "memfs": "^4.7.0",
     "prettier": "3.2.5",
     "prettier-plugin-organize-imports": "3.2.4",
-    "rome": "^12.1.3",
     "tslib": "^2.6.2",
     "tsup": "^8.0.2",
     "tsx": "^4.7.1",

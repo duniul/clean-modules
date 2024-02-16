@@ -73,14 +73,14 @@ export async function removeEmptyDirsUp(
     if (emptyDir) {
       try {
         await fs.promises.rmdir(dirPath);
-        // rome-ignore lint/style/noParameterAssign: recursive function
+        // biome-ignore lint/style/noParameterAssign: recursive function
         count++;
       } catch (error) {
         // do nothing
       }
 
       const parentDir = path.dirname(dirPath);
-      // rome-ignore lint/style/noParameterAssign: recursive function
+      // biome-ignore lint/style/noParameterAssign: recursive function
       count = await removeEmptyDirsUp(checkedDirs, parentDir, count);
     }
   }

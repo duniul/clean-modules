@@ -21,16 +21,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 🏗 Setup repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+
+      - name: 🏗 Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
 
       - name: 🏗 Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 18.x
-          cache: yarn
+          cache: pnpm
 
       - name: 📦 Install dependencies
-        run: yarn install
+        run: pnpm install
 
       - name: 🆕 Publish to npm or create release PR
         id: changesets
@@ -38,8 +43,8 @@ jobs:
         with:
           title: '🆕 Upcoming release'
           commit: 'chore: bump version'
-          version: yarn version
-          publish: yarn release
+          version: pnpm version
+          publish: pnpm release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

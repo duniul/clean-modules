@@ -19,22 +19,24 @@ jobs:
       contents: read
     steps:
       - name: 🏗 Setup repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+
+      - name: 🏗 Setup pnpm
+        uses: pnpm/action-setup@v2
         with:
-          fetch-depth: 0
-          persist-credentials: false
+          version: 8
 
       - name: 🏗 Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 18.x
-          cache: yarn
+          cache: pnpm
 
       - name: 📦 Install dependencies
-        run: yarn install
+        run: pnpm install
 
       - name: 🧱 Build project
-        run: yarn build
+        run: pnpm build
 
   test:
     name: 🧪 Test
@@ -47,19 +49,21 @@ jobs:
 
     steps:
       - name: 🏗 Setup repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+
+      - name: 🏗 Setup pnpm
+        uses: pnpm/action-setup@v2
         with:
-          fetch-depth: 0
-          persist-credentials: false
+          version: 8
 
       - name: 🏗 Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: yarn
+          node-version: 18.x
+          cache: pnpm
 
       - name: 📦 Install dependencies
-        run: yarn install
+        run: pnpm install
 
       - name: 🧪 Run tests
-        run: yarn test
+        run: pnpm test

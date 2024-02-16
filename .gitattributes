@@ -2,7 +2,3 @@
 *.jpg binary
 *.png binary
 *.gif binary
-
-# Skip diffchecks of prebuilt files to avoid unnecessary diff checks
-.yarn/releases/** binary
-.yarn/plugins/** binary

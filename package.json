@@ -13,6 +13,7 @@
     "node-modules",
     "npm",
     "yarn",
+    "pnpm",
     "cli-tool",
     "ci"
   ],
@@ -25,7 +26,7 @@
     ".cleanmodules-default",
     "!.tsbuildinfo"
   ],
-  "packageManager": "yarn@3.6.3",
+  "packageManager": "pnpm@8.14.3",
   "type": "module",
   "exports": {
     ".": {
@@ -48,7 +49,7 @@
     "build": "tsup",
     "dev": "tsc --watch",
     "test": "vitest",
-    "prepublishOnly": "yarn build",
+    "prepublishOnly": "pnpm build",
     "lint": "rome check src && prettier --check src",
     "lint:fix": "rome check --apply src && prettier --write src",
     "version": "changeset version",

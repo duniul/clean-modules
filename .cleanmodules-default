@@ -50,7 +50,7 @@ website/
 *.@(md|mkd|markdown|mdown)
 *.todo
 *.mustache
-*.asciidoc
+*.@(adoc|asciidoc)
 *.DOCS
 
 # compiled

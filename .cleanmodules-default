@@ -114,6 +114,7 @@ circle.yml
 
 # linters
 .eslintrc*(.*)
+eslint.config.@(cjs|js|mjs)
 stylelint.config.js
 .stylelintrc*(.*)
 .htmllintrc*(.*)

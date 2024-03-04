@@ -1,5 +1,13 @@
 # clean-modules
 
+## 3.0.5
+
+### Patch Changes
+
+- Add `adoc` to the AsciiDoc glob in `.cleanmodules-default`. _[`#32`](https://github.com/duniul/clean-modules/pull/32) [`e0b0239`](https://github.com/duniul/clean-modules/commit/e0b0239ea1fbddde9382ead635716a8d2253a41b) [@sdavids](https://github.com/sdavids)_
+- Add glob for OSSMETADATA to `.cleanmodules-default`. _[`#30`](https://github.com/duniul/clean-modules/pull/30) [`cf70c0b`](https://github.com/duniul/clean-modules/commit/cf70c0b326320078a08d91a98a9f4216100477c4) [@sdavids](https://github.com/sdavids)_
+- Add glob for new ESLint config files to `.cleanmodules-default`. _[`#28`](https://github.com/duniul/clean-modules/pull/28) [`680825a`](https://github.com/duniul/clean-modules/commit/680825ae8b554bc047627c51c032e01990f4b9f6) [@sdavids](https://github.com/sdavids)_
+
 ## 3.0.4
 
 ### Patch Changes

@@ -43,8 +43,8 @@ jobs:
         with:
           title: '🆕 Upcoming release'
           commit: 'chore: bump version'
-          version: pnpm version
-          publish: pnpm release
+          version: pnpm run version
+          publish: pnpm run release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -35,6 +35,7 @@ coverage/
 
 # other
 website/
+.husky/
 
 #
 # FILE EXTENSIONS

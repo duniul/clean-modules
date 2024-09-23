@@ -40,6 +40,9 @@ website/
 # FILE EXTENSIONS
 #
 
+# IDE
+*.iml
+
 # tests
 *.test.*
 
@@ -198,5 +201,4 @@ contributors
 .jamignore
 .codecov.yml
 pom.xml
-.iml
 OSSMETADATA

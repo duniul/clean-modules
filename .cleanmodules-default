@@ -111,6 +111,7 @@ Jenkinsfile
 .gitlab-ci.yml
 .appveyor.yml
 circle.yml
+.nojekyll
 
 # Mac OS
 .DS_Store

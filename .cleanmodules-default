@@ -156,6 +156,7 @@ authors*(.*)
 contributors*(.*)
 contributing*(.*)
 notice*(.*)
+copying*(.*)
 
 # licenses
 licen@(s|c)e

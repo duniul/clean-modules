@@ -196,6 +196,7 @@ renovate.json
 
 # versioning
 .bmp.yml
+.release-it.@(cjs|js|json|toml|ts|yaml|yml)
 
 # other
 .dir-locals.el

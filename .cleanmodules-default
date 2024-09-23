@@ -141,6 +141,7 @@ karma.conf.js
 wallaby.js
 wallaby.conf.js
 .coveralls.yml
+.airtap.yml
 
 # docs
 readme*(.*)

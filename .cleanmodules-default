@@ -194,6 +194,9 @@ renovate.json
 .nycrc
 .jscsrc
 
+# versioning
+.bmp.yml
+
 # other
 .dir-locals.el
 binding.gyp

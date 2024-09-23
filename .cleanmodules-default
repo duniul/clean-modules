@@ -117,6 +117,10 @@ circle.yml
 # Mac OS
 .DS_Store
 
+# Windows
+Desktop.ini
+Thumbs.db
+
 # linters
 .eslintrc*(.*)
 eslint.config.@(cjs|js|mjs)

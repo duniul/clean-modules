@@ -73,7 +73,16 @@ export class CleanCommand extends BaseCommand {
       console.log(JSON.stringify(output, null, 2));
     } else {
       logger.log(bold('\nResults:'));
-      logger.log('- size reduced:', green(prettyBytes(reducedSize || 0)));
+      logger.log(
+        '- size reduced:',
+        green(
+          prettyBytes(reducedSize || 0, {
+            space: true,
+            minimumFractionDigits: 1,
+            maximumFractionDigits: 2,
+          })
+        )
+      );
       logger.log('- files removed:', green(files.length));
       logger.log('- empty dirs removed:', green(removedEmptyDirs || 0));
     }

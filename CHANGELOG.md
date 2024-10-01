@@ -1,5 +1,11 @@
 # clean-modules
 
+## 3.1.1
+
+### Patch Changes
+
+- Respect `directory` option in `analyze` command. _[`529502e`](https://github.com/duniul/clean-modules/commit/529502e1de3da64b87dd40f631b0abd6f91879b7) [@duniul](https://github.com/duniul)_
+
 ## 3.1.0
 
 ### Minor Changes

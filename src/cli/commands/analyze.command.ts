@@ -10,6 +10,7 @@ export class AnalyzeCommand extends BaseCommand {
 
   async execute(): Promise<void> {
     const analyzeResults = await analyze({
+      directory: this.directory,
       globs: this.globs,
       noDefaults: this.noDefaults,
       globFile: this.globFile,

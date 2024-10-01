@@ -1,5 +1,15 @@
 # clean-modules
 
+## 3.1.0
+
+### Minor Changes
+
+- Add default patterns for GitHub Pages, JetBrains, airtap, husky, bmp, release-it, Windows, and GNU COPYING. _[`#35`](https://github.com/duniul/clean-modules/pull/35) [`89fcb28`](https://github.com/duniul/clean-modules/commit/89fcb2862ab07bbd52cded0288b3bf694a974238) [@sdavids](https://github.com/sdavids)_
+
+### Patch Changes
+
+- Include up to 2 fraction digits when reporting reduced size. _[`89dd555`](https://github.com/duniul/clean-modules/commit/89dd5554b44e8229ba8be7d6a2472d4c14bd9c02) [@duniul](https://github.com/duniul)_
+
 ## 3.0.5
 
 ### Patch Changes

@@ -8,6 +8,7 @@
   "bugs": {
     "url": "https://github.com/duniul/clean-modules/issues"
   },
+  "sideEffects": false,
   "keywords": [
     "node",
     "node-modules",

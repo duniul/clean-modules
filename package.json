@@ -59,12 +59,12 @@
   "dependencies": {
     "clipanion": "^3.2.1",
     "picomatch": "^4.0.2",
-    "pretty-bytes": "^6.1.0",
-    "pretty-ms": "^8.0.0",
+    "pretty-bytes": "^6.1.1",
+    "pretty-ms": "^9.1.0",
     "supports-color": "^9.4.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.9.2",
+    "@biomejs/biome": "^1.9.3",
     "@changesets/cli": "^2.27.8",
     "@tsconfig/node14": "^14.1.2",
     "@types/mock-fs": "4.13.4",

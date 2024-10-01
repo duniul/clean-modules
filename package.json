@@ -26,7 +26,7 @@
     ".cleanmodules-default",
     "!.tsbuildinfo"
   ],
-  "packageManager": "pnpm@8.14.3",
+  "packageManager": "pnpm@9.11.0",
   "type": "module",
   "exports": {
     ".": {

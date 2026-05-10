@@ -1,13 +1,12 @@
-import { defineConfig } from 'tsup';
+import { defineConfig } from 'tsdown';
 
 export default defineConfig({
-  format: ['cjs', 'esm'],
+  format: ['esm'],
   entry: ['src/index.ts', 'src/cli/cli.ts'],
   outDir: 'dist',
-  target: 'node14',
-  splitting: true,
+  target: 'node22',
+  outExtensions: () => ({ js: '.js', dts: '.d.ts' }),
   sourcemap: false,
   clean: true,
-  shims: true,
   dts: true,
 });

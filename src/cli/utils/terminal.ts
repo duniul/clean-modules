@@ -1,5 +1,4 @@
 import readline from 'node:readline';
-import supportsColor from 'supports-color';
 
 type DisabledConsole = Console;
 
@@ -38,19 +37,3 @@ export function yesOrNo(query: string): Promise<boolean> {
     });
   });
 }
-
-/**
- * Simple string colorizer factory.
- */
-function colorizer(colorCode: string): (text: string | number) => string {
-  if (!supportsColor.stdout) {
-    // oxlint-disable-next-line unicorn/prefer-native-coercion-functions
-    return text => String(text);
-  }
-
-  return text => `\u001B[${colorCode}m${text}\u001B[0m`;
-}
-
-export const bold = colorizer('1');
-export const green = colorizer('32');
-export const yellow = colorizer('33');

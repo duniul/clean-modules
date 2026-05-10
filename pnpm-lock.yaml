@@ -34,8 +34,8 @@ importers:
         specifier: 22.19.18
         version: 22.19.18
       '@types/picomatch':
-        specifier: 3.0.1
-        version: 3.0.1
+        specifier: 4.0.3
+        version: 4.0.3
       '@types/supports-color':
         specifier: 8.1.3
         version: 8.1.3
@@ -830,8 +830,8 @@ packages:
   '@types/node@22.19.18':
     resolution: {integrity: sha512-9v00a+dn2yWVsYDEunWC4g/TcRKVq3r8N5FuZp7u0SGrPvdN9c2yXI9bBuf5Fl0hNCb+QTIePTn5pJs2pwBOQQ==}
 
-  '@types/picomatch@3.0.1':
-    resolution: {integrity: sha512-1MRgzpzY0hOp9pW/kLRxeQhUWwil6gnrUYd3oEpeYBqp/FexhaCPv3F8LsYr47gtUU45fO2cm1dbwkSrHEo8Uw==}
+  '@types/picomatch@4.0.3':
+    resolution: {integrity: sha512-iG0T6+nYJ9FAPmx9SsUlnwcq1ZVRuCXcVEvWnntoPlrOpwtSTKNDC9uVAxTsC3PUvJ+99n4RpAcNgBbHX3JSnQ==}
 
   '@types/supports-color@8.1.3':
     resolution: {integrity: sha512-Hy6UMpxhE3j1tLpl27exp1XqHD7n8chAiNPzWfz16LPZoMMoSc4dzLl6w9qijkEb/r5O1ozdu1CWGA2L83ZeZg==}
@@ -2276,7 +2276,7 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
-  '@types/picomatch@3.0.1': {}
+  '@types/picomatch@4.0.3': {}
 
   '@types/supports-color@8.1.3': {}
 

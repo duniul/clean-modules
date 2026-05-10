@@ -1,7 +1,6 @@
 import { Command, Option } from 'clipanion';
-import prettyBytes from 'pretty-bytes';
-import prettyMs from 'pretty-ms';
 import { clean } from '../../clean.js';
+import { formatBytes, formatMs } from '../../utils/formatting.js';
 import { BaseCommand } from '../helpers/base.command.js';
 import { makeLogger, yesOrNo } from '../utils/terminal.js';
 
@@ -62,7 +61,7 @@ export class CleanCommand extends BaseCommand {
     });
 
     const cleanupDuration = Date.now() - cleanupStart;
-    logger.log(`Done in ${prettyMs(cleanupDuration)}!`);
+    logger.log(`Done in ${formatMs(cleanupDuration)}!`);
 
     if (this.json) {
       const output: Record<string, unknown> = {
@@ -77,14 +76,7 @@ export class CleanCommand extends BaseCommand {
       console.log(JSON.stringify(output, null, JSON_INDENT));
     } else {
       logger.log('\nResults:');
-      logger.log(
-        '- size reduced:',
-        prettyBytes(reducedSize || 0, {
-          space: true,
-          minimumFractionDigits: 1,
-          maximumFractionDigits: 2,
-        })
-      );
+      logger.log('- size reduced:', formatBytes(reducedSize || 0));
       logger.log('- files removed:', files.length);
       logger.log('- empty dirs removed:', removedEmptyDirs || 0);
     }

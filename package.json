@@ -53,9 +53,7 @@
   },
   "dependencies": {
     "clipanion": "^3.2.1",
-    "picomatch": "^4.0.2",
-    "pretty-bytes": "^6.1.1",
-    "pretty-ms": "^9.1.0"
+    "picomatch": "^4.0.2"
   },
   "devDependencies": {
     "@changesets/cli": "2.31.0",

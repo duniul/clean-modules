@@ -1,13 +1,10 @@
-import path from 'path';
-import { vol } from 'memfs';
-import pm from 'picomatch';
-import { beforeEach, describe, expect, it, Mock, vi } from 'vitest';
+import path from 'node:path';
+import { vol, type NestedDirectoryJSON } from 'memfs';
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { getMockedFileStructure } from '../__test__/getMockedFileStructure.js';
 import {
-  DEFAULT_PICO_OPTIONS,
   findFilesByGlobLists,
   formatGlob,
-  GlobLists,
   initGlobLists,
   makeGlobMatcher,
   mergeGlobLists,
@@ -18,9 +15,12 @@ import {
   toAbsoluteGlobLists,
   updateGlobLists,
   wrapGlobs,
+  type GlobLists,
 } from './glob.js';
 
-describe('makeGlobMatcher', () => {
+vi.setConfig({ testTimeout: 5000 });
+
+describe(makeGlobMatcher, () => {
   it('creates a picomatch globber with default options', () => {
     const pattern = '**/**';
 
@@ -31,7 +31,7 @@ describe('makeGlobMatcher', () => {
   });
 });
 
-describe('updateGlobLists', () => {
+describe(updateGlobLists, () => {
   const mockGlobLists: GlobLists = {
     ...initGlobLists(),
     included: ['foo'],
@@ -40,7 +40,7 @@ describe('updateGlobLists', () => {
   };
 
   it('runs passed function for correct files', () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<(globs: string[], key: keyof GlobLists) => string[]>();
 
     updateGlobLists(mockGlobLists, mockFn);
 
@@ -54,15 +54,15 @@ describe('updateGlobLists', () => {
     const expectedResult: GlobLists = {
       ...mockGlobLists,
       included: [...mockGlobLists.included, 'included'],
-      includedDirs: [...(mockGlobLists.includedDirs || []), 'includedDirs'],
+      includedDirs: [...mockGlobLists.includedDirs, 'includedDirs'],
       excluded: [...mockGlobLists.excluded, 'excluded'],
     };
 
-    expect(result).toEqual(expectedResult);
+    expect(result).toStrictEqual(expectedResult);
   });
 });
 
-describe('mergeGlobLists', () => {
+describe(mergeGlobLists, () => {
   it('merges glob lists', () => {
     const result = mergeGlobLists(
       {
@@ -79,7 +79,7 @@ describe('mergeGlobLists', () => {
       }
     );
 
-    expect(result).toEqual({
+    expect(result).toStrictEqual({
       ...initGlobLists(),
       included: ['foo', 'bar'],
       includedDirs: ['foo', 'bar'],
@@ -88,7 +88,7 @@ describe('mergeGlobLists', () => {
   });
 });
 
-describe('toAbsoluteGlobLists', () => {
+describe(toAbsoluteGlobLists, () => {
   it('prepends globs with absolute paths on all platforms', () => {
     const result = toAbsoluteGlobLists(
       {
@@ -100,7 +100,7 @@ describe('toAbsoluteGlobLists', () => {
       '/foo'
     );
 
-    expect(result).toEqual({
+    expect(result).toStrictEqual({
       ...initGlobLists(),
       included: ['/foo/bar'],
       includedDirs: ['/foo/bar'],
@@ -109,31 +109,31 @@ describe('toAbsoluteGlobLists', () => {
   });
 });
 
-describe('wrapGlobs', () => {
+describe(wrapGlobs, () => {
   it('wraps globs into a single glob', () => {
     const result = wrapGlobs(['**/foo', '**/bar', '*/baz']);
-    expect(result).toEqual('@((**/foo)|(**/bar)|(*/baz))');
+    expect(result).toBe('@((**/foo)|(**/bar)|(*/baz))');
   });
 
   it('prepends an optional prefix to the result', () => {
     const result = wrapGlobs(['**/foo', '**/bar', '*/baz'], 'hello');
-    expect(result).toEqual('hello@((**/foo)|(**/bar)|(*/baz))');
+    expect(result).toBe('hello@((**/foo)|(**/bar)|(*/baz))');
   });
 });
 
-describe('optimizeGlobs', () => {
+describe(optimizeGlobs, () => {
   it('splits globs by leading characters and merges into two globs', () => {
     const result = optimizeGlobs(['**/some', '*/where', 'over', '**/the', '/rainbow']);
-    expect(result).toEqual(['**/@((some)|(the))', '@((*/where)|(over)|(/rainbow))']);
+    expect(result).toStrictEqual(['**/@((some)|(the))', '@((*/where)|(over)|(/rainbow))']);
   });
 
   it('normalizes leading globstars', () => {
     const result = optimizeGlobs(['**/**/**/one', '**/**/two', '**/three', '/**/four']);
-    expect(result).toEqual(['**/@((one)|(two)|(three)|(four))']);
+    expect(result).toStrictEqual(['**/@((one)|(two)|(three)|(four))']);
   });
 });
 
-describe('optimizeGlobLists', () => {
+describe(optimizeGlobLists, () => {
   it('splits globs by leading characters and merges into two globs', () => {
     const result = optimizeGlobLists({
       ...initGlobLists(),
@@ -162,34 +162,34 @@ describe('optimizeGlobLists', () => {
   });
 });
 
-describe('formatGlob', () => {
+describe(formatGlob, () => {
   it('trims globs', () => {
     const result = formatGlob('   foo/**    ');
-    expect(result).toEqual('**/foo/**');
+    expect(result).toBe('**/foo/**');
   });
 
   it('adds globstars to globs not starting with a slash', () => {
     const result = formatGlob('test.ts');
-    expect(result).toEqual('**/test.ts');
+    expect(result).toBe('**/test.ts');
   });
 
   it('replaces escaped leading exclamation marks', () => {
-    const result = formatGlob('\\!(*.d).ts');
-    expect(result).toEqual('**/!(*.d).ts');
+    const result = formatGlob(String.raw`\!(*.d).ts`);
+    expect(result).toBe('**/!(*.d).ts');
   });
 
   it('removes leading slashes', () => {
     const result = formatGlob('/path/to/file');
-    expect(result).toEqual('path/to/file');
+    expect(result).toBe('path/to/file');
   });
 
   it('appends globstars to directory globs', () => {
     const result = formatGlob('/path/to/directory/');
-    expect(result).toEqual('path/to/directory/**');
+    expect(result).toBe('path/to/directory/**');
   });
 });
 
-describe('processGlobs', () => {
+describe(processGlobs, () => {
   it('formats globs and splits them into include/exclude glob lists', () => {
     const result = processGlobs(['**/test', '!test.js', '**/path/to/directory/', '*.ext']);
     expect(result).toMatchInlineSnapshot(`
@@ -216,25 +216,27 @@ describe('processGlobs', () => {
 
   it('removes trailing globstars from dir globs', () => {
     const result = processGlobs(['**/foo/**', '/bar/**']);
-    expect(result.includedDirs).toEqual(['**/**/foo', 'bar']);
+    expect(result.includedDirs).toStrictEqual(['**/**/foo', 'bar']);
   });
 
   it('filters empty strings', () => {
     const result = processGlobs(['foo', '', '', '', 'bar']);
-    expect(result.included).toEqual(['**/foo', '**/bar']);
+    expect(result.included).toStrictEqual(['**/foo', '**/bar']);
   });
 
   it('keeps original inclusion globs', () => {
     const original = ['**/test', '**/path/to/directory/', '*.ext'];
     const result = processGlobs(original);
-    expect(result.originalIncluded).toEqual(original);
+    expect(result.originalIncluded).toStrictEqual(original);
   });
 });
 
-describe('parseGlobsFile', () => {
+describe(parseGlobsFile, () => {
   const globFilePath = process.cwd() + '/.cleanmodules';
 
   it('loads globs from a glob file', async () => {
+    expect.hasAssertions();
+
     const globFile = `
     # this is a comment
     __test__/
@@ -276,6 +278,8 @@ describe('parseGlobsFile', () => {
   });
 
   it('removes comments', async () => {
+    expect.hasAssertions();
+
     const globFile = `
     # this is a comment
     # this too
@@ -285,11 +289,13 @@ describe('parseGlobsFile', () => {
 
     vol.fromNestedJSON({ [globFilePath]: globFile });
     const result = await parseGlobsFile(globFilePath);
-    expect(result.included).toEqual(['**/path/to/something']);
-    expect(result.excluded).toEqual([]);
+    expect(result.included).toStrictEqual(['**/path/to/something']);
+    expect(result.excluded).toStrictEqual([]);
   });
 
   it('removes empty lines', async () => {
+    expect.hasAssertions();
+
     const globFile = `
 
     path/to/something
@@ -298,37 +304,45 @@ describe('parseGlobsFile', () => {
 
     vol.fromNestedJSON({ [globFilePath]: globFile });
     const result = await parseGlobsFile(globFilePath);
-    expect(result.included).toEqual(['**/path/to/something']);
-    expect(result.excluded).toEqual([]);
+    expect(result.included).toStrictEqual(['**/path/to/something']);
+    expect(result.excluded).toStrictEqual([]);
   });
 
   it('adds lines starting with an exclamation point to excluded globs', async () => {
+    expect.hasAssertions();
+
     const globFile = `
     !excludeMe
     `;
 
     vol.fromNestedJSON({ [globFilePath]: globFile });
     const result = await parseGlobsFile(globFilePath);
-    expect(result.included).toEqual([]);
-    expect(result.excluded).toEqual(['**/excludeMe']);
+    expect(result.included).toStrictEqual([]);
+    expect(result.excluded).toStrictEqual(['**/excludeMe']);
   });
 });
 
-describe('findFilesByGlobLists', async () => {
-  const fileStructure = await getMockedFileStructure();
+describe(findFilesByGlobLists, () => {
+  let fileStructure: NestedDirectoryJSON;
   const nodeModulesPath = 'node_modules';
 
-  beforeEach(async () => {
+  beforeAll(async () => {
+    fileStructure = await getMockedFileStructure();
+  });
+
+  beforeEach(() => {
     vol.fromNestedJSON(fileStructure);
   });
 
   it('includes dirs', async () => {
+    expect.hasAssertions();
+
     const result = await findFilesByGlobLists(nodeModulesPath, {
       ...initGlobLists(),
       includedDirs: ['**/__tests__', '**/dep3'],
     });
 
-    expect(result).toEqual([
+    expect(result).toStrictEqual([
       path.join('node_modules', 'dep1', '__tests__', 'test1.js'),
       path.join('node_modules', 'dep1', '__tests__', 'test2.js'),
       path.join('node_modules', 'dep3', 'deeply', 'nested', 'file.ext'),
@@ -336,24 +350,28 @@ describe('findFilesByGlobLists', async () => {
   });
 
   it('includes files', async () => {
+    expect.hasAssertions();
+
     const result = await findFilesByGlobLists(nodeModulesPath, {
       ...initGlobLists(),
       included: ['**/deeply/nested/file.ext', '**/dep4/**'],
     });
 
-    expect(result).toEqual([
+    expect(result).toStrictEqual([
       path.join('node_modules', 'dep4', 'nonDefaultFile.ext'),
       path.join('node_modules', 'dep3', 'deeply', 'nested', 'file.ext'),
     ]);
   });
 
   it('can exclude files and dirs by glob patterns', async () => {
+    expect.hasAssertions();
+
     const result = await findFilesByGlobLists(nodeModulesPath, {
       ...initGlobLists(),
       included: ['**/*.js'],
       excluded: ['**/test*.js'],
     });
 
-    expect(result).toEqual([path.join('node_modules', 'dep2', 'file.js')]);
+    expect(result).toStrictEqual([path.join('node_modules', 'dep2', 'file.js')]);
   });
 });

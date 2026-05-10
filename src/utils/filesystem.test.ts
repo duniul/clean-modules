@@ -1,7 +1,7 @@
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 import { vol } from 'memfs';
-import { afterEach, beforeEach, describe, expect, it, MockedFunction, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { getMockedFileStructure } from '../__test__/getMockedFileStructure.js';
 import {
   crawlDirFast,
@@ -12,7 +12,11 @@ import {
   removeEmptyDirs,
   removeEmptyDirsUp,
   removeFiles,
+  type CheckPathFunc,
+  type DirentAction,
 } from './filesystem.js';
+
+vi.setConfig({ testTimeout: 5000 });
 
 describe('file exists', () => {
   beforeEach(() => {
@@ -25,16 +29,22 @@ describe('file exists', () => {
   });
 
   it('returns true if the file exists', async () => {
+    expect.hasAssertions();
+
     const result = await fileExists('testdir/foo');
     expect(result).toBe(true);
   });
 
   it('returns false if the file does not exists', async () => {
+    expect.hasAssertions();
+
     const result = await fileExists('testdir/foo');
     expect(result).toBe(true);
   });
 
   it("throws any error that isn't ENOENT", async () => {
+    expect.hasAssertions();
+
     const statSpy = vi.spyOn(fs.promises, 'stat').mockImplementation(() => {
       throw new Error('not an ENOENT!');
     });
@@ -45,7 +55,7 @@ describe('file exists', () => {
   });
 });
 
-describe('forEachDirentAsync', () => {
+describe(forEachDirentAsync, () => {
   beforeEach(() => {
     vol.fromNestedJSON({
       testdir: {
@@ -57,7 +67,9 @@ describe('forEachDirentAsync', () => {
   });
 
   it('runs action with dirents for each item in a directory', async () => {
-    const action = vi.fn();
+    expect.hasAssertions();
+
+    const action = vi.fn<DirentAction>();
     await forEachDirentAsync('testdir', action);
 
     expect(action).toHaveBeenCalledTimes(3);
@@ -81,21 +93,27 @@ describe('forEachDirentAsync', () => {
   });
 });
 
-describe('readDirectory', () => {
+describe(readDirectory, () => {
   beforeEach(() => {
     vol.fromNestedJSON({ 'parent/empty': { 'foo.txt': '', 'bar.txt': '' } });
   });
 
   it('returns list of files in directory', async () => {
-    expect(await readDirectory('parent/empty')).toEqual(expect.arrayContaining(['foo.txt', 'bar.txt']));
+    expect.hasAssertions();
+
+    await expect(readDirectory('parent/empty')).resolves.toStrictEqual(
+      expect.arrayContaining(['foo.txt', 'bar.txt'])
+    );
   });
 
   it('returns empty array if directory does not exist', async () => {
-    expect(await readDirectory('parent/invalid')).toEqual([]);
+    expect.hasAssertions();
+
+    await expect(readDirectory('parent/invalid')).resolves.toStrictEqual([]);
   });
 });
 
-describe('removeEmptyDirsUp', () => {
+describe(removeEmptyDirsUp, () => {
   beforeEach(() => {
     vol.fromNestedJSON({
       a0: {
@@ -112,32 +130,38 @@ describe('removeEmptyDirsUp', () => {
   });
 
   it('recursively removes empty directories up in the file tree', async () => {
+    expect.hasAssertions();
+
     const checkedDirs = new Set<string>();
     await removeEmptyDirsUp(checkedDirs, 'a0/b0/c0/d0/e0');
 
-    expect(Array.from(checkedDirs)).toEqual(['a0/b0/c0/d0/e0', 'a0/b0/c0/d0', 'a0/b0/c0', 'a0/b0']);
+    expect([...checkedDirs]).toStrictEqual(['a0/b0/c0/d0/e0', 'a0/b0/c0/d0', 'a0/b0/c0', 'a0/b0']);
 
     // dirs no longer exist
-    expect(fs.existsSync('a0/b0/c0/d0/e0')).toEqual(false);
-    expect(fs.existsSync('a0/b0/c0/d0')).toEqual(false);
-    expect(fs.existsSync('a0/b0/c0')).toEqual(false);
-    expect(fs.existsSync('a0/b0')).toEqual(true);
-    expect(fs.existsSync('a0')).toEqual(true);
+    expect(fs.existsSync('a0/b0/c0/d0/e0')).toBe(false);
+    expect(fs.existsSync('a0/b0/c0/d0')).toBe(false);
+    expect(fs.existsSync('a0/b0/c0')).toBe(false);
+    expect(fs.existsSync('a0/b0')).toBe(true);
+    expect(fs.existsSync('a0')).toBe(true);
   });
 
   it('does not throw if path is invalid', async () => {
+    expect.hasAssertions();
+
     const checkedDirs = new Set<string>();
-    expect(async () => await removeEmptyDirsUp(checkedDirs, 'invalid/path')).not.toThrow();
+    await expect(() => removeEmptyDirsUp(checkedDirs, 'invalid/path')).not.toThrow();
   });
 });
 
-describe('removeEmptyDirs', () => {
+describe(removeEmptyDirs, () => {
   beforeEach(async () => {
     const fileStructure = await getMockedFileStructure();
     vol.fromNestedJSON(fileStructure);
   });
 
   it('cleans up empty parent dirs for provided files', async () => {
+    expect.hasAssertions();
+
     const filePaths = [
       'node_modules/dep1/__tests__/test1.js',
       'node_modules/dep1/a-dir/doc.md',
@@ -158,12 +182,14 @@ describe('removeEmptyDirs', () => {
   });
 
   it('does not throw if path is invalid', async () => {
+    expect.hasAssertions();
+
     const filePaths = ['invalid/path/2', 'invalid/path/2'];
-    expect(async () => await removeEmptyDirs(filePaths)).not.toThrow();
+    await expect(() => removeEmptyDirs(filePaths)).not.toThrow();
   });
 });
 
-describe('crawlDirFast', () => {
+describe(crawlDirFast, () => {
   beforeEach(() => {
     vol.fromNestedJSON({
       a0: {
@@ -189,9 +215,11 @@ describe('crawlDirFast', () => {
   });
 
   it('appends all nested file paths to the provided array', async () => {
+    expect.hasAssertions();
+
     const filePaths: string[] = [];
     await crawlDirFast(filePaths, 'a0');
-    expect(filePaths).toEqual([
+    expect(filePaths).toStrictEqual([
       path.join('a0', 'b0', 'c1'),
       path.join('a0', 'b0', 'c2'),
       path.join('a0', 'b0', 'c0', 'd2'),
@@ -200,12 +228,14 @@ describe('crawlDirFast', () => {
   });
 
   it('does not throw if path is invalid', async () => {
+    expect.hasAssertions();
+
     const filePaths: string[] = [];
-    expect(async () => await crawlDirFast(filePaths, 'invalid/path')).not.toThrow();
+    await expect(() => crawlDirFast(filePaths, 'invalid/path')).not.toThrow();
   });
 });
 
-describe('crawlDirWithChecks', () => {
+describe(crawlDirWithChecks, () => {
   beforeEach(() => {
     vol.fromNestedJSON({
       a0: {
@@ -231,9 +261,11 @@ describe('crawlDirWithChecks', () => {
   });
 
   it('runs check functions on each nested item', async () => {
+    expect.hasAssertions();
+
     const filePaths: string[] = [];
-    const checkDir = vi.fn(() => false);
-    const checkFile = vi.fn(() => true);
+    const checkDir = vi.fn<CheckPathFunc>(() => false);
+    const checkFile = vi.fn<CheckPathFunc>(() => true);
 
     await crawlDirWithChecks(filePaths, 'a0', checkDir, checkFile);
     expect(checkDir).toHaveBeenCalledTimes(6);
@@ -241,51 +273,57 @@ describe('crawlDirWithChecks', () => {
   });
 
   it('includes full dir without checking remaining items if checkDir returns true', async () => {
+    expect.hasAssertions();
+
     const filePaths: string[] = [];
-    const checkDir = vi.fn(() => true);
-    const checkFile = vi.fn(() => true);
+    const checkDir = vi.fn<CheckPathFunc>(() => true);
+    const checkFile = vi.fn<CheckPathFunc>(() => true);
 
     await crawlDirWithChecks(filePaths, 'a0', checkDir, checkFile);
 
-    expect(filePaths).toEqual([
+    expect(filePaths).toStrictEqual([
       path.join('a0', 'b0', 'c1'),
       path.join('a0', 'b0', 'c2'),
       path.join('a0', 'b0', 'c0', 'd2'),
       path.join('a0', 'b0', 'c0', 'd1', 'e0', 'f0'),
     ]);
     expect(checkDir).toHaveBeenCalledTimes(1);
-    expect(checkFile).toHaveBeenCalledTimes(0);
+    expect(checkFile).not.toHaveBeenCalled();
   });
 
   it('skips file if checkFile function returns false', async () => {
+    expect.hasAssertions();
+
     const filePaths: string[] = [];
-    const checkDir = vi.fn(() => false);
-    const checkFile = vi.fn(() => false);
+    const checkDir = vi.fn<CheckPathFunc>(() => false);
+    const checkFile = vi.fn<CheckPathFunc>(() => false);
 
     await crawlDirWithChecks(filePaths, 'a0', checkDir, checkFile);
 
-    expect(filePaths).toEqual([]);
+    expect(filePaths).toStrictEqual([]);
     expect(checkFile).toHaveBeenCalledTimes(4);
   });
 
   it('does not throw if path is invalid', async () => {
-    const filePaths: string[] = [];
-    const checkDir = vi.fn(() => false);
-    const checkFile = vi.fn(() => false);
+    expect.hasAssertions();
 
-    expect(
-      async () => await crawlDirWithChecks(filePaths, 'invalid/path', checkDir, checkFile)
-    ).not.toThrow();
+    const filePaths: string[] = [];
+    const checkDir = vi.fn<CheckPathFunc>(() => false);
+    const checkFile = vi.fn<CheckPathFunc>(() => false);
+
+    await expect(() => crawlDirWithChecks(filePaths, 'invalid/path', checkDir, checkFile)).not.toThrow();
   });
 });
 
-describe('removeFiles', () => {
+describe(removeFiles, () => {
   beforeEach(async () => {
     const fileStructure = await getMockedFileStructure();
     vol.fromNestedJSON(fileStructure);
   });
 
   it('removes files at provided file paths', async () => {
+    expect.hasAssertions();
+
     const filePaths = ['node_modules/dep1/__tests__/test1.js', 'node_modules/dep1/a-dir/doc.md'];
 
     // files are initially there
@@ -300,6 +338,8 @@ describe('removeFiles', () => {
   });
 
   it('does not remove files during dry runs', async () => {
+    expect.hasAssertions();
+
     const filePaths = ['node_modules/dep1/__tests__/test1.js', 'node_modules/dep1/a-dir/doc.md'];
 
     await removeFiles(filePaths, { dryRun: true });
@@ -309,7 +349,9 @@ describe('removeFiles', () => {
   });
 
   it('does not throw if path is invalid', async () => {
+    expect.hasAssertions();
+
     const filePaths = ['/invalid/path/2', '/invalid/path/2'];
-    expect(async () => await removeFiles(filePaths)).not.toThrow();
+    await expect(() => removeFiles(filePaths)).not.toThrow();
   });
 });

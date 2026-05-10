@@ -1,16 +1,20 @@
 import { vol } from 'memfs';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { vi, beforeEach, describe, expect, it } from 'vitest';
 import { getMockedFileStructure } from './__test__/getMockedFileStructure.js';
 import { clean } from './clean.js';
 
+vi.setConfig({ testTimeout: 5000 });
+
 const fileStructure = await getMockedFileStructure();
 
-beforeEach(async () => {
-  vol.fromNestedJSON(fileStructure);
-});
+describe(clean, () => {
+  beforeEach(() => {
+    vol.fromNestedJSON(fileStructure);
+  });
 
-describe(clean.name, () => {
   it('cleans up expected files by default', async () => {
+    expect.hasAssertions();
+
     const result = await clean();
     expect(result).toMatchInlineSnapshot(`
       {
@@ -28,6 +32,8 @@ describe(clean.name, () => {
   });
 
   it('accepts custom globs', async () => {
+    expect.hasAssertions();
+
     const result = await clean({ globs: ['**/nonDefaultFile.ext'] });
     expect(result).toMatchInlineSnapshot(`
       {
@@ -46,6 +52,8 @@ describe(clean.name, () => {
   });
 
   it('allows skipping default globs', async () => {
+    expect.hasAssertions();
+
     const result = await clean({ noDefaults: true, globs: ['**/nonDefaultFile.ext'] });
     expect(result).toMatchInlineSnapshot(`
       {
@@ -59,6 +67,8 @@ describe(clean.name, () => {
   });
 
   it('uses custom glob file if provided', async () => {
+    expect.hasAssertions();
+
     const customGlobFile = '.custom-glob-file';
     vol.fromNestedJSON({ ...fileStructure, [customGlobFile]: '**.md\n**/nonDefaultFile.ext' });
 
@@ -77,6 +87,8 @@ describe(clean.name, () => {
   });
 
   it('keeps empty directories if specified', async () => {
+    expect.hasAssertions();
+
     const result = await clean({ keepEmpty: true });
     expect(result.removedEmptyDirs).toBe(0);
   });

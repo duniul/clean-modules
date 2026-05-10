@@ -1,4 +1,5 @@
-import { SharedOptions, sharedDefaultOptions } from './shared.js';
+import type { SharedOptions } from './shared.js';
+import { sharedDefaultOptions } from './shared.js';
 import {
   findFilesByGlobLists,
   getGlobLists,
@@ -9,21 +10,21 @@ import {
   toPosixPath,
 } from './utils/glob.js';
 
-export interface GlobVersions {
+export type GlobVersions = {
   /** The original glob, as provided by the glob file or user. */
   original: string;
   /** The glob as it was derived by clean-modules and passed to picomatch. */
   derived: string;
-}
+};
 
-export interface AnalyzeResult {
+export type AnalyzeResult = {
   /** The absolute path to the file. */
   filePath: string;
   /** Whether the file was included by clean-modules' default globs. */
   includedByDefault: boolean;
   /** List of globs that included the file. */
   includedByGlobs: GlobVersions[];
-}
+};
 
 export type AnalyzeOptions = SharedOptions;
 

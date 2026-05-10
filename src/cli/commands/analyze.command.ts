@@ -1,24 +1,25 @@
+import { defineCommand } from 'citty';
 import { analyze } from '../../analyze.js';
-import { BaseCommand } from '../helpers/base.command.js';
+import { sharedArgs } from '../helpers/args.js';
 
 const JSON_INDENT = 2;
 
-export class AnalyzeCommand extends BaseCommand {
-  static override paths = [['analyze']];
-  static override usage = {
+export const analyzeCommand = defineCommand({
+  meta: {
+    name: 'analyze',
     description:
       'Helps determining why a file is included by the clean command without removing any files. Extra globs can be passed as positional args.',
-  };
-
-  async execute(): Promise<void> {
+  },
+  args: sharedArgs,
+  async run({ args }): Promise<void> {
     const analyzeResults = await analyze({
-      directory: this.directory,
-      globs: this.globs,
-      noDefaults: this.noDefaults,
-      globFile: this.globFile,
+      directory: args.directory,
+      noDefaults: args['no-defaults'],
+      globFile: args['glob-file'],
+      globs: args._,
     });
 
     // oxlint-disable-next-line no-console
     console.log(JSON.stringify(analyzeResults, null, JSON_INDENT));
-  }
-}
+  },
+});

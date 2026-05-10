@@ -51,6 +51,7 @@
     "no-ternary": "off",
     "no-undefined": "off",
     "operator-assignment": "off",
+    "prefer-await-to-then": "off",
     "prefer-template": "off",
     "prefer-ternary": "off",
     "promise/avoid-new": "off",

@@ -1,14 +1,31 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "extends": ["@tsconfig/node14/tsconfig.json"],
+  "exclude": ["node_modules", "dist", ".history", "images"],
   "compilerOptions": {
+    "lib": ["esnext"],
+    "target": "esnext",
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "types": [],
+
     "outDir": "dist",
+    "noEmit": true,
+    "tsBuildInfoFile": "./tsconfig.tsbuildinfo",
+    "incremental": true,
+
     "strict": true,
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+
     "exactOptionalPropertyTypes": true,
     "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
     "noImplicitReturns": true,
-    "noImplicitOverride": true
+    "noUncheckedIndexedAccess": true,
+    "noUncheckedSideEffectImports": true
   }
 }

@@ -59,7 +59,7 @@ export async function analyze(options: AnalyzeOptions = {}): Promise<AnalyzeResu
 
     for (const { original, derived, matcher } of globMatchers) {
       if (matcher(filePath)) {
-        includedByGlobs.push({ original, derived });
+        includedByGlobs.push({ original: original ?? '', derived });
       }
     }
 

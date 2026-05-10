@@ -159,7 +159,10 @@ export type RemoveFilesOptions = {
  * @param options dryRun: if true, don't actually remove the files
  * @returns the total size of the removed files
  */
-export async function removeFiles(filePaths: string[], options: RemoveFilesOptions = {}): Promise<number> {
+export async function removeFiles(
+  filePaths: string[] | readonly string[],
+  options: RemoveFilesOptions = {}
+): Promise<number> {
   let reducedSize = 0;
 
   await Promise.all(

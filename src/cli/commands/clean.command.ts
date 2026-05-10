@@ -2,7 +2,7 @@ import { Command, Option } from 'clipanion';
 import { clean } from '../../clean.js';
 import { formatBytes, formatMs } from '../../utils/formatting.js';
 import { BaseCommand } from '../helpers/base.command.js';
-import { makeLogger, yesOrNo } from '../utils/terminal.js';
+import { makeSimpleLogger, yesOrNo } from '../utils/terminal.js';
 
 const JSON_INDENT = 2;
 
@@ -34,7 +34,7 @@ export class CleanCommand extends BaseCommand {
   });
 
   async execute(): Promise<void> {
-    const logger = makeLogger({ disabled: this.json || this.silent });
+    const logger = makeSimpleLogger({ disabled: this.json || this.silent });
 
     logger.log(`clean-modules${this.dryRun ? ' (dry run)' : ''}`);
 

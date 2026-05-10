@@ -22,7 +22,7 @@ export type GlobberPicoOptions = {
   cwd?: string;
 };
 
-export type GlobFunc = (filePath: string, test?: boolean) => boolean;
+export type GlobFunc = (filePath: string, test?: false | undefined) => boolean;
 
 /**
  * Creates a picomatch matcher from a set of globs.

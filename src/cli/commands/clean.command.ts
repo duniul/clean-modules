@@ -1,45 +1,57 @@
-import { Command, Option } from 'clipanion';
+import { defineCommand } from 'citty';
 import { clean } from '../../clean.js';
 import { formatBytes, formatMs } from '../../utils/formatting.js';
-import { BaseCommand } from '../helpers/base.command.js';
+import { sharedArgs } from '../helpers/args.js';
 import { makeSimpleLogger, yesOrNo } from '../utils/terminal.js';
 
 const JSON_INDENT = 2;
 
-export class CleanCommand extends BaseCommand {
-  static override paths = [['clean'], Command.Default];
-  static override usage = {
+export const cleanCommand = defineCommand({
+  meta: {
+    name: 'clean',
     description:
-      'Default command. Removes unnecessary files to reduce the size of your node_modules directory. Extra globs can be passed as positional args.',
-  };
+      'Removes unnecessary files to reduce the size of your node_modules directory. Extra globs can be passed as positional args.',
+  },
+  args: {
+    ...sharedArgs,
+    'keep-empty': {
+      type: 'boolean',
+      alias: ['k'],
+      default: false,
+      description: 'Skips removing empty folders after removing contents',
+    },
+    'dry-run': {
+      type: 'boolean',
+      alias: ['d'],
+      default: false,
+      description: 'Logs files that would be removed without removing any files',
+    },
+    'silent': {
+      type: 'boolean',
+      alias: ['s'],
+      default: false,
+      description: 'Does not log anything to console (unless --json is enabled)',
+    },
+    'json': {
+      type: 'boolean',
+      alias: ['j'],
+      default: false,
+      description: 'Output results as JSON',
+    },
+    'yes': {
+      type: 'boolean',
+      alias: ['y'],
+      default: false,
+      description: 'Skips the confirmation prompt at the start of the script',
+    },
+  },
+  async run({ args }): Promise<void> {
+    const logger = makeSimpleLogger({ disabled: args.json || args.silent });
 
-  keepEmpty = Option.Boolean('-k,--keep-empty', false, {
-    description: 'Skips removing empty folders after removing contents',
-  });
+    logger.log(`clean-modules${args.dryRun ? ' (dry run)' : ''}`);
 
-  dryRun = Option.Boolean('-d,--dry-run', false, {
-    description: 'Logs files that would be removed without removing any files',
-  });
-
-  silent = Option.Boolean('-s,--silent', false, {
-    description: 'Does not log anything to console (unless --json is enabled)',
-  });
-
-  yes = Option.Boolean('-y,--yes', false, {
-    description: 'Skips the confirmation prompt at the start of the script',
-  });
-
-  json = Option.Boolean('-j,--json', false, {
-    description: 'Output results as JSON',
-  });
-
-  async execute(): Promise<void> {
-    const logger = makeSimpleLogger({ disabled: this.json || this.silent });
-
-    logger.log(`clean-modules${this.dryRun ? ' (dry run)' : ''}`);
-
-    if (!this.yes && !this.dryRun) {
-      const warning = `\nPreparing to clean node_modules at: ${this.directory}\nAre you sure you want to continue? (Y/N) `;
+    if (!args.yes && !args.dryRun) {
+      const warning = `\nPreparing to clean node_modules at: ${args.directory}\nAre you sure you want to continue? (Y/N) `;
       const confirmed = await yesOrNo(warning);
 
       if (!confirmed) {
@@ -53,23 +65,23 @@ export class CleanCommand extends BaseCommand {
     const cleanupStart = Date.now();
 
     const { files, reducedSize, removedEmptyDirs } = await clean({
-      globs: this.globs,
-      noDefaults: this.noDefaults,
-      globFile: this.globFile,
-      directory: this.directory,
-      dryRun: this.dryRun,
+      globs: args._,
+      dryRun: args['dry-run'],
+      noDefaults: args['no-defaults'],
+      globFile: args['glob-file'],
+      directory: args.directory,
     });
 
     const cleanupDuration = Date.now() - cleanupStart;
     logger.log(`Done in ${formatMs(cleanupDuration)}!`);
 
-    if (this.json) {
+    if (args.json) {
       const output: Record<string, unknown> = {
         removedFiles: files.length,
         reducedSize,
         removedEmptyDirs,
         duration: cleanupDuration,
-        dryRun: this.dryRun,
+        dryRun: args['dry-run'],
       };
 
       // oxlint-disable-next-line no-console
@@ -80,5 +92,5 @@ export class CleanCommand extends BaseCommand {
       logger.log('- files removed:', files.length);
       logger.log('- empty dirs removed:', removedEmptyDirs || 0);
     }
-  }
-}
+  },
+});

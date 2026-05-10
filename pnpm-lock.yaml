@@ -8,9 +8,9 @@ importers:
 
   .:
     dependencies:
-      clipanion:
-        specifier: ^3.2.1
-        version: 3.2.1(typanion@3.14.0)
+      citty:
+        specifier: ^0.2.2
+        version: 0.2.2
       picomatch:
         specifier: ^4.0.2
         version: 4.0.4
@@ -905,10 +905,8 @@ packages:
   chardet@2.1.1:
     resolution: {integrity: sha512-PsezH1rqdV9VvyNhxxOW32/d75r01NY7TQCmOqomRo15ZSOKbpTFVsfjghxo6JloQUCGnH4k1LGu0R4yCLlWQQ==}
 
-  clipanion@3.2.1:
-    resolution: {integrity: sha512-dYFdjLb7y1ajfxQopN05mylEpK9ZX0sO1/RfMXdfmwjlIsPkbh4p7A682x++zFPLDCo1x3p82dtljHf5cW2LKA==}
-    peerDependencies:
-      typanion: '*'
+  citty@0.2.2:
+    resolution: {integrity: sha512-+6vJA3L98yv+IdfKGZHBNiGW5KHn22e/JwID0Strsz8h4S/csAu/OuICwxrg44k5MRiZHWIo8XXuJgQTriRP4w==}
 
   convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
@@ -1481,9 +1479,6 @@ packages:
 
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
-
-  typanion@3.14.0:
-    resolution: {integrity: sha512-ZW/lVMRabETuYCd9O9ZvMhAh8GslSqaUjxmK/JLPCh6l73CvLBiuXswj/+7LdnWOgYsQ130FqLzFz5aGT4I3Ug==}
 
   typescript@6.0.3:
     resolution: {integrity: sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==}
@@ -2333,9 +2328,7 @@ snapshots:
 
   chardet@2.1.1: {}
 
-  clipanion@3.2.1(typanion@3.14.0):
-    dependencies:
-      typanion: 3.14.0
+  citty@0.2.2: {}
 
   convert-source-map@2.0.0: {}
 
@@ -2854,8 +2847,6 @@ snapshots:
       - vue-tsc
 
   tslib@2.8.1: {}
-
-  typanion@3.14.0: {}
 
   typescript@6.0.3: {}
 

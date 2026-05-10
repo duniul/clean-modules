@@ -53,7 +53,7 @@
     "release": "changeset publish"
   },
   "dependencies": {
-    "clipanion": "^3.2.1",
+    "citty": "^0.2.2",
     "picomatch": "^4.0.2"
   },
   "devDependencies": {

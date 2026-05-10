@@ -1,24 +1,18 @@
-import { createRequire } from 'node:module';
-import path from 'node:path';
-import { Builtins, Cli } from 'clipanion';
-import { fileDir } from '../utils/filesystem.js';
-import { AnalyzeCommand } from './commands/analyze.command.js';
-import { CleanCommand } from './commands/clean.command.js';
+import { defineCommand, runMain } from 'citty';
+import pkgJson from '../../package.json' with { type: 'json' };
 
-const [_node, _app, ...args] = process.argv;
-const esmRequire = createRequire(import.meta.url);
-const cliDir = fileDir(import.meta.url);
-const { name, version } = esmRequire(path.resolve(cliDir, '..', '..', 'package.json'));
+const { name, version, description } = pkgJson;
 
-const cli = new Cli({
-  binaryLabel: name,
-  binaryVersion: version,
-  binaryName: name,
+const main = defineCommand({
+  meta: {
+    name,
+    version,
+    description,
+  },
+  subCommands: {
+    clean: () => import('./commands/clean.command').then(module => module.cleanCommand),
+    analyze: () => import('./commands/analyze.command').then(module => module.analyzeCommand),
+  },
 });
 
-cli.register(Builtins.HelpCommand);
-cli.register(Builtins.VersionCommand);
-cli.register(CleanCommand);
-cli.register(AnalyzeCommand);
-
-cli.runExit(args);
+runMain(main);

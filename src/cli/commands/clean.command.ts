@@ -48,9 +48,9 @@ export const cleanCommand = defineCommand({
   async run({ args }): Promise<void> {
     const logger = makeSimpleLogger({ disabled: args.json || args.silent });
 
-    logger.log(`clean-modules${args.dryRun ? ' (dry run)' : ''}`);
+    logger.log(`clean-modules${args['dryRun'] ? ' (dry run)' : ''}`);
 
-    if (!args.yes && !args.dryRun) {
+    if (!args.yes && !args['dryRun']) {
       const warning = `\nPreparing to clean node_modules at: ${args.directory}\nAre you sure you want to continue? (Y/N) `;
       const confirmed = await yesOrNo(warning);
 
@@ -69,6 +69,7 @@ export const cleanCommand = defineCommand({
       dryRun: args['dry-run'],
       noDefaults: args['no-defaults'],
       globFile: args['glob-file'],
+      keepEmpty: args['keep-empty'],
       directory: args.directory,
     });
 

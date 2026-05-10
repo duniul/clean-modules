@@ -1,9 +1,9 @@
-import path from 'path';
+import path from 'node:path';
 import { fileDir } from './utils/filesystem.js';
 
 export const DEFAULT_GLOBS_FILE_PATH = path.resolve(fileDir(import.meta.url), '..', '.cleanmodules-default');
 
-export interface SharedOptions {
+export type SharedOptions = {
   /** The directory to clean, usually node_modules. */
   directory?: string;
   /** Path to a custom glob file. Uses `.cleanmodules` by default. */
@@ -12,7 +12,7 @@ export interface SharedOptions {
   noDefaults?: boolean;
   /** List of custom globs to include or exclude. */
   globs?: string[] | undefined;
-}
+};
 
 export const sharedDefaultOptions: Required<SharedOptions> = {
   directory: path.resolve(process.cwd(), 'node_modules'),

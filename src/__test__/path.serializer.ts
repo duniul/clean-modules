@@ -1,16 +1,16 @@
-import { expect } from 'vitest';
+import type { expect } from 'vitest';
 
-function normalizePathPart(str: string) {
-  return str.replace(/\\/g, '/'); // replace windows backslashes
+function normalizePathPart(str: string): string {
+  return str.replaceAll('\\', '/'); // replace windows backslashes
 }
 
-function normalizePath(str: string) {
+function normalizePath(str: string): string {
   const normalizedCwd = normalizePathPart(process.cwd());
   const normalizedStr = normalizePathPart(str);
   return normalizedStr.replace(normalizedCwd, '<CWD>');
 }
 
-function shouldNormalizePath(val: any) {
+function shouldNormalizePath(val: unknown): val is string {
   if (typeof val === 'string') {
     return normalizePath(val) !== val;
   }

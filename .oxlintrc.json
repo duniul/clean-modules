@@ -1,0 +1,112 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "ignorePatterns": ["**/node_modules", "**/dist", "**/.history", "**/tsconfig.tsbuildinfo"],
+  "plugins": ["eslint", "import", "jsdoc", "node", "oxc", "promise", "typescript", "unicorn"],
+  "env": {
+    "builtin": true,
+    "node": true
+  },
+  "categories": {
+    "correctness": "error",
+    "nursery": "error",
+    "pedantic": "error",
+    "perf": "error",
+    "restriction": "error",
+    "style": "error",
+    "suspicious": "error"
+  },
+  "rules": {
+    "capitalized-comments": "off",
+    "consistent-type-definitions": ["error", "type"],
+    "explicit-length-check": "off",
+    "exports-last": "off",
+    "filename-case": ["error", { "case": "camelCase" }],
+    "func-style": "off",
+    "import/consistent-type-specifier-style": "off",
+    "import/group-exports": "off",
+    "import/no-named-export": "off",
+    "import/no-nodejs-modules": "off",
+    "import/no-relative-parent-imports": "off",
+    "import/prefer-default-export": "off",
+    "init-declarations": "off",
+    "jsdoc/require-param-type": "off",
+    "jsdoc/require-param": "off",
+    "jsdoc/require-returns-type": "off",
+    "jsdoc/require-returns": "off",
+    "max-lines-per-function": "off",
+    "max-lines": "off",
+    "max-params": "off",
+    "max-statements": "off",
+    "no-array-callback-reference": "off",
+    "no-async-await": "off",
+    "no-continue": "off",
+    "no-duplicate-imports": ["error", { "allowSeparateTypeImports": true }],
+    "no-implicit-coercion": "off",
+    "no-inline-comments": "off",
+    "no-magic-numbers": ["error", { "ignore": [0] }],
+    "no-null": "off",
+    "no-optional-chaining": "off",
+    "no-plusplus": "off",
+    "no-rest-spread-properties": "off",
+    "no-ternary": "off",
+    "no-undefined": "off",
+    "prefer-template": "off",
+    "prefer-ternary": "off",
+    "promise/avoid-new": "off",
+    "sort-imports": "off",
+    "sort-keys": "off",
+    "typescript/explicit-member-accessibility": ["error", { "accessibility": "no-public" }],
+
+    "prefer-string-replace-all": "warn",
+    "require-unicode-regexp": "warn"
+  },
+  "overrides": [
+    {
+      "files": ["*.config.ts", "*.config.*.ts"],
+      "rules": {
+        "import/no-default-export": "off"
+      }
+    },
+    {
+      "files": ["src/cli/**/*.ts"],
+      "rules": {
+        "new-cap": "off"
+      }
+    },
+    {
+      "files": ["__mocks__/fs/**/*"],
+      "rules": {
+        "unicorn/prefer-module": "off",
+        "import/no-commonjs": "off"
+      }
+    },
+    {
+      "files": ["bin/**/*"],
+      "rules": {
+        "import/no-unassigned-import": "off"
+      }
+    },
+    {
+      "files": ["*.test.ts", "__test__/**"],
+      "plugins": ["vitest"],
+      "rules": {
+        "vitest/no-hooks": "off",
+        "vitest/no-importing-vitest-globals": "off",
+        "vitest/prefer-to-be-truthy": "off",
+        "vitest/prefer-to-be-falsy": "off",
+        "vitest/max-expects": "off",
+        "vitest/prefer-expect-assertions": [
+          "error",
+          {
+            "onlyFunctionsWithAsyncKeyword": true,
+            "onlyFunctionsWithExpectInCallback": true,
+            "onlyFunctionsWithExpectInLoop": true
+          }
+        ],
+        "vitest/valid-title": "off",
+        "vitest/prefer-called-once": "off",
+        "no-magic-numbers": "off"
+      }
+    }
+  ]
+}

@@ -1,10 +1,11 @@
-import fs from 'fs';
+import type fs from 'node:fs';
+import type { NestedDirectoryJSON } from 'memfs';
 import { vi } from 'vitest';
 import { DEFAULT_GLOBS_FILE_PATH } from '../shared.js';
 
-export async function getMockedFileStructure(): Promise<Record<string, any>> {
+export async function getMockedFileStructure(): Promise<NestedDirectoryJSON> {
   const actualFs = await vi.importActual<typeof fs.promises>('fs/promises');
-  const defaultGlobs = (await actualFs.readFile(DEFAULT_GLOBS_FILE_PATH)).toString();
+  const defaultGlobs = await actualFs.readFile(DEFAULT_GLOBS_FILE_PATH, { encoding: 'utf8' });
 
   return {
     [DEFAULT_GLOBS_FILE_PATH]: defaultGlobs,

@@ -1,6 +1,8 @@
 import { analyze } from '../../analyze.js';
 import { BaseCommand } from '../helpers/base.command.js';
 
+const JSON_INDENT = 2;
+
 export class AnalyzeCommand extends BaseCommand {
   static override paths = [['analyze']];
   static override usage = {
@@ -16,6 +18,7 @@ export class AnalyzeCommand extends BaseCommand {
       globFile: this.globFile,
     });
 
-    console.log(JSON.stringify(analyzeResults, null, 2));
+    // oxlint-disable-next-line no-console
+    console.log(JSON.stringify(analyzeResults, null, JSON_INDENT));
   }
 }

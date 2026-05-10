@@ -1,6 +1,6 @@
-import { promises as fsAsync } from 'fs';
-import path from 'path';
-import pm, { PicomatchOptions } from 'picomatch';
+import { promises as fsAsync } from 'node:fs';
+import path from 'node:path';
+import pm, { type PicomatchOptions } from 'picomatch';
 import { DEFAULT_GLOBS_FILE_PATH } from '../shared.js';
 import { crawlDirWithChecks, fileExists } from './filesystem.js';
 
@@ -14,13 +14,13 @@ export const DEFAULT_PICO_OPTIONS: Partial<PicomatchOptions> = {
   strictSlashes: true,
 };
 
-export interface GlobberPicoOptions {
+export type GlobberPicoOptions = {
   dot?: boolean;
   regex?: boolean;
   nocase?: boolean;
   ignore?: string | string[];
   cwd?: string;
-}
+};
 
 export type GlobFunc = (filePath: string, test?: boolean) => boolean;
 
@@ -31,12 +31,12 @@ export function makeGlobMatcher(globs: string | string[], picoOptions?: GlobberP
   return pm(globs, { ...DEFAULT_PICO_OPTIONS, ...picoOptions });
 }
 
-export interface GlobLists {
+export type GlobLists = {
   excluded: string[];
   included: string[];
   includedDirs: string[];
   originalIncluded: string[];
-}
+};
 
 /**
  * Runs an action on all editable lists in a GlobLists object, and returns the updated object.
@@ -65,9 +65,11 @@ export function mergeGlobLists(globListsA: GlobLists, globListsB: GlobLists): Gl
   };
 }
 
-/** Replaces path with forward slashes as separators if necessary. Globs should always have POSIX separators, even on Windows. */
+/**
+ * Replaces path with forward slashes as separators if necessary. Globs should always have POSIX separators, even on Windows.
+ */
 export function toPosixPath(pathStr: string): string {
-  return path.sep === '/' ? pathStr : pathStr.replace(/\\/g, '/');
+  return path.sep === '/' ? pathStr : pathStr.replaceAll('\\', '/');
 }
 
 /**
@@ -96,7 +98,7 @@ export function optimizeGlobs(globs: string[]): string[] {
   const fixedPathGlobs: string[] = [];
 
   for (const glob of globs) {
-    if (glob.match(GLOBSTAR_START_REGEX)) {
+    if (GLOBSTAR_START_REGEX.test(glob)) {
       globstarStartGlobs.push(glob);
     } else {
       fixedPathGlobs.push(glob);
@@ -151,7 +153,7 @@ export function processGlobs(globs: string[]): GlobLists {
   const globLists = initGlobLists();
 
   for (const glob of globs) {
-    const isExcluded = !!glob.match(EXCLAMATION_START);
+    const isExcluded = !!EXCLAMATION_START.test(glob);
     const formattedGlob = formatGlob(glob);
 
     if (!formattedGlob) {
@@ -182,13 +184,14 @@ export async function parseGlobsFile(filePath: string): Promise<GlobLists> {
   let fileContents: string;
 
   try {
-    fileContents = (await fsAsync.readFile(filePath, { encoding: 'utf-8' })).toString() || '';
+    fileContents = await fsAsync.readFile(filePath, { encoding: 'utf8' });
   } catch (error) {
+    // oxlint-disable-next-line no-console
     console.error(`Failed to read glob file (${filePath})`);
     throw error;
   }
 
-  const fileGlobs = fileContents.split(/\r?\n/).filter(line => !line.match(COMMENT_OR_EMPTY_REGEX)) || [];
+  const fileGlobs = fileContents.split(/\r?\n/).filter(line => !COMMENT_OR_EMPTY_REGEX.test(line)) || [];
 
   return processGlobs(fileGlobs);
 }
@@ -196,15 +199,15 @@ export async function parseGlobsFile(filePath: string): Promise<GlobLists> {
 /**
  * Parses clean-modules' default glob file.
  */
-export async function parseDefaultGlobsFile(): Promise<GlobLists> {
+export function parseDefaultGlobsFile(): Promise<GlobLists> {
   return parseGlobsFile(DEFAULT_GLOBS_FILE_PATH);
 }
 
-export interface GetGlobListsOptions {
+export type GetGlobListsOptions = {
   noDefaults?: boolean | undefined;
   globFile?: string | undefined;
   globs?: string[] | undefined;
-}
+};
 
 /**
  * Parses and combines globs from all possible sources.
@@ -227,10 +230,13 @@ export async function getGlobLists({ noDefaults, globFile, globs }: GetGlobLists
     globListsToMerge.push(argGlobsLists);
   }
 
-  return globListsToMerge.reduce(
-    (mergedGlobLists, globLists) => mergeGlobLists(mergedGlobLists, globLists),
-    initGlobLists()
-  );
+  let mergedGlobLists = initGlobLists();
+
+  for (const globLists of globListsToMerge) {
+    mergedGlobLists = mergeGlobLists(mergedGlobLists, globLists);
+  }
+
+  return mergedGlobLists;
 }
 
 /**
@@ -243,7 +249,7 @@ export async function findFilesByGlobLists(directory: string, globLists: GlobLis
   const { included, includedDirs, excluded } = toAbsoluteGlobLists(optimizeGlobLists(globLists), directory);
 
   const picoOptions = { ignore: excluded };
-  const checkDir = includedDirs?.length ? makeGlobMatcher(includedDirs, picoOptions) : () => false;
+  const checkDir = includedDirs?.length ? makeGlobMatcher(includedDirs, picoOptions) : (): boolean => false;
   const checkFile = makeGlobMatcher(included, picoOptions);
 
   let filesToRemove = await crawlDirWithChecks([], directory, checkDir, checkFile);

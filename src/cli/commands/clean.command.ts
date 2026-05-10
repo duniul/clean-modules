@@ -5,6 +5,8 @@ import { clean } from '../../clean.js';
 import { BaseCommand } from '../helpers/base.command.js';
 import { bold, green, makeLogger, yellow, yesOrNo } from '../utils/terminal.js';
 
+const JSON_INDENT = 2;
+
 export class CleanCommand extends BaseCommand {
   static override paths = [['clean'], Command.Default];
   static override usage = {
@@ -42,13 +44,14 @@ export class CleanCommand extends BaseCommand {
       const confirmed = await yesOrNo(yellow(warning));
 
       if (!confirmed) {
+        // oxlint-disable-next-line unicorn/no-process-exit
         process.exit(0);
       }
     }
 
     logger.log('\nCleaning up node_modules...');
 
-    const cleanupStart = new Date().getTime();
+    const cleanupStart = Date.now();
 
     const { files, reducedSize, removedEmptyDirs } = await clean({
       globs: this.globs,
@@ -58,7 +61,7 @@ export class CleanCommand extends BaseCommand {
       dryRun: this.dryRun,
     });
 
-    const cleanupDuration = new Date().getTime() - cleanupStart;
+    const cleanupDuration = Date.now() - cleanupStart;
     logger.log(green(`Done in ${prettyMs(cleanupDuration)}!`));
 
     if (this.json) {
@@ -70,7 +73,8 @@ export class CleanCommand extends BaseCommand {
         dryRun: this.dryRun,
       };
 
-      console.log(JSON.stringify(output, null, 2));
+      // oxlint-disable-next-line no-console
+      console.log(JSON.stringify(output, null, JSON_INDENT));
     } else {
       logger.log(bold('\nResults:'));
       logger.log(

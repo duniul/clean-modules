@@ -1,12 +1,12 @@
-import fs, { Dirent } from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs, { type Dirent } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 export type DirentAction = (dirent: Dirent) => void;
 export type CheckPathFunc = (nextPath: string) => boolean;
 
-function hasErrorCode(error: any, code: string): boolean {
-  return error?.code === code;
+function hasErrorCode(error: unknown, code: string): boolean {
+  return (error as { code?: string })?.code === code;
 }
 
 /**
@@ -34,7 +34,7 @@ export async function forEachDirentAsync(dirPath: string, action: DirentAction):
 
   try {
     dirFiles = await fs.promises.readdir(dirPath, { withFileTypes: true });
-  } catch (error) {
+  } catch {
     // do nothing
   }
 
@@ -73,14 +73,14 @@ export async function removeEmptyDirsUp(
     if (emptyDir) {
       try {
         await fs.promises.rmdir(dirPath);
-        // biome-ignore lint/style/noParameterAssign: recursive function
+        // oxlint-disable-next-line no-param-reassign
         count++;
-      } catch (error) {
+      } catch {
         // do nothing
       }
 
       const parentDir = path.dirname(dirPath);
-      // biome-ignore lint/style/noParameterAssign: recursive function
+      // oxlint-disable-next-line no-param-reassign
       count = await removeEmptyDirsUp(checkedDirs, parentDir, count);
     }
   }
@@ -172,7 +172,7 @@ export async function removeFiles(filePaths: string[], options: RemoveFilesOptio
         }
 
         reducedSize += fileStats.size;
-      } catch (error) {
+      } catch {
         // do nothing
       }
     })
@@ -185,6 +185,6 @@ export async function removeFiles(filePaths: string[], options: RemoveFilesOptio
  * Get directory of the file directory, like CommonJS `__dirname`.
  * @example const thisFilesDir = fileDir(import.meta.url);
  */
-export function fileDir(importMetaUrl: string) {
+export function fileDir(importMetaUrl: string): string {
   return path.dirname(fileURLToPath(importMetaUrl));
 }

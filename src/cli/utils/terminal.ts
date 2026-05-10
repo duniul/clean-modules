@@ -1,15 +1,19 @@
-import readline from 'readline';
+import readline from 'node:readline';
 import supportsColor from 'supports-color';
 
 type DisabledConsole = Console;
+
+// oxlint-disable-next-line no-empty-function
+const noop = (): void => {};
 
 /**
  * Creates a conditional console logger.
  */
 export function makeLogger({ disabled }: { disabled: boolean }): Console | DisabledConsole {
   if (disabled) {
-    const noop = () => undefined;
+    // oxlint-disable-next-line unicorn/no-array-reduce
     return Object.keys(console).reduce((disabledConsole, key) => {
+      // oxlint-disable-next-line typescript/no-explicit-any
       disabledConsole[key as keyof Console] = noop as any;
       return disabledConsole;
     }, {} as DisabledConsole);
@@ -21,29 +25,30 @@ export function makeLogger({ disabled }: { disabled: boolean }): Console | Disab
 /**
  * Prompts the user with a yes/no question and waits for the answer.
  */
-export async function yesOrNo(query: string): Promise<boolean> {
+export function yesOrNo(query: string): Promise<boolean> {
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
   });
 
-  return new Promise(resolve =>
+  return new Promise(resolve => {
     rl.question(query, (answer: string) => {
       rl.close();
       resolve(/ye?s?/i.test(answer));
-    })
-  );
+    });
+  });
 }
 
 /**
  * Simple string colorizer factory.
  */
-function colorizer(colorCode: string) {
+function colorizer(colorCode: string): (text: string | number) => string {
   if (!supportsColor.stdout) {
-    return (text: string | number) => String(text);
+    // oxlint-disable-next-line unicorn/prefer-native-coercion-functions
+    return text => String(text);
   }
 
-  return (text: string | number) => `\x1b[${colorCode}m${text}\x1b[0m`;
+  return text => `\u001B[${colorCode}m${text}\u001B[0m`;
 }
 
 export const bold = colorizer('1');

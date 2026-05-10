@@ -4,5 +4,3 @@ allowBuilds:
 engineStrict: true
 
 nodeVersion: '24.13.0'
-
-savePrefix: ''

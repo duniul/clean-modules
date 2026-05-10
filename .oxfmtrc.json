@@ -1,0 +1,18 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "ignorePatterns": ["**/node_modules", "**/dist", "**/.history", "**/tsconfig.tsbuildinfo"],
+  "printWidth": 110,
+  "trailingComma": "es5",
+  "jsxSingleQuote": true,
+  "singleQuote": true,
+  "arrowParens": "avoid",
+  "quoteProps": "consistent",
+  "sortPackageJson": {
+    "enabled": true,
+    "sortScripts": false
+  },
+  "sortImports": {
+    "enabled": true,
+    "newlinesBetween": false
+  }
+}

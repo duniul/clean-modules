@@ -1,0 +1,8 @@
+allowBuilds:
+  esbuild: set this to true or false
+
+engineStrict: true
+
+nodeVersion: '24.13.0'
+
+savePrefix: ''

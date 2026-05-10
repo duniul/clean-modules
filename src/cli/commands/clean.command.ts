@@ -3,7 +3,7 @@ import prettyBytes from 'pretty-bytes';
 import prettyMs from 'pretty-ms';
 import { clean } from '../../clean.js';
 import { BaseCommand } from '../helpers/base.command.js';
-import { bold, green, makeLogger, yellow, yesOrNo } from '../utils/terminal.js';
+import { makeLogger, yesOrNo } from '../utils/terminal.js';
 
 const JSON_INDENT = 2;
 
@@ -37,11 +37,11 @@ export class CleanCommand extends BaseCommand {
   async execute(): Promise<void> {
     const logger = makeLogger({ disabled: this.json || this.silent });
 
-    logger.log(bold('clean-modules'), this.dryRun ? yellow('(dry run)') : '');
+    logger.log(`clean-modules${this.dryRun ? ' (dry run)' : ''}`);
 
     if (!this.yes && !this.dryRun) {
       const warning = `\nPreparing to clean node_modules at: ${this.directory}\nAre you sure you want to continue? (Y/N) `;
-      const confirmed = await yesOrNo(yellow(warning));
+      const confirmed = await yesOrNo(warning);
 
       if (!confirmed) {
         // oxlint-disable-next-line unicorn/no-process-exit
@@ -62,7 +62,7 @@ export class CleanCommand extends BaseCommand {
     });
 
     const cleanupDuration = Date.now() - cleanupStart;
-    logger.log(green(`Done in ${prettyMs(cleanupDuration)}!`));
+    logger.log(`Done in ${prettyMs(cleanupDuration)}!`);
 
     if (this.json) {
       const output: Record<string, unknown> = {
@@ -76,19 +76,17 @@ export class CleanCommand extends BaseCommand {
       // oxlint-disable-next-line no-console
       console.log(JSON.stringify(output, null, JSON_INDENT));
     } else {
-      logger.log(bold('\nResults:'));
+      logger.log('\nResults:');
       logger.log(
         '- size reduced:',
-        green(
-          prettyBytes(reducedSize || 0, {
-            space: true,
-            minimumFractionDigits: 1,
-            maximumFractionDigits: 2,
-          })
-        )
+        prettyBytes(reducedSize || 0, {
+          space: true,
+          minimumFractionDigits: 1,
+          maximumFractionDigits: 2,
+        })
       );
-      logger.log('- files removed:', green(files.length));
-      logger.log('- empty dirs removed:', green(removedEmptyDirs || 0));
+      logger.log('- files removed:', files.length);
+      logger.log('- empty dirs removed:', removedEmptyDirs || 0);
     }
   }
 }

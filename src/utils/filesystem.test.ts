@@ -324,7 +324,7 @@ describe(removeFiles, () => {
   it('removes files at provided file paths', async () => {
     expect.hasAssertions();
 
-    const filePaths = ['node_modules/dep1/__tests__/test1.js', 'node_modules/dep1/a-dir/doc.md'];
+    const filePaths = ['node_modules/dep1/__tests__/test1.js', 'node_modules/dep1/a-dir/doc.md'] as const;
 
     // files are initially there
     expect(fs.existsSync(filePaths[0])).toBe(true);
@@ -340,7 +340,7 @@ describe(removeFiles, () => {
   it('does not remove files during dry runs', async () => {
     expect.hasAssertions();
 
-    const filePaths = ['node_modules/dep1/__tests__/test1.js', 'node_modules/dep1/a-dir/doc.md'];
+    const filePaths = ['node_modules/dep1/__tests__/test1.js', 'node_modules/dep1/a-dir/doc.md'] as const;
 
     await removeFiles(filePaths, { dryRun: true });
 

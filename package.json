@@ -44,6 +44,7 @@
     "test": "vitest",
     "prepublishOnly": "pnpm build",
     "stylecheck": "oxfmt --check src && oxlint src",
+    "typecheck": "tsc --noEmit",
     "format": "oxfmt --write .",
     "lint": "oxlint .",
     "lint:fix": "oxlint --fix .",
@@ -59,9 +60,8 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.8",
-    "@tsconfig/node14": "^14.1.2",
     "@types/mock-fs": "4.13.4",
-    "@types/node": "16",
+    "@types/node": "^22.19.18",
     "@types/picomatch": "3.0.1",
     "@types/supports-color": "8.1.3",
     "changesets-changelog-clean": "^1.3.0",

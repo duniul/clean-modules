@@ -1,6 +1,6 @@
 import readline from 'node:readline';
 
-type DisabledConsole = Console;
+type SimpleConsole = Pick<Console, 'log'>;
 
 // oxlint-disable-next-line no-empty-function
 const noop = (): void => {};
@@ -8,17 +8,17 @@ const noop = (): void => {};
 /**
  * Creates a conditional console logger.
  */
-export function makeLogger({ disabled }: { disabled: boolean }): Console | DisabledConsole {
+export function makeSimpleLogger({ disabled }: { disabled: boolean }): SimpleConsole {
   if (disabled) {
-    // oxlint-disable-next-line unicorn/no-array-reduce
-    return Object.keys(console).reduce((disabledConsole, key) => {
-      // oxlint-disable-next-line typescript/no-explicit-any
-      disabledConsole[key as keyof Console] = noop as any;
-      return disabledConsole;
-    }, {} as DisabledConsole);
+    return {
+      log: noop,
+    };
   }
 
-  return console;
+  return {
+    // oxlint-disable-next-line no-console
+    log: console.log.bind(console),
+  };
 }
 
 /**

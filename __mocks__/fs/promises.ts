@@ -1,3 +1,3 @@
 import { fs } from 'memfs';
 
-module.exports = fs
+module.exports = fs;

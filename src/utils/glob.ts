@@ -27,10 +27,7 @@ export type GlobFunc = (filePath: string, test?: boolean) => boolean;
 /**
  * Creates a picomatch matcher from a set of globs.
  */
-export function makeGlobMatcher(
-  globs: string | string[],
-  picoOptions?: GlobberPicoOptions
-): GlobFunc {
+export function makeGlobMatcher(globs: string | string[], picoOptions?: GlobberPicoOptions): GlobFunc {
   return pm(globs, { ...DEFAULT_PICO_OPTIONS, ...picoOptions });
 }
 
@@ -76,15 +73,10 @@ export function toPosixPath(pathStr: string): string {
 /**
  * Prepends an absolute path to all editable lists in a GlobLists object.
  */
-export function toAbsoluteGlobLists(
-  globLists: GlobLists,
-  absoluteNodeModulesPath: string
-): GlobLists {
+export function toAbsoluteGlobLists(globLists: GlobLists, absoluteNodeModulesPath: string): GlobLists {
   const absolutePathWithPosixSeparator = toPosixPath(absoluteNodeModulesPath);
 
-  return updateGlobLists(globLists, globs =>
-    globs.map(glob => absolutePathWithPosixSeparator + '/' + glob)
-  );
+  return updateGlobLists(globLists, globs => globs.map(glob => absolutePathWithPosixSeparator + '/' + glob));
 }
 
 /**
@@ -196,8 +188,7 @@ export async function parseGlobsFile(filePath: string): Promise<GlobLists> {
     throw error;
   }
 
-  const fileGlobs =
-    fileContents.split(/\r?\n/).filter(line => !line.match(COMMENT_OR_EMPTY_REGEX)) || [];
+  const fileGlobs = fileContents.split(/\r?\n/).filter(line => !line.match(COMMENT_OR_EMPTY_REGEX)) || [];
 
   return processGlobs(fileGlobs);
 }
@@ -218,11 +209,7 @@ export interface GetGlobListsOptions {
 /**
  * Parses and combines globs from all possible sources.
  */
-export async function getGlobLists({
-  noDefaults,
-  globFile,
-  globs,
-}: GetGlobListsOptions): Promise<GlobLists> {
+export async function getGlobLists({ noDefaults, globFile, globs }: GetGlobListsOptions): Promise<GlobLists> {
   const globListsToMerge: GlobLists[] = [];
 
   if (!noDefaults) {
@@ -252,14 +239,8 @@ export async function getGlobLists({
  * @param globLists the glob lists to match against
  * @returns a promise that resolves to an array of matching file paths
  */
-export async function findFilesByGlobLists(
-  directory: string,
-  globLists: GlobLists
-): Promise<string[]> {
-  const { included, includedDirs, excluded } = toAbsoluteGlobLists(
-    optimizeGlobLists(globLists),
-    directory
-  );
+export async function findFilesByGlobLists(directory: string, globLists: GlobLists): Promise<string[]> {
+  const { included, includedDirs, excluded } = toAbsoluteGlobLists(optimizeGlobLists(globLists), directory);
 
   const picoOptions = { ignore: excluded };
   const checkDir = includedDirs?.length ? makeGlobMatcher(includedDirs, picoOptions) : () => false;

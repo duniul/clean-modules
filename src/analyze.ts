@@ -40,10 +40,7 @@ export async function analyze(options: AnalyzeOptions = {}): Promise<AnalyzeResu
   const globLists = await getGlobLists({ globs, noDefaults, globFile });
   const includedFiles = await findFilesByGlobLists(nodeModulesPath, globLists);
 
-  const defaultGlobs = toAbsoluteGlobLists(
-    optimizeGlobLists(await parseDefaultGlobsFile()),
-    nodeModulesPath
-  );
+  const defaultGlobs = toAbsoluteGlobLists(optimizeGlobLists(await parseDefaultGlobsFile()), nodeModulesPath);
 
   const includedByDefaultMatcher = makeGlobMatcher(defaultGlobs.included, {
     ignore: defaultGlobs.excluded,

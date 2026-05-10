@@ -1,7 +1,8 @@
-import { vol } from 'memfs';
 import path from 'path';
+import { vol } from 'memfs';
 import pm from 'picomatch';
 import { beforeEach, describe, expect, it, Mock, vi } from 'vitest';
+import { getMockedFileStructure } from '../__test__/getMockedFileStructure.js';
 import {
   DEFAULT_PICO_OPTIONS,
   findFilesByGlobLists,
@@ -18,7 +19,6 @@ import {
   updateGlobLists,
   wrapGlobs,
 } from './glob.js';
-import { getMockedFileStructure } from '../__test__/getMockedFileStructure.js';
 
 describe('makeGlobMatcher', () => {
   it('creates a picomatch globber with default options', () => {

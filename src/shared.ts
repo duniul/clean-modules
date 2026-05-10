@@ -1,11 +1,7 @@
 import path from 'path';
 import { fileDir } from './utils/filesystem.js';
 
-export const DEFAULT_GLOBS_FILE_PATH = path.resolve(
-  fileDir(import.meta.url),
-  '..',
-  '.cleanmodules-default'
-);
+export const DEFAULT_GLOBS_FILE_PATH = path.resolve(fileDir(import.meta.url), '..', '.cleanmodules-default');
 
 export interface SharedOptions {
   /** The directory to clean, usually node_modules. */

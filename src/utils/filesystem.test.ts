@@ -1,6 +1,6 @@
 import fs from 'fs';
-import { vol } from 'memfs';
 import path from 'path';
+import { vol } from 'memfs';
 import { afterEach, beforeEach, describe, expect, it, MockedFunction, vi } from 'vitest';
 import { getMockedFileStructure } from '../__test__/getMockedFileStructure.js';
 import {
@@ -87,9 +87,7 @@ describe('readDirectory', () => {
   });
 
   it('returns list of files in directory', async () => {
-    expect(await readDirectory('parent/empty')).toEqual(
-      expect.arrayContaining(['foo.txt', 'bar.txt'])
-    );
+    expect(await readDirectory('parent/empty')).toEqual(expect.arrayContaining(['foo.txt', 'bar.txt']));
   });
 
   it('returns empty array if directory does not exist', async () => {

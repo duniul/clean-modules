@@ -1,37 +1,37 @@
 {
   "name": "clean-modules",
-  "author": "Daniel Grefberg <hello@danielgrefberg.com>",
   "version": "3.1.1",
   "description": "Clean up/prune unnecessary files and reduce the size of your `node_modules` directory. Useful for CI caches or for reducing the size of serverless functions.",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/duniul/clean-modules.git"
-  },
+  "keywords": [
+    "ci",
+    "cli-tool",
+    "node",
+    "node-modules",
+    "npm",
+    "pnpm",
+    "yarn"
+  ],
   "homepage": "https://github.com/duniul/clean-modules#readme",
   "bugs": {
     "url": "https://github.com/duniul/clean-modules/issues"
   },
-  "sideEffects": false,
-  "keywords": [
-    "node",
-    "node-modules",
-    "npm",
-    "yarn",
-    "pnpm",
-    "cli-tool",
-    "ci"
-  ],
   "license": "ISC",
-  "engines": {
-    "node": ">=14"
+  "author": "Daniel Grefberg <hello@danielgrefberg.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/duniul/clean-modules.git"
   },
+  "bin": "bin/cli.js",
   "files": [
     "dist",
     ".cleanmodules-default",
     "!.tsbuildinfo"
   ],
-  "packageManager": "pnpm@9.11.0",
   "type": "module",
+  "sideEffects": false,
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "import": {
@@ -44,10 +44,6 @@
       }
     }
   },
-  "main": "dist/index.cjs",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "bin": "bin/cli.js",
   "scripts": {
     "cli": "tsx src/cli/cli.ts",
     "build": "tsup",
@@ -82,5 +78,9 @@
     "tsx": "^4.19.1",
     "typescript": "5.6.2",
     "vitest": "^2.1.1"
-  }
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "packageManager": "pnpm@9.11.0"
 }

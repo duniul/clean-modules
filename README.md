@@ -303,7 +303,7 @@ Clean modules can be used programmatically too!
 
 Simply import the corresponding function from the package:
 
-````ts
+```ts
 import { clean, analyze } from 'clean-modules';
 
 // analyze, all options are optional
@@ -323,7 +323,7 @@ const cleanResult = await clean({
   keepEmpty: false,
   dryRun: false,
 });
-````
+```
 
 ## Alternatives
 

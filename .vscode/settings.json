@@ -25,7 +25,7 @@
 
   // Treat .cleanmodules files as ignore files
   "files.associations": {
-    ".cleanmodules*": "ignore",
+    ".cleanmodules*": "ignore"
   },
 
   // Ensure we use the same formatter for files
@@ -47,5 +47,5 @@
   },
 
   // Use same TypeScript version as repo rather than local user version
-  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

@@ -1,6 +1,6 @@
-import { Builtins, Cli } from 'clipanion';
 import { createRequire } from 'node:module';
 import path from 'node:path';
+import { Builtins, Cli } from 'clipanion';
 import { fileDir } from '../utils/filesystem.js';
 import { AnalyzeCommand } from './commands/analyze.command.js';
 import { CleanCommand } from './commands/clean.command.js';

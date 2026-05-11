@@ -12,7 +12,7 @@ export const analyzeCommand = defineCommand({
   },
   args: sharedArgs,
   async run({ args }): Promise<void> {
-    const analyzeResults = await analyze({
+    const analyzeResult = await analyze({
       directory: args.directory,
       noDefaults: args['no-defaults'],
       globFile: args['glob-file'],
@@ -20,6 +20,6 @@ export const analyzeCommand = defineCommand({
     });
 
     // oxlint-disable-next-line no-console
-    console.log(JSON.stringify(analyzeResults, null, JSON_INDENT));
+    console.log(JSON.stringify(analyzeResult, null, JSON_INDENT));
   },
 });

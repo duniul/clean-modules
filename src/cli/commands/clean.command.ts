@@ -1,10 +1,17 @@
 import { defineCommand } from 'citty';
 import { clean } from '../../clean.js';
+import type { CleanFailure } from '../../shared.js';
 import { formatBytes, formatMs } from '../../utils/formatting.js';
 import { sharedArgs } from '../helpers/args.js';
 import { makeSimpleLogger, yesOrNo } from '../utils/terminal.js';
 
 const JSON_INDENT = 2;
+const MAX_PRINTED_FAILURES = 5;
+
+function formatFailureLine(failure: CleanFailure): string {
+  const prefix = failure.code ? `${failure.code}: ` : '';
+  return `  ${prefix}${failure.path} (${failure.phase} failed: ${failure.message})`;
+}
 
 export const cleanCommand = defineCommand({
   meta: {
@@ -44,6 +51,11 @@ export const cleanCommand = defineCommand({
       default: false,
       description: 'Skips the confirmation prompt at the start of the script',
     },
+    'fail-on-error': {
+      type: 'boolean',
+      default: false,
+      description: 'Exit with a non-zero status code if any file failed to be removed',
+    },
   },
   async run({ args }): Promise<void> {
     const logger = makeSimpleLogger({ disabled: args.json || args.silent });
@@ -64,7 +76,7 @@ export const cleanCommand = defineCommand({
 
     const cleanupStart = Date.now();
 
-    const { files, reducedSize, removedEmptyDirs } = await clean({
+    const { removedFilesCount, reducedSize, removedEmptyDirs, failures } = await clean({
       globs: args._,
       dryRun: args['dry-run'],
       noDefaults: args['no-defaults'],
@@ -78,11 +90,12 @@ export const cleanCommand = defineCommand({
 
     if (args.json) {
       const output: Record<string, unknown> = {
-        removedFiles: files.length,
+        removedFiles: removedFilesCount,
         reducedSize,
         removedEmptyDirs,
         duration: cleanupDuration,
         dryRun: args['dry-run'],
+        failures,
       };
 
       // oxlint-disable-next-line no-console
@@ -90,8 +103,28 @@ export const cleanCommand = defineCommand({
     } else {
       logger.log('\nResults:');
       logger.log('- size reduced:', formatBytes(reducedSize));
-      logger.log('- files removed:', files.length);
+      logger.log('- files removed:', removedFilesCount);
       logger.log('- empty dirs removed:', removedEmptyDirs);
+
+      if (failures.length > 0) {
+        logger.log('- failures:', failures.length);
+
+        const printed = failures.slice(0, MAX_PRINTED_FAILURES);
+        const remaining = failures.length - printed.length;
+
+        logger.log(`\nFailed to process ${failures.length} ${failures.length === 1 ? 'file' : 'files'}:`);
+        for (const failure of printed) {
+          logger.log(formatFailureLine(failure));
+        }
+        if (remaining > 0) {
+          logger.log(`  ...${remaining} more (use --json to see all)`);
+        }
+      }
+    }
+
+    if (failures.length > 0 && args['fail-on-error']) {
+      // oxlint-disable-next-line unicorn/no-process-exit
+      process.exit(1);
     }
   },
 });

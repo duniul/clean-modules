@@ -1,187 +1,191 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`analyze > accepts custom globs 1`] = `
-[
-  {
-    "filePath": "<CWD>/node_modules/dep1/.npmrc",
-    "includedByDefault": true,
-    "includedByGlobs": [
-      {
-        "derived": "<CWD>/node_modules/**/.npmrc",
-        "original": ".npmrc",
-      },
-      {
-        "derived": "<CWD>/node_modules/**/.npmrc",
-        "original": ".npmrc",
-      },
-    ],
-  },
-  {
-    "filePath": "<CWD>/node_modules/dep2/CHANGELOG.md",
-    "includedByDefault": true,
-    "includedByGlobs": [
-      {
-        "derived": "<CWD>/node_modules/**/*.@(md|mkd|markdown|mdown)",
-        "original": "*.@(md|mkd|markdown|mdown)",
-      },
-      {
-        "derived": "<CWD>/node_modules/**/changelog*(.*)",
-        "original": "changelog*(.*)",
-      },
-    ],
-  },
-  {
-    "filePath": "<CWD>/node_modules/dep4/nonDefaultFile.ext",
-    "includedByDefault": false,
-    "includedByGlobs": [
-      {
-        "derived": "<CWD>/node_modules/**/**/nonDefaultFile.ext",
-        "original": "**/nonDefaultFile.ext",
-      },
-    ],
-  },
-  {
-    "filePath": "<CWD>/node_modules/dep1/__tests__/test1.js",
-    "includedByDefault": true,
-    "includedByGlobs": [
-      {
-        "derived": "<CWD>/node_modules/**/__tests__/**",
-        "original": "__tests__/",
-      },
-    ],
-  },
-  {
-    "filePath": "<CWD>/node_modules/dep1/__tests__/test2.js",
-    "includedByDefault": true,
-    "includedByGlobs": [
-      {
-        "derived": "<CWD>/node_modules/**/__tests__/**",
-        "original": "__tests__/",
-      },
-    ],
-  },
-  {
-    "filePath": "<CWD>/node_modules/dep1/a-dir/doc.md",
-    "includedByDefault": true,
-    "includedByGlobs": [
-      {
-        "derived": "<CWD>/node_modules/**/*.@(md|mkd|markdown|mdown)",
-        "original": "*.@(md|mkd|markdown|mdown)",
-      },
-    ],
-  },
-]
+{
+  "failures": [],
+  "files": [
+    {
+      "filePath": "<CWD>/node_modules/dep1/.npmrc",
+      "includedByDefault": true,
+      "includedByGlobs": [
+        {
+          "derived": "<CWD>/node_modules/**/*.npmrc",
+          "original": "*.npmrc",
+        },
+      ],
+    },
+    {
+      "filePath": "<CWD>/node_modules/dep2/CHANGELOG.md",
+      "includedByDefault": true,
+      "includedByGlobs": [
+        {
+          "derived": "<CWD>/node_modules/**/*.@(md|mkd|markdown|mdown)",
+          "original": "*.@(md|mkd|markdown|mdown)",
+        },
+        {
+          "derived": "<CWD>/node_modules/**/changelog*(.*)",
+          "original": "changelog*(.*)",
+        },
+      ],
+    },
+    {
+      "filePath": "<CWD>/node_modules/dep4/nonDefaultFile.ext",
+      "includedByDefault": false,
+      "includedByGlobs": [
+        {
+          "derived": "<CWD>/node_modules/**/**/nonDefaultFile.ext",
+          "original": "**/nonDefaultFile.ext",
+        },
+      ],
+    },
+    {
+      "filePath": "<CWD>/node_modules/dep1/__tests__/test1.js",
+      "includedByDefault": true,
+      "includedByGlobs": [
+        {
+          "derived": "<CWD>/node_modules/**/__tests__/**",
+          "original": "__tests__/",
+        },
+      ],
+    },
+    {
+      "filePath": "<CWD>/node_modules/dep1/__tests__/test2.js",
+      "includedByDefault": true,
+      "includedByGlobs": [
+        {
+          "derived": "<CWD>/node_modules/**/__tests__/**",
+          "original": "__tests__/",
+        },
+      ],
+    },
+    {
+      "filePath": "<CWD>/node_modules/dep1/a-dir/doc.md",
+      "includedByDefault": true,
+      "includedByGlobs": [
+        {
+          "derived": "<CWD>/node_modules/**/*.@(md|mkd|markdown|mdown)",
+          "original": "*.@(md|mkd|markdown|mdown)",
+        },
+      ],
+    },
+  ],
+}
 `;
 
 exports[`analyze > allows skipping default globs 1`] = `
-[
-  {
-    "filePath": "<CWD>/node_modules/dep4/nonDefaultFile.ext",
-    "includedByDefault": false,
-    "includedByGlobs": [
-      {
-        "derived": "<CWD>/node_modules/**/**/nonDefaultFile.ext",
-        "original": "**/nonDefaultFile.ext",
-      },
-    ],
-  },
-]
+{
+  "failures": [],
+  "files": [
+    {
+      "filePath": "<CWD>/node_modules/dep4/nonDefaultFile.ext",
+      "includedByDefault": false,
+      "includedByGlobs": [
+        {
+          "derived": "<CWD>/node_modules/**/**/nonDefaultFile.ext",
+          "original": "**/nonDefaultFile.ext",
+        },
+      ],
+    },
+  ],
+}
 `;
 
 exports[`analyze > returns information about the files that would be removed 1`] = `
-[
-  {
-    "filePath": "<CWD>/node_modules/dep1/.npmrc",
-    "includedByDefault": true,
-    "includedByGlobs": [
-      {
-        "derived": "<CWD>/node_modules/**/.npmrc",
-        "original": ".npmrc",
-      },
-      {
-        "derived": "<CWD>/node_modules/**/.npmrc",
-        "original": ".npmrc",
-      },
-    ],
-  },
-  {
-    "filePath": "<CWD>/node_modules/dep2/CHANGELOG.md",
-    "includedByDefault": true,
-    "includedByGlobs": [
-      {
-        "derived": "<CWD>/node_modules/**/*.@(md|mkd|markdown|mdown)",
-        "original": "*.@(md|mkd|markdown|mdown)",
-      },
-      {
-        "derived": "<CWD>/node_modules/**/changelog*(.*)",
-        "original": "changelog*(.*)",
-      },
-    ],
-  },
-  {
-    "filePath": "<CWD>/node_modules/dep1/__tests__/test1.js",
-    "includedByDefault": true,
-    "includedByGlobs": [
-      {
-        "derived": "<CWD>/node_modules/**/__tests__/**",
-        "original": "__tests__/",
-      },
-    ],
-  },
-  {
-    "filePath": "<CWD>/node_modules/dep1/__tests__/test2.js",
-    "includedByDefault": true,
-    "includedByGlobs": [
-      {
-        "derived": "<CWD>/node_modules/**/__tests__/**",
-        "original": "__tests__/",
-      },
-    ],
-  },
-  {
-    "filePath": "<CWD>/node_modules/dep1/a-dir/doc.md",
-    "includedByDefault": true,
-    "includedByGlobs": [
-      {
-        "derived": "<CWD>/node_modules/**/*.@(md|mkd|markdown|mdown)",
-        "original": "*.@(md|mkd|markdown|mdown)",
-      },
-    ],
-  },
-]
+{
+  "failures": [],
+  "files": [
+    {
+      "filePath": "<CWD>/node_modules/dep1/.npmrc",
+      "includedByDefault": true,
+      "includedByGlobs": [
+        {
+          "derived": "<CWD>/node_modules/**/*.npmrc",
+          "original": "*.npmrc",
+        },
+      ],
+    },
+    {
+      "filePath": "<CWD>/node_modules/dep2/CHANGELOG.md",
+      "includedByDefault": true,
+      "includedByGlobs": [
+        {
+          "derived": "<CWD>/node_modules/**/*.@(md|mkd|markdown|mdown)",
+          "original": "*.@(md|mkd|markdown|mdown)",
+        },
+        {
+          "derived": "<CWD>/node_modules/**/changelog*(.*)",
+          "original": "changelog*(.*)",
+        },
+      ],
+    },
+    {
+      "filePath": "<CWD>/node_modules/dep1/__tests__/test1.js",
+      "includedByDefault": true,
+      "includedByGlobs": [
+        {
+          "derived": "<CWD>/node_modules/**/__tests__/**",
+          "original": "__tests__/",
+        },
+      ],
+    },
+    {
+      "filePath": "<CWD>/node_modules/dep1/__tests__/test2.js",
+      "includedByDefault": true,
+      "includedByGlobs": [
+        {
+          "derived": "<CWD>/node_modules/**/__tests__/**",
+          "original": "__tests__/",
+        },
+      ],
+    },
+    {
+      "filePath": "<CWD>/node_modules/dep1/a-dir/doc.md",
+      "includedByDefault": true,
+      "includedByGlobs": [
+        {
+          "derived": "<CWD>/node_modules/**/*.@(md|mkd|markdown|mdown)",
+          "original": "*.@(md|mkd|markdown|mdown)",
+        },
+      ],
+    },
+  ],
+}
 `;
 
 exports[`analyze > uses custom glob file if provided 1`] = `
-[
-  {
-    "filePath": "<CWD>/node_modules/dep2/CHANGELOG.md",
-    "includedByDefault": true,
-    "includedByGlobs": [
-      {
-        "derived": "<CWD>/node_modules/**/**.md",
-        "original": "**.md",
-      },
-    ],
-  },
-  {
-    "filePath": "<CWD>/node_modules/dep4/nonDefaultFile.ext",
-    "includedByDefault": false,
-    "includedByGlobs": [
-      {
-        "derived": "<CWD>/node_modules/**/**/nonDefaultFile.ext",
-        "original": "**/nonDefaultFile.ext",
-      },
-    ],
-  },
-  {
-    "filePath": "<CWD>/node_modules/dep1/a-dir/doc.md",
-    "includedByDefault": true,
-    "includedByGlobs": [
-      {
-        "derived": "<CWD>/node_modules/**/**.md",
-        "original": "**.md",
-      },
-    ],
-  },
-]
+{
+  "failures": [],
+  "files": [
+    {
+      "filePath": "<CWD>/node_modules/dep2/CHANGELOG.md",
+      "includedByDefault": true,
+      "includedByGlobs": [
+        {
+          "derived": "<CWD>/node_modules/**/**.md",
+          "original": "**.md",
+        },
+      ],
+    },
+    {
+      "filePath": "<CWD>/node_modules/dep4/nonDefaultFile.ext",
+      "includedByDefault": false,
+      "includedByGlobs": [
+        {
+          "derived": "<CWD>/node_modules/**/**/nonDefaultFile.ext",
+          "original": "**/nonDefaultFile.ext",
+        },
+      ],
+    },
+    {
+      "filePath": "<CWD>/node_modules/dep1/a-dir/doc.md",
+      "includedByDefault": true,
+      "includedByGlobs": [
+        {
+          "derived": "<CWD>/node_modules/**/**.md",
+          "original": "**.md",
+        },
+      ],
+    },
+  ],
+}
 `;

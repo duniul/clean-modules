@@ -485,3 +485,76 @@ describe(removeFiles, () => {
     unlinkSpy.mockRestore();
   });
 });
+
+describe('symlink handling', () => {
+  describe(crawlDirFast, () => {
+    beforeEach(() => {
+      vol.fromNestedJSON({
+        root: {
+          realdir: {
+            'file.txt': 'real',
+          },
+        },
+      });
+      vol.symlinkSync(path.resolve('root/realdir'), path.resolve('root/linkdir'));
+    });
+
+    it('does not recurse into symlinks to directories', async () => {
+      expect.hasAssertions();
+
+      const filePaths: string[] = [];
+      await crawlDirFast(filePaths, 'root');
+
+      expect(filePaths).toContain(path.join('root', 'realdir', 'file.txt'));
+      expect(filePaths).toContain(path.join('root', 'linkdir'));
+      expect(filePaths).not.toContain(path.join('root', 'linkdir', 'file.txt'));
+    });
+  });
+
+  describe(crawlDirWithChecks, () => {
+    beforeEach(() => {
+      vol.fromNestedJSON({
+        root: {
+          realdir: {
+            'file.txt': 'real',
+          },
+        },
+      });
+      vol.symlinkSync(path.resolve('root/realdir'), path.resolve('root/linkdir'));
+    });
+
+    it('does not recurse into symlinks to directories', async () => {
+      expect.hasAssertions();
+
+      const filePaths: string[] = [];
+      const checkDir = vi.fn<CheckPathFunc>(() => false);
+      const checkFile = vi.fn<CheckPathFunc>(() => true);
+
+      await crawlDirWithChecks(filePaths, 'root', checkDir, checkFile);
+
+      expect(filePaths).toContain(path.join('root', 'realdir', 'file.txt'));
+      expect(filePaths).toContain(path.join('root', 'linkdir'));
+      expect(filePaths).not.toContain(path.join('root', 'linkdir', 'file.txt'));
+      // The symlink itself is offered to checkFile (not checkDir), so it can be matched
+      // by file globs but is never descended into.
+      expect(checkDir).toHaveBeenCalledWith(path.join('root', 'realdir'));
+      expect(checkDir).not.toHaveBeenCalledWith(path.join('root', 'linkdir'));
+      expect(checkFile).toHaveBeenCalledWith(path.join('root', 'linkdir'));
+    });
+  });
+
+  describe(removeFiles, () => {
+    it('unlinks the symlink itself rather than its target', async () => {
+      expect.hasAssertions();
+
+      vol.fromNestedJSON({ 'target.md': 'content' });
+      vol.symlinkSync(path.resolve('target.md'), path.resolve('link.md'));
+
+      const result = await removeFiles(['link.md']);
+
+      expect(result.failures).toStrictEqual([]);
+      expect(fs.existsSync('link.md')).toBe(false);
+      expect(fs.existsSync('target.md')).toBe(true);
+    });
+  });
+});

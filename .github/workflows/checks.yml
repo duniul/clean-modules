@@ -16,7 +16,7 @@ permissions:
 
 jobs:
   build:
-    name: 🧱 Build
+    name: 🧱 Check and build
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -37,6 +37,12 @@ jobs:
 
       - name: 📦 Install dependencies
         run: pnpm install
+
+      - name: 🧹 Stylecheck project
+        run: pnpm stylecheck
+
+      - name: 🧹 Typecheck project
+        run: pnpm typecheck
 
       - name: 🧱 Build project
         run: pnpm build

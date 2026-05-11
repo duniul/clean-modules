@@ -5,9 +5,9 @@
 
 # test
 __tests__/
+__mocks__/
 test/
 tests/
-powered-test/
 
 # IDE
 .idea/
@@ -29,9 +29,27 @@ coverage/
 # git
 .git/
 
+# ai
+.claude/
+.cursor/
+.copilot/
+.codeium/
+.aider/
+.windsurf/
+.bolt/
+.codex/
+.continue/
+
 # other
 website/
 .husky/
+.turbo/
+.pnpm-store/
+.kotlin/
+.gradle/
+.changeset/
+.storybook/
+.devcontainer/
 
 #
 # FILE EXTENSIONS
@@ -49,7 +67,6 @@ website/
 # docs/text
 *.@(md|mkd|markdown|mdown)
 *.todo
-*.mustache
 *.@(adoc|asciidoc)
 *.DOCS
 
@@ -57,6 +74,7 @@ website/
 # include .ts files but not .d.ts
 \!(*.d).ts
 *.coffee
+*.flow
 
 # compressed
 *.zip
@@ -64,11 +82,17 @@ website/
 *.rar
 *.tar
 *.tgz
+*.gz
+*.xz
+*.bz2
 
 # images
 *.@(jpg|jpeg)
 *.png
 *.gif
+*.bmp
+*.ico
+*.webp
 
 # compiled
 *.h
@@ -77,6 +101,8 @@ website/
 *.cpp
 *.o
 *.mk
+*.hh
+*.cc
 
 # other
 *.log
@@ -90,6 +116,15 @@ website/
 *.vcxproj*(.*)
 *.orig
 *.rej
+*.lockfile
+*.lcov
+*.bak
+*.tmp
+*.temp
+*.gyp
+*.gypi
+*.1
+*.un~
 
 #
 # FILES
@@ -112,13 +147,15 @@ circle.yml
 
 # Mac OS
 .DS_Store
+._*
 
 # Windows
 Desktop.ini
 Thumbs.db
 
 # linters
-.eslintrc*(.*)
+*.eslintrc*(.*)
+*.eslintcache
 eslint.config.@(cjs|js|mjs)
 stylelint.config.js
 .stylelintrc*(.*)
@@ -127,13 +164,18 @@ htmllint.js
 .jshintrc*(.*)
 .lint
 tslint.json
-.lintignore
-.jshintignore
-.eslintignore
-
-# prettier
+biome.json
+.oxlintrc.@(json|jsonc)
+oxlint.config.ts
+.oxfmtrc.@(json|jsonc)
+oxfmt.config.ts
 .prettierrc*(.*)
 prettier.config.js
+
+# ai
+.cursorrules
+.clinerules
+.windsurfrules
 
 # testing
 \!(utils)/test.js
@@ -142,7 +184,7 @@ karma.conf.js
 wallaby.js
 wallaby.conf.js
 .coveralls.yml
-.airtap.yml
+vitest.config.*
 
 # docs
 readme*(.*)
@@ -154,17 +196,23 @@ contributing*(.*)
 notice*(.*)
 copying*(.*)
 
+# docker
+docker-compose.@(yml|yaml)
+
+# editors
+*.sublime-project
+*.sublime-workspace
+
 # licenses
-licen@(s|c)e
-licen@(s|c)e-mit
-licen@(s|c)e.txt
-licen@(s|c)e-mit.txt
+licen@(s|c)e*
+*.licen@(s|c)e*
+LICEN@(S|C)E*
+*.LICEN@(S|C)E*
+ThirdPartyNotice*(.*)
+CopyrightNotice*(.*)
 
 # typescript
-.tsbuildinfo
-
-# npm
-.npmrc
+*.tsbuildinfo
 
 # ignore files
 .*ignore
@@ -174,39 +222,47 @@ yarn.lock
 .yarnclean
 .yarn-metadata.json
 
+# pnpm
+pnpm-lock.yaml
+pnpm-workspace.yaml
+
 # git
 .gitmodules
 .gitattributes
 
 # configs
-.npmrc
-.babelrc
-.editorconfig
-.tern-project
-.flowconfig
-.documentup.json
-.yo-rc.json
+*.npmrc
+*.nvmrc
+*.babelrc
+*.editorconfig
+*.flowconfig
+*.yo-rc.json
 _config.yml
 bower.json
 renovate.json
 .vimrc*(.*)
-.zuul.yml
 .istanbul.yml
 .nycrc
-.jscsrc
+jsconfig.json
+tsconfig.json
+turbo.json
+nx.json
+deno.@(json|jsonc)
 
 # versioning
 .bmp.yml
 .release-it.@(cjs|js|json|toml|ts|yaml|yml)
 
+# lint-staged
+lint-staged.config.*
+.lintstagedrc*(.*)
+
 # other
 .dir-locals.el
-binding.gyp
-cakefile
-component.json
 composer.json
-contributors
-.jamignore
 .codecov.yml
 pom.xml
-OSSMETADATA
+.browserslistrc
+.browserslist
+.node-version
+.tool-versions

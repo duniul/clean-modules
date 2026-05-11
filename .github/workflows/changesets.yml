@@ -5,12 +5,12 @@ on:
     branches:
       - main
     paths-ignore:
-      - ".vscode/**"
-      - "images/**"
-      - ".gitattributes"
-      - ".gitignore"
-      - "*.md"
-      - "LICENSE"
+      - '.vscode/**'
+      - 'images/**'
+      - '.gitattributes'
+      - '.gitignore'
+      - '*.md'
+      - 'LICENSE'
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -44,8 +44,8 @@ jobs:
         id: changesets
         uses: changesets/action@v1
         with:
-          title: "🆕 Upcoming release"
-          commit: "chore: bump version"
+          title: '🆕 Upcoming release'
+          commit: 'chore: bump version'
           version: pnpm run version
           publish: pnpm run release
         env:

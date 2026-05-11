@@ -4,12 +4,12 @@ on:
   workflow_dispatch:
   push:
     paths-ignore:
-      - ".vscode/**"
-      - "images/**"
-      - ".gitattributes"
-      - ".gitignore"
-      - "*.md"
-      - "LICENSE"
+      - '.vscode/**'
+      - 'images/**'
+      - '.gitattributes'
+      - '.gitignore'
+      - '*.md'
+      - 'LICENSE'
 
 permissions:
   contents: read

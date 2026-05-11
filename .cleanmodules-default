@@ -9,10 +9,6 @@ test/
 tests/
 powered-test/
 
-# docs
-docs/
-doc/
-
 # IDE
 .idea/
 .vscode/

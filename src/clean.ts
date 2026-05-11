@@ -3,8 +3,6 @@ import type { SharedOptions } from './shared.js';
 import { removeEmptyDirs, removeFiles } from './utils/filesystem.js';
 import { findFilesByGlobLists, getGlobLists } from './utils/glob.js';
 
-const ZERO_DIRS = 0;
-
 export const defaultCleanOptions: Required<CleanOptions> = {
   ...sharedDefaultOptions,
   dryRun: false,
@@ -39,8 +37,7 @@ export async function clean(options: CleanOptions = {}): Promise<CleanResult> {
   const globLists = await getGlobLists({ globs, noDefaults, globFile });
   const files = await findFilesByGlobLists(directory, globLists);
   const reducedSize = await removeFiles(files, { dryRun });
-  // oxlint-disable-next-line no-magic-numbers
-  const removedEmptyDirs = dryRun || keepEmpty ? ZERO_DIRS : await removeEmptyDirs(files);
+  const removedEmptyDirs = dryRun || keepEmpty ? 0 : await removeEmptyDirs(files);
 
   return { files, reducedSize, removedEmptyDirs };
 }

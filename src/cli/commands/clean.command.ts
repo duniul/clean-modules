@@ -89,9 +89,9 @@ export const cleanCommand = defineCommand({
       console.log(JSON.stringify(output, null, JSON_INDENT));
     } else {
       logger.log('\nResults:');
-      logger.log('- size reduced:', formatBytes(reducedSize || 0));
+      logger.log('- size reduced:', formatBytes(reducedSize));
       logger.log('- files removed:', files.length);
-      logger.log('- empty dirs removed:', removedEmptyDirs || 0);
+      logger.log('- empty dirs removed:', removedEmptyDirs);
     }
   },
 });

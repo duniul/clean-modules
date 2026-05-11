@@ -38,8 +38,8 @@ describe('file exists', () => {
   it('returns false if the file does not exists', async () => {
     expect.hasAssertions();
 
-    const result = await fileExists('testdir/foo');
-    expect(result).toBe(true);
+    const result = await fileExists('testdir/bar');
+    expect(result).toBe(false);
   });
 
   it("throws any error that isn't ENOENT", async () => {

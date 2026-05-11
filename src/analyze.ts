@@ -1,4 +1,4 @@
-import type { SharedOptions } from './shared.js';
+import type { CleanFailure, SharedOptions } from './shared.js';
 import { sharedDefaultOptions } from './shared.js';
 import {
   findFilesByGlobLists,
@@ -17,7 +17,7 @@ export type GlobVersions = {
   derived: string;
 };
 
-export type AnalyzeResult = {
+export type AnalyzedFile = {
   /** The absolute path to the file. */
   filePath: string;
   /** Whether the file was included by clean-modules' default globs. */
@@ -26,20 +26,27 @@ export type AnalyzeResult = {
   includedByGlobs: GlobVersions[];
 };
 
+export type AnalyzeResult = {
+  /** Files that would be cleaned up by the corresponding `clean` call. */
+  files: AnalyzedFile[];
+  /** Non-fatal failures encountered while crawling the directory tree. */
+  failures: CleanFailure[];
+};
+
 export type AnalyzeOptions = SharedOptions;
 
 /**
  * Helps determining why a file is included by the `clean` operation without removing any files. Extra globs can be passed as positional args.
  * @param options analyze options
- * @returns list of files that were included by the clean operation and what globs they were included by
+ * @returns analyzed files alongside any crawl failures
  */
-export async function analyze(options: AnalyzeOptions = {}): Promise<AnalyzeResult[]> {
+export async function analyze(options: AnalyzeOptions = {}): Promise<AnalyzeResult> {
   const mergedOptions = { ...sharedDefaultOptions, ...options };
   const { globs, noDefaults, globFile, directory } = mergedOptions;
   const nodeModulesPath = directory || sharedDefaultOptions.directory;
 
   const globLists = await getGlobLists({ globs, noDefaults, globFile });
-  const includedFiles = await findFilesByGlobLists(nodeModulesPath, globLists);
+  const { files: includedFiles, failures } = await findFilesByGlobLists(nodeModulesPath, globLists);
 
   const defaultGlobs = toAbsoluteGlobLists(optimizeGlobLists(await parseDefaultGlobsFile()), nodeModulesPath);
 
@@ -53,9 +60,9 @@ export async function analyze(options: AnalyzeOptions = {}): Promise<AnalyzeResu
     return { original: globLists.originalIncluded[index], derived: absoluteGlob, matcher };
   });
 
-  const analyzedResults = includedFiles.map(filePath => {
+  const analyzedFiles: AnalyzedFile[] = includedFiles.map(filePath => {
     const includedByDefault = includedByDefaultMatcher(filePath);
-    const includedByGlobs: { original: string; derived: string }[] = [];
+    const includedByGlobs: GlobVersions[] = [];
 
     for (const { original, derived, matcher } of globMatchers) {
       if (matcher(filePath)) {
@@ -66,5 +73,5 @@ export async function analyze(options: AnalyzeOptions = {}): Promise<AnalyzeResu
     return { filePath, includedByDefault, includedByGlobs };
   });
 
-  return analyzedResults;
+  return { files: analyzedFiles, failures };
 }

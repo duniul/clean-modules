@@ -1,8 +1,9 @@
 import { promises as fsAsync } from 'node:fs';
 import path from 'node:path';
 import pm, { type PicomatchOptions } from 'picomatch';
+import type { CleanFailure } from '../shared.js';
 import { DEFAULT_GLOBS_FILE_PATH } from '../shared.js';
-import { crawlDirWithChecks, fileExists } from './filesystem.js';
+import { type CrawlErrorHandler, crawlDirWithChecks, fileExists } from './filesystem.js';
 
 export function initGlobLists(): GlobLists {
   return { excluded: [], included: [], includedDirs: [], originalIncluded: [] };
@@ -239,26 +240,44 @@ export async function getGlobLists({ noDefaults, globFile, globs }: GetGlobLists
   return mergedGlobLists;
 }
 
+export type FindFilesResult = {
+  /** File paths that matched the include rules. */
+  files: string[];
+  /** Non-fatal failures encountered while crawling the directory tree. */
+  failures: CleanFailure[];
+};
+
 /**
  * Finds all files matching the given glob lists in the given directory.
+ *
+ * Crawl errors (e.g. permission failures on a subdirectory) are collected as `failures` so the
+ * walk can continue and partial results are still returned.
+ *
  * @param directory the directory to search in
  * @param globLists the glob lists to match against
- * @returns a promise that resolves to an array of matching file paths
  */
-export async function findFilesByGlobLists(directory: string, globLists: GlobLists): Promise<string[]> {
+export async function findFilesByGlobLists(
+  directory: string,
+  globLists: GlobLists
+): Promise<FindFilesResult> {
   const { included, includedDirs, excluded } = toAbsoluteGlobLists(optimizeGlobLists(globLists), directory);
 
   const picoOptions = { ignore: excluded };
   const checkDir = includedDirs?.length ? makeGlobMatcher(includedDirs, picoOptions) : (): boolean => false;
   const checkFile = makeGlobMatcher(included, picoOptions);
 
-  let filesToRemove = await crawlDirWithChecks([], directory, checkDir, checkFile);
+  const failures: CleanFailure[] = [];
+  const onError: CrawlErrorHandler = failure => {
+    failures.push(failure);
+  };
+
+  let files = await crawlDirWithChecks([], directory, checkDir, checkFile, onError);
 
   if (excluded.length) {
     // make another pass to ensure that files included by dir globs are
     // matched with excluded globs too
-    filesToRemove = filesToRemove.filter(file => checkFile(file));
+    files = files.filter(file => checkFile(file));
   }
 
-  return filesToRemove;
+  return { files, failures };
 }

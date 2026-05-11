@@ -18,6 +18,7 @@ describe(clean, () => {
     const result = await clean();
     expect(result).toMatchInlineSnapshot(`
       {
+        "failures": [],
         "files": [
           "<CWD>/node_modules/dep1/.npmrc",
           "<CWD>/node_modules/dep2/CHANGELOG.md",
@@ -27,6 +28,7 @@ describe(clean, () => {
         ],
         "reducedSize": 5,
         "removedEmptyDirs": 3,
+        "removedFilesCount": 5,
       }
     `);
   });
@@ -37,6 +39,7 @@ describe(clean, () => {
     const result = await clean({ globs: ['**/nonDefaultFile.ext'] });
     expect(result).toMatchInlineSnapshot(`
       {
+        "failures": [],
         "files": [
           "<CWD>/node_modules/dep1/.npmrc",
           "<CWD>/node_modules/dep2/CHANGELOG.md",
@@ -47,6 +50,7 @@ describe(clean, () => {
         ],
         "reducedSize": 6,
         "removedEmptyDirs": 4,
+        "removedFilesCount": 6,
       }
     `);
   });
@@ -57,11 +61,13 @@ describe(clean, () => {
     const result = await clean({ noDefaults: true, globs: ['**/nonDefaultFile.ext'] });
     expect(result).toMatchInlineSnapshot(`
       {
+        "failures": [],
         "files": [
           "<CWD>/node_modules/dep4/nonDefaultFile.ext",
         ],
         "reducedSize": 1,
         "removedEmptyDirs": 1,
+        "removedFilesCount": 1,
       }
     `);
   });
@@ -75,6 +81,7 @@ describe(clean, () => {
     const result = await clean({ noDefaults: true, globFile: customGlobFile });
     expect(result).toMatchInlineSnapshot(`
       {
+        "failures": [],
         "files": [
           "<CWD>/node_modules/dep2/CHANGELOG.md",
           "<CWD>/node_modules/dep4/nonDefaultFile.ext",
@@ -82,6 +89,7 @@ describe(clean, () => {
         ],
         "reducedSize": 3,
         "removedEmptyDirs": 2,
+        "removedFilesCount": 3,
       }
     `);
   });

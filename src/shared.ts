@@ -20,3 +20,18 @@ export const sharedDefaultOptions: Required<SharedOptions> = {
   noDefaults: false,
   globs: [],
 };
+
+/** Filesystem phase where a failure occurred. */
+export type CleanFailurePhase = 'readdir' | 'stat' | 'unlink';
+
+/** A non-fatal filesystem failure that occurred while crawling or removing files. */
+export type CleanFailure = {
+  /** Absolute path that the operation was attempted against. */
+  path: string;
+  /** Which filesystem operation failed. */
+  phase: CleanFailurePhase;
+  /** Error code, when the underlying error exposes one (e.g. `EACCES`, `EBUSY`). */
+  code?: string;
+  /** Human-readable error message. */
+  message: string;
+};

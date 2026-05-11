@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import path from 'node:path';
 import { vol, type NestedDirectoryJSON } from 'memfs';
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -17,6 +18,14 @@ import {
   wrapGlobs,
   type GlobLists,
 } from './glob.js';
+
+type NodeError = Error & { code: string };
+
+function makeNodeError(message: string, code: string): NodeError {
+  const error = new Error(message) as NodeError;
+  error.code = code;
+  return error;
+}
 
 vi.setConfig({ testTimeout: 5000 });
 
@@ -342,11 +351,12 @@ describe(findFilesByGlobLists, () => {
       includedDirs: ['**/__tests__', '**/dep3'],
     });
 
-    expect(result).toStrictEqual([
+    expect(result.files).toStrictEqual([
       path.join('node_modules', 'dep1', '__tests__', 'test1.js'),
       path.join('node_modules', 'dep1', '__tests__', 'test2.js'),
       path.join('node_modules', 'dep3', 'deeply', 'nested', 'file.ext'),
     ]);
+    expect(result.failures).toStrictEqual([]);
   });
 
   it('includes files', async () => {
@@ -357,10 +367,11 @@ describe(findFilesByGlobLists, () => {
       included: ['**/deeply/nested/file.ext', '**/dep4/**'],
     });
 
-    expect(result).toStrictEqual([
+    expect(result.files).toStrictEqual([
       path.join('node_modules', 'dep4', 'nonDefaultFile.ext'),
       path.join('node_modules', 'dep3', 'deeply', 'nested', 'file.ext'),
     ]);
+    expect(result.failures).toStrictEqual([]);
   });
 
   it('can exclude files and dirs by glob patterns', async () => {
@@ -372,6 +383,43 @@ describe(findFilesByGlobLists, () => {
       excluded: ['**/test*.js'],
     });
 
-    expect(result).toStrictEqual([path.join('node_modules', 'dep2', 'file.js')]);
+    expect(result.files).toStrictEqual([path.join('node_modules', 'dep2', 'file.js')]);
+    expect(result.failures).toStrictEqual([]);
+  });
+
+  it('collects crawl failures without aborting the walk', async () => {
+    expect.hasAssertions();
+
+    const failingDir = path.join('node_modules', 'dep1', '__tests__');
+
+    // Capture the (memfs-backed) original before installing the spy so we can pass-through.
+    const originalReaddir = fs.promises.readdir.bind(fs.promises);
+    const readdirSpy = vi.spyOn(fs.promises, 'readdir').mockImplementation(((dirPath, options) =>
+      // oxlint-disable-next-line vitest/no-conditional-in-test
+      dirPath === failingDir
+        ? Promise.reject(makeNodeError('denied', 'EACCES'))
+        : originalReaddir(dirPath as never, options as never)) as typeof fs.promises.readdir);
+
+    const result = await findFilesByGlobLists(nodeModulesPath, {
+      ...initGlobLists(),
+      included: ['**/*.js', '**/*.md'],
+    });
+
+    // file from the failing directory should be missing, but the walk should still complete
+    expect(result.files).toStrictEqual(
+      expect.arrayContaining([
+        path.join('node_modules', 'dep2', 'CHANGELOG.md'),
+        path.join('node_modules', 'dep2', 'file.js'),
+        path.join('node_modules', 'dep1', 'a-dir', 'doc.md'),
+      ])
+    );
+    expect(result.failures).toHaveLength(1);
+    expect(result.failures[0]).toMatchObject({
+      path: failingDir,
+      phase: 'readdir',
+      code: 'EACCES',
+    });
+
+    readdirSpy.mockRestore();
   });
 });

@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      citty:
-        specifier: ^0.2.2
-        version: 0.2.2
       picomatch:
         specifier: ^4.0.2
         version: 4.0.4
@@ -898,9 +895,6 @@ packages:
 
   chardet@2.1.1:
     resolution: {integrity: sha512-PsezH1rqdV9VvyNhxxOW32/d75r01NY7TQCmOqomRo15ZSOKbpTFVsfjghxo6JloQUCGnH4k1LGu0R4yCLlWQQ==}
-
-  citty@0.2.2:
-    resolution: {integrity: sha512-+6vJA3L98yv+IdfKGZHBNiGW5KHn22e/JwID0Strsz8h4S/csAu/OuICwxrg44k5MRiZHWIo8XXuJgQTriRP4w==}
 
   convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
@@ -2317,8 +2311,6 @@ snapshots:
       - encoding
 
   chardet@2.1.1: {}
-
-  citty@0.2.2: {}
 
   convert-source-map@2.0.0: {}
 

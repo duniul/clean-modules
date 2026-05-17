@@ -26,6 +26,7 @@
     "import/group-exports": "off",
     "import/no-named-export": "off",
     "import/no-nodejs-modules": "off",
+    "import/no-namespace": "off",
     "import/no-relative-parent-imports": "off",
     "import/prefer-default-export": "off",
     "init-declarations": "off",
@@ -35,6 +36,7 @@
     "jsdoc/require-returns": "off",
     "max-lines-per-function": "off",
     "max-lines": "off",
+    "id-length": "off",
     "max-params": "off",
     "max-statements": "off",
     "no-array-callback-reference": "off",
@@ -43,7 +45,9 @@
     "no-duplicate-imports": ["error", { "allowSeparateTypeImports": true }],
     "no-implicit-coercion": "off",
     "no-inline-comments": "off",
-    "no-magic-numbers": ["error", { "ignore": [0, 1] }],
+    "no-magic-numbers": ["error", { "ignore": [0, 1], "ignoreDefaultValues": true }],
+    "no-nested-ternary": "off",
+    "unicorn/no-nested-ternary": "off",
     "no-null": "off",
     "no-optional-chaining": "off",
     "no-plusplus": "off",
@@ -72,7 +76,8 @@
     {
       "files": ["src/cli/**/*.ts"],
       "rules": {
-        "new-cap": "off"
+        "new-cap": "off",
+        "no-console": "off"
       }
     },
     {

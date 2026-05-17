@@ -1,11 +1,11 @@
-import { defineCommand } from 'citty';
 import { clean } from '../../clean.js';
 import type { CleanFailure } from '../../shared.js';
-import { formatBytes, formatMs } from '../../utils/formatting.js';
-import { sharedArgs } from '../helpers/args.js';
+import { formatBytes, formatJson, formatMs } from '../../utils/formatting.js';
+import { processArgs, sharedOptions, sharedPositionals } from '../helpers/args.js';
+import { formatHelp } from '../helpers/help.js';
+import type { CommandDefinition } from '../types.js';
 import { makeSimpleLogger, yesOrNo } from '../utils/terminal.js';
 
-const JSON_INDENT = 2;
 const MAX_PRINTED_FAILURES = 5;
 
 function formatFailureLine(failure: CleanFailure): string {
@@ -13,56 +13,65 @@ function formatFailureLine(failure: CleanFailure): string {
   return `  ${prefix}${failure.path} (${failure.phase} failed: ${failure.message})`;
 }
 
-export const cleanCommand = defineCommand({
-  meta: {
-    name: 'clean',
-    description:
-      'Removes unnecessary files to reduce the size of your node_modules directory. Extra globs can be passed as positional args.',
-  },
-  args: {
-    ...sharedArgs,
+export const cleanCommand = {
+  name: 'clean',
+  description: 'Remove unnecessary files in your node_modules directory.',
+  extraUsageInfo: 'Extra globs can be passed as positional args.',
+
+  allowPositionals: true,
+  positionals: sharedPositionals,
+
+  options: {
+    ...sharedOptions,
     'keep-empty': {
       type: 'boolean',
-      alias: ['k'],
+      short: 'k',
+      description: 'Skips removing empty folders after cleanup',
       default: false,
-      description: 'Skips removing empty folders after removing contents',
     },
     'dry-run': {
       type: 'boolean',
-      alias: ['d'],
+      short: 'd',
+      description: 'Runs clean without removing any files',
       default: false,
-      description: 'Logs files that would be removed without removing any files',
     },
     'silent': {
       type: 'boolean',
-      alias: ['s'],
+      short: 's',
+      description: 'Does not log anything to console',
       default: false,
-      description: 'Does not log anything to console (unless --json is enabled)',
     },
     'json': {
       type: 'boolean',
-      alias: ['j'],
-      default: false,
+      short: 'j',
       description: 'Output results as JSON',
+      default: false,
     },
     'yes': {
       type: 'boolean',
-      alias: ['y'],
+      short: 'y',
+      description: 'Skips the confirmation prompt',
       default: false,
-      description: 'Skips the confirmation prompt at the start of the script',
     },
     'fail-on-error': {
       type: 'boolean',
+      short: 'e',
+      description: 'Exit with a non-zero status code on file errors',
       default: false,
-      description: 'Exit with a non-zero status code if any file failed to be removed',
     },
   },
-  async run({ args }): Promise<void> {
+
+  renderHelp(): string {
+    return formatHelp(this as typeof cleanCommand);
+  },
+
+  async run(): Promise<void> {
+    const { values: args, positionals: globs } = processArgs(this as typeof cleanCommand);
     const logger = makeSimpleLogger({ disabled: args.json || args.silent });
 
-    logger.log(`clean-modules${args['dryRun'] ? ' (dry run)' : ''}`);
+    logger.log(`clean-modules${args['dry-run'] ? ' (dry run)' : ''}`);
 
-    if (!args.yes && !args['dryRun']) {
+    if (!args.yes && !args['dry-run']) {
       const warning = `\nPreparing to clean node_modules at: ${args.directory}\nAre you sure you want to continue? (Y/N) `;
       const confirmed = await yesOrNo(warning);
 
@@ -77,7 +86,7 @@ export const cleanCommand = defineCommand({
     const cleanupStart = Date.now();
 
     const { removedFilesCount, reducedSize, removedEmptyDirs, failures } = await clean({
-      globs: args._,
+      globs,
       dryRun: args['dry-run'],
       noDefaults: args['no-defaults'],
       globFile: args['glob-file'],
@@ -99,7 +108,7 @@ export const cleanCommand = defineCommand({
       };
 
       // oxlint-disable-next-line no-console
-      console.log(JSON.stringify(output, null, JSON_INDENT));
+      console.log(formatJson(output));
     } else {
       logger.log('\nResults:');
       logger.log('- size reduced:', formatBytes(reducedSize));
@@ -127,4 +136,4 @@ export const cleanCommand = defineCommand({
       process.exit(1);
     }
   },
-});
+} satisfies CommandDefinition;

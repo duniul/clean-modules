@@ -2,7 +2,7 @@ import { clean } from '../../clean.js';
 import type { CleanFailure } from '../../shared.js';
 import { formatBytes, formatJson, formatMs } from '../../utils/formatting.js';
 import { processArgs, sharedOptions, sharedPositionals } from '../helpers/args.js';
-import { formatHelp } from '../helpers/help.js';
+import { formatHelp, NAME } from '../helpers/help.js';
 import type { CommandDefinition } from '../types.js';
 import { makeSimpleLogger, yesOrNo } from '../utils/terminal.js';
 
@@ -69,7 +69,7 @@ export const cleanCommand = {
     const { values: args, positionals: globs } = processArgs(this as typeof cleanCommand);
     const logger = makeSimpleLogger({ disabled: args.json || args.silent });
 
-    logger.log(`clean-modules${args['dry-run'] ? ' (dry run)' : ''}`);
+    logger.log(`${NAME}${args['dry-run'] ? ' (dry run)' : ''}`);
 
     if (!args.yes && !args['dry-run']) {
       if (!process.stdin.isTTY) {
@@ -94,7 +94,7 @@ export const cleanCommand = {
 
     const cleanupStart = Date.now();
 
-    const { removedFilesCount, reducedSize, removedEmptyDirs, failures } = await clean({
+    const { files, removedFilesCount, reducedSize, removedEmptyDirs, failures } = await clean({
       globs,
       dryRun: args['dry-run'],
       noDefaults: args['no-defaults'],
@@ -119,10 +119,12 @@ export const cleanCommand = {
       // oxlint-disable-next-line no-console
       console.log(formatJson(output));
     } else {
+      const dryRunSuffix = args['dry-run'] ? '(skipped in dry run)' : '';
       logger.log('\nResults:');
       logger.log('- size reduced:', formatBytes(reducedSize));
-      logger.log('- files removed:', removedFilesCount);
-      logger.log('- empty dirs removed:', removedEmptyDirs);
+      logger.log('- files matched:', files.length);
+      logger.log('- files removed:', removedFilesCount, dryRunSuffix);
+      logger.log('- empty dirs removed:', removedEmptyDirs, dryRunSuffix);
 
       if (failures.length > 0) {
         logger.log('- failures:', failures.length);

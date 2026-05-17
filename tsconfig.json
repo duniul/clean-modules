@@ -10,7 +10,7 @@
 
     "outDir": "dist",
     "noEmit": true,
-    "tsBuildInfoFile": "./tsconfig.tsbuildinfo",
+    "tsBuildInfoFile": "./.tsbuildinfo",
     "incremental": true,
 
     "strict": true,

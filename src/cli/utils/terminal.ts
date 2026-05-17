@@ -25,6 +25,11 @@ export function makeSimpleLogger({ disabled }: { disabled: boolean }): SimpleCon
  * Prompts the user with a yes/no question and waits for the answer.
  */
 export function yesOrNo(query: string): Promise<boolean> {
+  if (!process.stdin.isTTY) {
+    console.error('stdin is not a TTY, skipping confirmation prompt. Please use --yes or -y to skip the prompt.');
+    return Promise.resolve(false);
+  }
+
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -33,7 +38,7 @@ export function yesOrNo(query: string): Promise<boolean> {
   return new Promise(resolve => {
     rl.question(query, (answer: string) => {
       rl.close();
-      resolve(/ye?s?/i.test(answer));
+      resolve(/^\s*y(es)?\s*$/i.test(answer));
     });
   });
 }

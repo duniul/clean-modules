@@ -1,18 +1,38 @@
-import { defineCommand, runMain } from 'citty';
-import pkgJson from '../../package.json' with { type: 'json' };
+import { analyzeCommand } from './commands/analyze.command.js';
+import { cleanCommand } from './commands/clean.command.js';
+import { formatHelp } from './helpers/help.js';
 
-const { name, version, description } = pkgJson;
+const FIRST_POSITIONAL_INDEX = 2;
 
-const main = defineCommand({
-  meta: {
-    name,
-    version,
-    description,
-  },
-  subCommands: {
-    clean: () => import('./commands/clean.command').then(module => module.cleanCommand),
-    analyze: () => import('./commands/analyze.command').then(module => module.analyzeCommand),
-  },
-});
+const firstPositional = process.argv
+  .slice(FIRST_POSITIONAL_INDEX)
+  .find(positional => !positional.startsWith('-'));
 
-runMain(main);
+switch (firstPositional) {
+  case cleanCommand.name: {
+    await cleanCommand.run();
+    break;
+  }
+
+  case analyzeCommand.name: {
+    await analyzeCommand.run();
+    break;
+  }
+
+  default: {
+    const rootCommand = {
+      ...cleanCommand,
+      renderHelp: (): string =>
+        formatHelp({
+          ...cleanCommand,
+          subcommands: [
+            { name: `${cleanCommand.name} (default)`, description: cleanCommand.description },
+            analyzeCommand,
+          ],
+        }),
+    };
+
+    await rootCommand.run();
+    break;
+  }
+}

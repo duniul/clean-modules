@@ -1,5 +1,5 @@
 ---
-'clean-modules': patch
+'clean-modules': minor
 ---
 
-Replace `clipanion` with `citty` for CLI argument parsing.
+Replace `clipanion` built-in CLI parsing via `parseArgs`.

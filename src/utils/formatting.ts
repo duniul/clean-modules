@@ -55,3 +55,7 @@ export function formatMs(ms: number): string {
   const seconds = Math.floor((ms % MS_PER_MINUTE) / MS_PER_SECOND);
   return seconds === 0 ? `${minutes}m` : `${minutes}m ${seconds}s`;
 }
+
+export function formatJson(value: unknown, indent = 2): string {
+  return JSON.stringify(value, null, indent);
+}

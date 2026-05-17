@@ -1,25 +1,32 @@
-import { defineCommand } from 'citty';
 import { analyze } from '../../analyze.js';
-import { sharedArgs } from '../helpers/args.js';
+import { formatJson } from '../../utils/formatting.js';
+import { processArgs, sharedOptions, sharedPositionals } from '../helpers/args.js';
+import { formatHelp } from '../helpers/help.js';
+import type { CommandDefinition } from '../types.js';
 
-const JSON_INDENT = 2;
+export const analyzeCommand = {
+  name: 'analyze',
+  description: 'Analyze which files are cleaned up or not.',
 
-export const analyzeCommand = defineCommand({
-  meta: {
-    name: 'analyze',
-    description:
-      'Helps determining why a file is included by the clean command without removing any files. Extra globs can be passed as positional args.',
+  allowPositionals: true,
+  positionals: sharedPositionals,
+  options: sharedOptions,
+
+  renderHelp(): string {
+    return formatHelp(this as typeof analyzeCommand);
   },
-  args: sharedArgs,
-  async run({ args }): Promise<void> {
+
+  async run(): Promise<void> {
+    const { values: args, positionals: globs } = processArgs(this as typeof analyzeCommand);
+
     const analyzeResult = await analyze({
+      globs,
       directory: args.directory,
       noDefaults: args['no-defaults'],
       globFile: args['glob-file'],
-      globs: args._,
     });
 
     // oxlint-disable-next-line no-console
-    console.log(JSON.stringify(analyzeResult, null, JSON_INDENT));
+    console.log(formatJson(analyzeResult));
   },
-});
+} satisfies CommandDefinition;

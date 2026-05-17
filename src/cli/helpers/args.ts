@@ -1,33 +1,76 @@
-import type { ArgsDef } from 'citty';
+import { parseArgs } from 'node:util';
 import { sharedDefaultOptions } from '../../shared.js';
+import type { CommandDefinition, OptionDescriptors, ParsedArgs } from '../types.js';
+import { formatHelp, VERSION } from './help.js';
 
-/**
- * Shared options for all commands.
- */
-export const sharedArgs = {
+/** Shared positionals for all commands. */
+export const sharedPositionals = {
+  globs: {
+    multiple: true,
+    required: false,
+  },
+};
+
+/** Shared options for all commands. */
+export const sharedOptions = {
+  'help': {
+    type: 'boolean',
+    short: 'h',
+    description: 'Show help',
+  },
+  'version': {
+    type: 'boolean',
+    short: 'v',
+    description: 'Show version',
+  },
   'directory': {
     type: 'string',
-    alias: ['D'],
+    short: 'D',
     default: sharedDefaultOptions.directory,
+    defaultHint: '$PWD',
     description: 'Path to node_modules',
     valueHint: 'path',
   },
   'glob-file': {
     type: 'string',
-    alias: ['f'],
+    short: 'f',
     default: sharedDefaultOptions.globFile,
     description: 'Path to a custom glob file',
     valueHint: 'path',
   },
   'no-defaults': {
     type: 'boolean',
-    alias: ['n'],
+    short: 'n',
     default: sharedDefaultOptions.noDefaults,
-    description: 'Only includes/excludes globs specified by a custom glob file or CLI arguments',
+    description: 'Skips default glob patterns from being used',
   },
-  'globs': {
-    type: 'positional',
-    description: 'Optional extra globs to include or exclude',
-    required: false,
-  },
-} satisfies ArgsDef;
+} satisfies OptionDescriptors;
+
+export function processArgs<T extends CommandDefinition>(command: T): ParsedArgs<T> {
+  let parsed: ParsedArgs<T>;
+  try {
+    parsed = parseArgs(command);
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : String(error);
+    console.error(`${msg}\n\nRun with --help for usage.`);
+    // oxlint-disable-next-line unicorn/no-process-exit
+    process.exit(1);
+  }
+
+  const values = parsed.values as { help?: boolean; version?: boolean };
+
+  if (values.version) {
+    console.log(VERSION);
+    // oxlint-disable-next-line unicorn/no-process-exit
+    process.exit(0);
+  }
+
+  if (values.help) {
+    const helpText = command.renderHelp ? command.renderHelp() : formatHelp(command);
+    console.log(helpText);
+    // oxlint-disable-next-line unicorn/no-process-exit
+    process.exit(0);
+  }
+
+  return parsed;
+}

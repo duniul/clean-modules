@@ -81,7 +81,7 @@ export const cleanCommand = {
         process.exit(1);
       }
 
-      const warning = `\nPreparing to clean node_modules at: ${args.directory}\nAre you sure you want to continue? (Y/N) `;
+      const warning = `\nPreparing to clean node_modules at:\n${args.directory}\n\nAre you sure you want to continue? (Y/N) `;
       const confirmed = await yesOrNo(warning);
 
       if (!confirmed) {

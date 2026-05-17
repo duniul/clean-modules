@@ -4,6 +4,7 @@ import {
   findFilesByGlobLists,
   getGlobLists,
   makeGlobMatcher,
+  mergeGlobLists,
   optimizeGlobLists,
   parseDefaultGlobsFile,
   toAbsoluteGlobLists,
@@ -45,11 +46,13 @@ export async function analyze(options: AnalyzeOptions = {}): Promise<AnalyzeResu
   const { globs, noDefaults, globFile, directory } = mergedOptions;
   const nodeModulesPath = directory || sharedDefaultOptions.directory;
 
-  const globLists = await getGlobLists({ globs, noDefaults, globFile });
+  const defaultGlobLists = await parseDefaultGlobsFile();
+  const customGlobLists = await getGlobLists({ globs, noDefaults: true, globFile });
+  const globLists = noDefaults ? customGlobLists : mergeGlobLists(defaultGlobLists, customGlobLists);
+
   const { files: includedFiles, failures } = await findFilesByGlobLists(nodeModulesPath, globLists);
 
-  const defaultGlobs = toAbsoluteGlobLists(optimizeGlobLists(await parseDefaultGlobsFile()), nodeModulesPath);
-
+  const defaultGlobs = toAbsoluteGlobLists(optimizeGlobLists(defaultGlobLists), nodeModulesPath);
   const includedByDefaultMatcher = makeGlobMatcher(defaultGlobs.included, {
     ignore: defaultGlobs.excluded,
   });

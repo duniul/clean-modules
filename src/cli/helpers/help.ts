@@ -2,7 +2,7 @@ import pkgJson from '../../../package.json' with { type: 'json' };
 import type { CommandDefinition, OptionDescriptor, OptionDescriptors, PositionalDescriptors } from '../types';
 
 export const VERSION = pkgJson.version;
-const NAME = pkgJson.name;
+export const NAME = pkgJson.name;
 const HOMEPAGE = pkgJson.homepage.replace('#readme', '');
 
 function renderOptions(options: OptionDescriptors): string {

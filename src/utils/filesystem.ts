@@ -85,53 +85,102 @@ export async function readDirectory(dirPath: string): Promise<string[]> {
 }
 
 /**
- * Remove empty directories, recursively travelling up in the file until the first non-empty directory is reached.
+ * Counts the path separators in a directory path. Used to bucket directories
+ * by depth so they can be processed strictly bottom-up.
  */
-export async function removeEmptyDirsUp(
-  checkedDirs: Set<string>,
-  dirPath: string,
-  count = 0
-): Promise<number> {
-  if (!checkedDirs.has(dirPath)) {
-    const files = await readDirectory(dirPath);
-    const emptyDir = files.length === 0;
-    checkedDirs.add(dirPath);
-
-    if (emptyDir) {
-      try {
-        await fs.promises.rmdir(dirPath);
-        // oxlint-disable-next-line no-param-reassign
-        count++;
-      } catch {
-        // Do nothing, empty dir removal is best effort.
-        // A parent may become non-empty between checks, or be locked.
-      }
-
-      const parentDir = path.dirname(dirPath);
-      // oxlint-disable-next-line no-param-reassign
-      count = await removeEmptyDirsUp(checkedDirs, parentDir, count);
+function depthOf(dirPath: string): number {
+  let count = 0;
+  for (const char of dirPath) {
+    if (char === path.sep) {
+      count++;
     }
   }
-
   return count;
 }
 
 /**
+ * Attempts to remove a directory if it's empty. Returns true if it was removed.
+ * ENOENT, EBUSY and similar errors are treated as no-ops (best effort).
+ */
+async function tryRemoveDirIfEmpty(dirPath: string): Promise<boolean> {
+  try {
+    const entries = await fs.promises.readdir(dirPath);
+    if (entries.length > 0) {
+      return false;
+    }
+    await fs.promises.rmdir(dirPath);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Deeply removes empty directories for each file path.
+ *
+ * Walks up from each file's immediate parent and removes any ancestor that is
+ * empty. Directories are processed in waves grouped by depth to avoid redundant
+ * `readdir` calls on shared ancestors.
+ *
  * @param filePaths the file paths to remove empty directories for
  * @returns the number of empty directories removed
  */
-export async function removeEmptyDirs(filePaths: string[]): Promise<number> {
-  let removedEmptyDirs = 0;
+export async function removeEmptyDirs(filePaths: string[] | readonly string[]): Promise<number> {
+  if (filePaths.length === 0) {
+    return 0;
+  }
 
-  await Promise.all(
-    filePaths.map(async filePath => {
-      const removedParentDirs = await removeEmptyDirsUp(new Set<string>(), path.dirname(filePath));
-      removedEmptyDirs += removedParentDirs;
-    })
-  );
+  const dirsByDepth = new Map<number, Set<string>>();
+  let maxDepth = 0;
 
-  return removedEmptyDirs;
+  function queue(dir: string): void {
+    const depth = depthOf(dir);
+    let bucket = dirsByDepth.get(depth);
+
+    if (!bucket) {
+      bucket = new Set();
+      dirsByDepth.set(depth, bucket);
+    }
+
+    bucket.add(dir);
+
+    if (depth > maxDepth) {
+      maxDepth = depth;
+    }
+  }
+
+  for (const filePath of filePaths) {
+    queue(path.dirname(filePath));
+  }
+
+  let removedCount = 0;
+
+  for (let depth = maxDepth; depth >= 0; depth--) {
+    const bucket = dirsByDepth.get(depth);
+    if (!bucket || bucket.size === 0) {
+      continue;
+    }
+
+    // oxlint-disable-next-line no-await-in-loop
+    const results = await Promise.all(
+      [...bucket].map(async dir => ({ dir, removed: await tryRemoveDirIfEmpty(dir) }))
+    );
+
+    for (const { dir, removed } of results) {
+      if (!removed) {
+        continue;
+      }
+
+      removedCount++;
+
+      const parent = path.dirname(dir);
+      if (parent !== dir) {
+        queue(parent);
+      }
+    }
+  }
+
+  return removedCount;
 }
 
 /**

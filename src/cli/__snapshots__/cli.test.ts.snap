@@ -1,0 +1,160 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`analyze command > renders the analyze help 1`] = `
+"
+━━━ clean-modules vX.Y.Z ━━━
+https://github.com/duniul/clean-modules
+
+Analyze which files are cleaned up or not.
+
+━━━ Usage ━━━━━━━━━━━━━━━━━━
+
+$ clean-modules analyze [options] [globs...]
+
+━━━ Options ━━━━━━━━━━━━━━━━
+-h, --help         Show help
+-v, --version      Show version
+-D, --directory    Path to node_modules (default: $PWD)
+-f, --glob-file    Path to a custom glob file (default: .cleanmodules)
+-n, --no-defaults  Skips default glob patterns from being used
+"
+`;
+
+exports[`clean command > renders the clean help 1`] = `
+"
+━━━ clean-modules vX.Y.Z ━━━
+https://github.com/duniul/clean-modules
+
+Remove unnecessary files in your node_modules directory.
+
+━━━ Usage ━━━━━━━━━━━━━━━━━━
+
+$ clean-modules clean [options] [globs...]
+
+Extra globs can be passed as positional args.
+
+━━━ Options ━━━━━━━━━━━━━━━━
+-h, --help           Show help
+-v, --version        Show version
+-D, --directory      Path to node_modules (default: $PWD)
+-f, --glob-file      Path to a custom glob file (default: .cleanmodules)
+-n, --no-defaults    Skips default glob patterns from being used
+-k, --keep-empty     Skips removing empty folders after cleanup
+-d, --dry-run        Runs clean without removing any files
+-s, --silent         Does not log anything to console
+-j, --json           Output results as JSON
+-y, --yes            Skips the confirmation prompt
+-e, --fail-on-error  Exit with a non-zero status code on file errors
+"
+`;
+
+exports[`clean output formatting > emits a JSON summary with --json (no human-readable text) 1`] = `
+"{
+  "removedFiles": 5,
+  "reducedSize": 5,
+  "removedEmptyDirs": 3,
+  "duration": <DURATION>,
+  "dryRun": false,
+  "failures": []
+}"
+`;
+
+exports[`clean output formatting > lists failures (truncated past MAX_PRINTED_FAILURES) below the summary 1`] = `
+"clean-modules
+
+Cleaning up node_modules...
+Done in <DURATION>!
+
+Results:
+- size reduced: 12.35 kB
+- files matched: 8
+- files removed: 3 
+- empty dirs removed: 0 
+- failures: 8
+
+Failed to process 8 files:
+  EACCES: /node_modules/dep/file-0 (unlink failed: permission denied (0))
+  EACCES: /node_modules/dep/file-1 (unlink failed: permission denied (1))
+  EACCES: /node_modules/dep/file-2 (unlink failed: permission denied (2))
+  EACCES: /node_modules/dep/file-3 (unlink failed: permission denied (3))
+  EACCES: /node_modules/dep/file-4 (unlink failed: permission denied (4))
+  ...3 more (use --json to see all)"
+`;
+
+exports[`clean output formatting > marks the run as a dry run in the human-readable output 1`] = `
+"clean-modules (dry run)
+
+Cleaning up node_modules...
+Done in <DURATION>!
+
+Results:
+- size reduced: 5 B
+- files matched: 5
+- files removed: 0 (skipped in dry run)
+- empty dirs removed: 0 (skipped in dry run)"
+`;
+
+exports[`clean output formatting > renders a human-readable summary after a successful clean 1`] = `
+"clean-modules
+
+Cleaning up node_modules...
+Done in <DURATION>!
+
+Results:
+- size reduced: 5 B
+- files matched: 5
+- files removed: 5 
+- empty dirs removed: 3 "
+`;
+
+exports[`clean output formatting > uses singular wording and skips truncation when there is a single failure 1`] = `
+"clean-modules
+
+Cleaning up node_modules...
+Done in <DURATION>!
+
+Results:
+- size reduced: 0 B
+- files matched: 1
+- files removed: 0 
+- empty dirs removed: 0 
+- failures: 1
+
+Failed to process 1 file:
+  /node_modules/dep/only-file (unlink failed: boom)"
+`;
+
+exports[`default command > renders help that lists both subcommands 1`] = `
+"
+━━━ clean-modules vX.Y.Z ━━━
+https://github.com/duniul/clean-modules
+
+Remove unnecessary files in your node_modules directory.
+
+━━━ Usage ━━━━━━━━━━━━━━━━━━
+
+$ clean-modules <command> [options] [globs...]
+
+Extra globs can be passed as positional args.
+
+━━━ Commands ━━━━━━━━━━━━━━━
+clean-modules clean (default)
+    Remove unnecessary files in your node_modules directory.
+
+clean-modules analyze
+    Analyze which files are cleaned up or not.
+
+━━━ Options ━━━━━━━━━━━━━━━━
+-h, --help           Show help
+-v, --version        Show version
+-D, --directory      Path to node_modules (default: $PWD)
+-f, --glob-file      Path to a custom glob file (default: .cleanmodules)
+-n, --no-defaults    Skips default glob patterns from being used
+-k, --keep-empty     Skips removing empty folders after cleanup
+-d, --dry-run        Runs clean without removing any files
+-s, --silent         Does not log anything to console
+-j, --json           Output results as JSON
+-y, --yes            Skips the confirmation prompt
+-e, --fail-on-error  Exit with a non-zero status code on file errors
+"
+`;

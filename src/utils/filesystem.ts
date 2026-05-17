@@ -226,7 +226,6 @@ export async function removeFiles(
 
       try {
         fileStats = await fs.promises.stat(filePath);
-        removedFilesCount++;
       } catch (error: unknown) {
         if (!hasErrorCode(error, 'ENOENT')) {
           failures.push(toFailure(filePath, 'stat', error));
@@ -237,6 +236,7 @@ export async function removeFiles(
       if (!options.dryRun) {
         try {
           await fs.promises.unlink(filePath);
+          removedFilesCount++;
         } catch (error: unknown) {
           if (!hasErrorCode(error, 'ENOENT')) {
             failures.push(toFailure(filePath, 'unlink', error));

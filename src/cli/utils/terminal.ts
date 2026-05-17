@@ -26,7 +26,9 @@ export function makeSimpleLogger({ disabled }: { disabled: boolean }): SimpleCon
  */
 export function yesOrNo(query: string): Promise<boolean> {
   if (!process.stdin.isTTY) {
-    console.error('stdin is not a TTY, skipping confirmation prompt. Please use --yes or -y to skip the prompt.');
+    console.error(
+      'stdin is not a TTY, skipping confirmation prompt. Please use --yes or -y to skip the prompt.'
+    );
     return Promise.resolve(false);
   }
 

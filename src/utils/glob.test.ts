@@ -196,6 +196,12 @@ describe(formatGlob, () => {
     const result = formatGlob('/path/to/directory/');
     expect(result).toBe('path/to/directory/**');
   });
+
+  it('does not double-prepend globstars when the glob already starts with **/', () => {
+    expect(formatGlob('**/foo')).toBe('**/foo');
+    expect(formatGlob('**/foo/**')).toBe('**/foo/**');
+    expect(formatGlob('**/foo/')).toBe('**/foo/**');
+  });
 });
 
 describe(processGlobs, () => {
@@ -207,12 +213,12 @@ describe(processGlobs, () => {
           "**/test.js",
         ],
         "included": [
-          "**/**/test",
-          "**/**/path/to/directory/**",
+          "**/test",
+          "**/path/to/directory/**",
           "**/*.ext",
         ],
         "includedDirs": [
-          "**/**/path/to/directory",
+          "**/path/to/directory",
         ],
         "originalIncluded": [
           "**/test",
@@ -225,7 +231,7 @@ describe(processGlobs, () => {
 
   it('removes trailing globstars from dir globs', () => {
     const result = processGlobs(['**/foo/**', '/bar/**']);
-    expect(result.includedDirs).toStrictEqual(['**/**/foo', 'bar']);
+    expect(result.includedDirs).toStrictEqual(['**/foo', 'bar']);
   });
 
   it('filters empty strings', () => {

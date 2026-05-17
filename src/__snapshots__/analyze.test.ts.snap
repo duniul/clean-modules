@@ -33,7 +33,7 @@ exports[`analyze > accepts custom globs 1`] = `
       "includedByDefault": false,
       "includedByGlobs": [
         {
-          "derived": "<CWD>/node_modules/**/**/nonDefaultFile.ext",
+          "derived": "<CWD>/node_modules/**/nonDefaultFile.ext",
           "original": "**/nonDefaultFile.ext",
         },
       ],
@@ -81,7 +81,7 @@ exports[`analyze > allows skipping default globs 1`] = `
       "includedByDefault": false,
       "includedByGlobs": [
         {
-          "derived": "<CWD>/node_modules/**/**/nonDefaultFile.ext",
+          "derived": "<CWD>/node_modules/**/nonDefaultFile.ext",
           "original": "**/nonDefaultFile.ext",
         },
       ],
@@ -171,7 +171,7 @@ exports[`analyze > uses custom glob file if provided 1`] = `
       "includedByDefault": false,
       "includedByGlobs": [
         {
-          "derived": "<CWD>/node_modules/**/**/nonDefaultFile.ext",
+          "derived": "<CWD>/node_modules/**/nonDefaultFile.ext",
           "original": "**/nonDefaultFile.ext",
         },
       ],

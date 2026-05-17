@@ -131,7 +131,7 @@ const EXCLAMATION_START = /^\s*!/; // Globs starting with !
 const DIR_GLOB_REGEX = /\/\**$/; // Globs ending with /, /* or /**
 const EXCLUDED_GLOB_REGEX = /^!/; // Globs starting with !
 const ESCAPED_NEGATIVE_GLOB_REGEX = /^\\!/; // Globs starting with \!
-const NOT_FIXED_START_GLOB_REGEX = /^([^/])/; // Globs not starting with /
+const NOT_FIXED_START_GLOB_REGEX = /^(?!\*\*\/)([^/])/; // Globs not starting with / or **/
 const FIXED_START_GLOB_REGEX = /^\//; // Globs starting with /
 
 /**

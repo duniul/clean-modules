@@ -10,7 +10,6 @@ import {
   forEachDirentAsync,
   readDirectory,
   removeEmptyDirs,
-  removeEmptyDirsUp,
   removeFiles,
   type CheckPathFunc,
   type CrawlErrorHandler,
@@ -164,46 +163,6 @@ describe(readDirectory, () => {
   });
 });
 
-describe(removeEmptyDirsUp, () => {
-  beforeEach(() => {
-    vol.fromNestedJSON({
-      a0: {
-        b0: {
-          c0: {
-            d0: {
-              e0: {},
-            },
-          },
-          c1: 'its a file',
-        },
-      },
-    });
-  });
-
-  it('recursively removes empty directories up in the file tree', async () => {
-    expect.hasAssertions();
-
-    const checkedDirs = new Set<string>();
-    await removeEmptyDirsUp(checkedDirs, 'a0/b0/c0/d0/e0');
-
-    expect([...checkedDirs]).toStrictEqual(['a0/b0/c0/d0/e0', 'a0/b0/c0/d0', 'a0/b0/c0', 'a0/b0']);
-
-    // dirs no longer exist
-    expect(fs.existsSync('a0/b0/c0/d0/e0')).toBe(false);
-    expect(fs.existsSync('a0/b0/c0/d0')).toBe(false);
-    expect(fs.existsSync('a0/b0/c0')).toBe(false);
-    expect(fs.existsSync('a0/b0')).toBe(true);
-    expect(fs.existsSync('a0')).toBe(true);
-  });
-
-  it('does not throw if path is invalid', async () => {
-    expect.hasAssertions();
-
-    const checkedDirs = new Set<string>();
-    await expect(() => removeEmptyDirsUp(checkedDirs, 'invalid/path')).not.toThrow();
-  });
-});
-
 describe(removeEmptyDirs, () => {
   beforeEach(async () => {
     const fileStructure = await getMockedFileStructure();
@@ -237,6 +196,55 @@ describe(removeEmptyDirs, () => {
 
     const filePaths = ['invalid/path/2', 'invalid/path/2'];
     await expect(() => removeEmptyDirs(filePaths)).not.toThrow();
+  });
+
+  it('walks up the tree, removing every empty ancestor', async () => {
+    expect.hasAssertions();
+
+    vol.fromNestedJSON({
+      a0: {
+        b0: {
+          c0: {
+            d0: {
+              e0: { 'leaf.js': '.' },
+            },
+          },
+          c1: 'its a file',
+        },
+      },
+    });
+
+    fs.unlinkSync('a0/b0/c0/d0/e0/leaf.js');
+    const removed = await removeEmptyDirs(['a0/b0/c0/d0/e0/leaf.js']);
+
+    expect(removed).toBe(3);
+    expect(fs.existsSync('a0/b0/c0/d0/e0')).toBe(false);
+    expect(fs.existsSync('a0/b0/c0/d0')).toBe(false);
+    expect(fs.existsSync('a0/b0/c0')).toBe(false);
+    expect(fs.existsSync('a0/b0')).toBe(true); // contains the unrelated c1 file
+    expect(fs.existsSync('a0')).toBe(true);
+  });
+
+  it('removes a parent that becomes empty only after multiple sibling cleanups', async () => {
+    expect.hasAssertions();
+
+    vol.fromNestedJSON({
+      parent: {
+        sub1: { 'a.js': '.' },
+        sub2: { 'b.js': '.' },
+      },
+    });
+
+    const filePaths = ['parent/sub1/a.js', 'parent/sub2/b.js'];
+    for (const filePath of filePaths) {
+      fs.unlinkSync(filePath);
+    }
+
+    const removed = await removeEmptyDirs(filePaths);
+
+    // sub1, sub2 and the parent that became empty because of them
+    expect(removed).toBe(3);
+    expect(fs.existsSync('parent')).toBe(false);
   });
 });
 

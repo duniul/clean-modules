@@ -22,11 +22,12 @@
     "exports-last": "off",
     "filename-case": ["error", { "case": "camelCase" }],
     "func-style": "off",
+    "id-length": "off",
     "import/consistent-type-specifier-style": "off",
     "import/group-exports": "off",
     "import/no-named-export": "off",
-    "import/no-nodejs-modules": "off",
     "import/no-namespace": "off",
+    "import/no-nodejs-modules": "off",
     "import/no-relative-parent-imports": "off",
     "import/prefer-default-export": "off",
     "init-declarations": "off",
@@ -36,7 +37,6 @@
     "jsdoc/require-returns": "off",
     "max-lines-per-function": "off",
     "max-lines": "off",
-    "id-length": "off",
     "max-params": "off",
     "max-statements": "off",
     "no-array-callback-reference": "off",
@@ -47,7 +47,6 @@
     "no-inline-comments": "off",
     "no-magic-numbers": ["error", { "ignore": [0, 1], "ignoreDefaultValues": true }],
     "no-nested-ternary": "off",
-    "unicorn/no-nested-ternary": "off",
     "no-null": "off",
     "no-optional-chaining": "off",
     "no-plusplus": "off",
@@ -59,12 +58,11 @@
     "prefer-template": "off",
     "prefer-ternary": "off",
     "promise/avoid-new": "off",
+    "require-unicode-regexp": "off",
     "sort-imports": "off",
     "sort-keys": "off",
     "typescript/explicit-member-accessibility": ["error", { "accessibility": "no-public" }],
-
-    "prefer-string-replace-all": "warn",
-    "require-unicode-regexp": "warn"
+    "unicorn/no-nested-ternary": "off"
   },
   "overrides": [
     {

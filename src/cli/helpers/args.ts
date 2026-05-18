@@ -27,7 +27,7 @@ export const sharedOptions = {
     type: 'string',
     short: 'D',
     default: sharedDefaultOptions.directory,
-    defaultHint: '$PWD',
+    defaultHint: '$PWD/node_modules',
     description: 'Path to node_modules',
     valueHint: 'path',
   },

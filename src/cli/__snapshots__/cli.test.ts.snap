@@ -14,7 +14,7 @@ $ clean-modules analyze [options] [globs...]
 ━━━ Options ━━━━━━━━━━━━━━━━
 -h, --help         Show help
 -v, --version      Show version
--D, --directory    Path to node_modules (default: $PWD)
+-D, --directory    Path to node_modules (default: $PWD/node_modules)
 -f, --glob-file    Path to a custom glob file (default: .cleanmodules)
 -n, --no-defaults  Skips default glob patterns from being used
 "
@@ -36,7 +36,7 @@ Extra globs can be passed as positional args.
 ━━━ Options ━━━━━━━━━━━━━━━━
 -h, --help           Show help
 -v, --version        Show version
--D, --directory      Path to node_modules (default: $PWD)
+-D, --directory      Path to node_modules (default: $PWD/node_modules)
 -f, --glob-file      Path to a custom glob file (default: .cleanmodules)
 -n, --no-defaults    Skips default glob patterns from being used
 -k, --keep-empty     Skips removing empty folders after cleanup
@@ -68,8 +68,8 @@ Done in <DURATION>!
 Results:
 - size reduced: 12.35 kB
 - files matched: 8
-- files removed: 3 
-- empty dirs removed: 0 
+- files removed: 3
+- empty dirs removed: 0
 - failures: 8
 
 Failed to process 8 files:
@@ -103,7 +103,7 @@ Done in <DURATION>!
 Results:
 - size reduced: 5 B
 - files matched: 5
-- files removed: 5 
+- files removed: 5
 - empty dirs removed: 3 "
 `;
 
@@ -116,8 +116,8 @@ Done in <DURATION>!
 Results:
 - size reduced: 0 B
 - files matched: 1
-- files removed: 0 
-- empty dirs removed: 0 
+- files removed: 0
+- empty dirs removed: 0
 - failures: 1
 
 Failed to process 1 file:
@@ -147,7 +147,7 @@ clean-modules analyze
 ━━━ Options ━━━━━━━━━━━━━━━━
 -h, --help           Show help
 -v, --version        Show version
--D, --directory      Path to node_modules (default: $PWD)
+-D, --directory      Path to node_modules (default: $PWD/node_modules)
 -f, --glob-file      Path to a custom glob file (default: .cleanmodules)
 -n, --no-defaults    Skips default glob patterns from being used
 -k, --keep-empty     Skips removing empty folders after cleanup

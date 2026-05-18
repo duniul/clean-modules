@@ -128,7 +128,7 @@ clean-modules analyze [options] [globs...]
 Because of the amount of data it can be useful to pipe it somewhere:
 
 ```bash
-clean-modules analyze >> clean-modules-result.json
+clean-modules analyze > clean-modules-result.json
 ```
 
 #### Positionals
@@ -219,7 +219,7 @@ import { analyze, clean } from 'clean-modules';
 const analyzeResult = await analyze({
   directory: '/path/to/node_modules',
   globFile: '/path/to/.cleanmodules',
-  globs: ['**/*.js'],
+  globs: ['**/*.d.ts'],
   noDefaults: false,
 });
 
@@ -227,7 +227,7 @@ const analyzeResult = await analyze({
 const cleanResult = await clean({
   directory: '/path/to/node_modules',
   globFile: '/path/to/.cleanmodules',
-  globs: ['**/*.js'],
+  globs: ['**/*.d.ts'],
   noDefaults: false,
   keepEmpty: false,
   dryRun: false,

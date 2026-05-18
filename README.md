@@ -100,8 +100,8 @@ clean-modules "*.d.ts" "!*.png"
 
 | Flag                       | Description                                                            |
 | -------------------------- | ---------------------------------------------------------------------- |
-| `--directory <path>`, `-D` | Path to your `node_modules` directory.<br/>_Default: `./node_modules`_ |
-| `--glob-file <path>`, `-f` | Path to a file with custom globs.<br/>_Default: `./.cleanmodules`_     |
+| `--directory <path>`, `-D` | Path to your `node_modules` directory.<br/>_Default: `$PWD/node_modules`_ |
+| `--glob-file <path>`, `-f` | Path to a file with custom globs.<br/>_Default: `$PWD/.cleanmodules`_     |
 | `--no-defaults`, `-n`      | Skip the default globs, use only globs explicitly set by you.          |
 | `--keep-empty`, `-k`       | Skip removing empty folders after removing files.                      |
 | `--yes`, `-y`              | Skip the confirmation prompt at the start.                             |

@@ -91,7 +91,8 @@ export async function readDirectory(dirPath: string): Promise<string[]> {
 function depthOf(dirPath: string): number {
   let count = 0;
   for (const char of dirPath) {
-    if (char === path.sep) {
+    // Counts both `/` and `\` because Windows accepts either as a separator and `path.dirname` preserves whichever the input used.
+    if (char === '/' || char === '\\') {
       count++;
     }
   }

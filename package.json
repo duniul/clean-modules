@@ -50,7 +50,7 @@
     "lint": "oxlint .",
     "lint:fix": "oxlint --fix .",
     "version": "changeset version",
-    "release": "changeset publish"
+    "release": "pnpm publish -r"
   },
   "dependencies": {
     "picomatch": "^4.0.2"

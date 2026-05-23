@@ -123,8 +123,16 @@ export const cleanCommand = {
       logger.log('\nResults:');
       logger.log('- size reduced:', formatBytes(reducedSize));
       logger.log('- files matched:', files.length);
-      logger.log('- files removed:', removedFilesCount, dryRunSuffix);
-      logger.log('- empty dirs removed:', removedEmptyDirs, dryRunSuffix);
+
+      const filesRemovedLogArgs = ['- files removed:', removedFilesCount];
+      const emptyDirLogArgs = ['- empty dirs removed:', removedEmptyDirs];
+      if (dryRunSuffix) {
+        filesRemovedLogArgs.push(dryRunSuffix);
+        emptyDirLogArgs.push(dryRunSuffix);
+      }
+
+      logger.log(...filesRemovedLogArgs);
+      logger.log(...emptyDirLogArgs);
 
       if (failures.length > 0) {
         logger.log('- failures:', failures.length);

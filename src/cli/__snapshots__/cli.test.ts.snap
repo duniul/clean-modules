@@ -104,7 +104,7 @@ Results:
 - size reduced: 5 B
 - files matched: 5
 - files removed: 5
-- empty dirs removed: 3 "
+- empty dirs removed: 3"
 `;
 
 exports[`clean output formatting > uses singular wording and skips truncation when there is a single failure 1`] = `

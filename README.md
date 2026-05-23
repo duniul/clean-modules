@@ -98,19 +98,19 @@ clean-modules "*.d.ts" "!*.png"
 
 #### Options
 
-| Flag                       | Description                                                            |
-| -------------------------- | ---------------------------------------------------------------------- |
+| Flag                       | Description                                                               |
+| -------------------------- | ------------------------------------------------------------------------- |
 | `--directory <path>`, `-D` | Path to your `node_modules` directory.<br/>_Default: `$PWD/node_modules`_ |
 | `--glob-file <path>`, `-f` | Path to a file with custom globs.<br/>_Default: `$PWD/.cleanmodules`_     |
-| `--no-defaults`, `-n`      | Skip the default globs, use only globs explicitly set by you.          |
-| `--keep-empty`, `-k`       | Skip removing empty folders after removing files.                      |
-| `--yes`, `-y`              | Skip the confirmation prompt at the start.                             |
-| `--dry-run`, `-d`          | Run without actually removing any files, just the final summary.       |
-| `--silent`, `-s`           | Suppress all console output.                                           |
-| `--json`, `-j`             | Only output a single JSON summary at the end.                          |
-| `--fail-on-error`, `-e`    | Exit with a non-zero status code if any files failed.                  |
-| `--help`, `-h`             | Show help.                                                             |
-| `--version`, `-v`          | Show version.                                                          |
+| `--no-defaults`, `-n`      | Skip the default globs, use only globs explicitly set by you.             |
+| `--keep-empty`, `-k`       | Skip removing empty folders after removing files.                         |
+| `--yes`, `-y`              | Skip the confirmation prompt at the start.                                |
+| `--dry-run`, `-d`          | Run without actually removing any files, just the final summary.          |
+| `--silent`, `-s`           | Suppress all console output.                                              |
+| `--json`, `-j`             | Only output a single JSON summary at the end.                             |
+| `--fail-on-error`, `-e`    | Exit with a non-zero status code if any files failed.                     |
+| `--help`, `-h`             | Show help.                                                                |
+| `--version`, `-v`          | Show version.                                                             |
 
 ### `clean-modules analyze`
 

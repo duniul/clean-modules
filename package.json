@@ -1,6 +1,6 @@
 {
   "name": "clean-modules",
-  "version": "3.1.1",
+  "version": "4.0.0",
   "description": "Saves space by removing redundant files from your node_modules. Useful for CI caches or reducing the size of serverless functions.",
   "keywords": [
     "ci",

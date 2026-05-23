@@ -1,8 +1,8 @@
 # clean-modules 🧹
 
-<a href="https://www.npmjs.com/package/clean-modules"><img src="https://img.shields.io/npm/v/clean-modules" /></a>
-<a href="https://www.npmjs.com/package/clean-modules"><img src="https://img.shields.io/npm/dm/clean-modules" /></a>
-<a href="https://www.npmjs.com/package/clean-modules"><img src="https://img.shields.io/node/v-lts/clean-modules" /></a>
+[![npm version](https://img.shields.io/npm/v/clean-modules)](https://www.npmjs.com/package/clean-modules)
+[![npm downloads](https://img.shields.io/npm/dm/clean-modules)](https://www.npmjs.com/package/clean-modules)
+[![node lts](https://img.shields.io/node/v-lts/clean-modules)](https://www.npmjs.com/package/clean-modules)
 
 Saves space by removing redundant files from your `node_modules`. Useful for CI caches
 or reducing the size of serverless functions.
